@@ -13,12 +13,8 @@ export default function Navbar() {
   return (
     <nav className="bg-navy shadow-lg">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-8 w-8 object-contain" />
-          <span className="text-xl font-bold text-white tracking-tight">Mlinzi</span>
-          <span className="text-[10px] text-blue-300 hidden sm:inline font-medium uppercase tracking-wider">
-            Child Digital Protection
-          </span>
+        <Link to="/" className="flex items-center group">
+          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-10 object-contain" />
         </Link>
 
         <div className="flex gap-1">

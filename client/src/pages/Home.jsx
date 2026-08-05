@@ -160,9 +160,8 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-navy py-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-6 w-6 object-contain" />
-            <span className="text-lg font-bold text-white">Mlinzi</span>
+          <div className="flex items-center justify-center mb-3">
+            <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-24 object-contain" />
           </div>
           <p className="text-sm text-blue-200 mb-2">
             AI-powered child digital protection platform
