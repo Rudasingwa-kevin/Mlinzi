@@ -38,9 +38,9 @@ app.get("/", (req, res) => {
 
 // --------------- Route Registration ---------------
 
-// Routes will be imported and mounted here as we build them:
-// const reportRoutes = require("./routes/reportRoutes");
-// app.use("/api/reports", reportRoutes);
+// Routes
+const reportRoutes = require("./routes/reportRoutes");
+app.use("/api/reports", reportRoutes);
 
 // --------------- 404 Handler ---------------
 
