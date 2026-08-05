@@ -1,13 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --color-navy: #0B1220;
+  --color-navy-light: #1a2744;
+  --color-blue: #2563EB;
+  --color-blue-light: #3b82f6;
+  --color-blue-dark: #1d4ed8;
+  --color-green: #10B981;
+  --color-green-light: #34d399;
+  --color-gold: #F59E0B;
+  --color-gold-light: #fbbf24;
+  --color-white: #FFFFFF;
+  --color-cloud: #F8FAFC;
+  --color-soft: #E5E7EB;
+  --color-slate-gray: #64748B;
+  --color-charcoal: #1F2937;
+  --color-red: #EF4444;
+  --color-red-soft: #FEE2E2;
+  --color-blue-bg: #EFF6FF;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
+  background-color: var(--color-cloud);
+  color: var(--color-charcoal);
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
+/* African geometric pattern - Imigongo-inspired */
+.pattern-divider {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-navy) 0px,
+    var(--color-navy) 12px,
+    var(--color-blue) 12px,
+    var(--color-blue) 24px,
+    var(--color-green) 24px,
+    var(--color-green) 36px,
+    var(--color-gold) 36px,
+    var(--color-gold) 48px
+  );
+}
+
+/* Calm gradient backgrounds */
+.gradient-hero {
+  background: linear-gradient(135deg, var(--color-navy) 0%, #162040 50%, var(--color-navy-light) 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, var(--color-blue-bg) 0%, var(--color-white) 100%);
+}
+
+/* AI Message Card style */
+.ai-card {
+  background-color: var(--color-blue-bg);
+  border-left: 4px solid var(--color-blue);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+/* Smooth animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 2s ease-in-out infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cloud);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-soft);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-gray);
 }
