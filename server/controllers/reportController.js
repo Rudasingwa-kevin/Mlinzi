@@ -1,4 +1,5 @@
 const { extractText } = require("../services/ocrService");
+const { analyzeText } = require("../services/aiService");
 const Report = require("../models/Report");
 
 // POST /api/reports/upload
@@ -21,11 +22,20 @@ async function uploadReport(req, res) {
       });
     }
 
-    // Step 2: AI analysis placeholder (will be built in Step 4)
-    const category = "pending_analysis";
-    const severity = "pending";
-    const guidance = "Analysis will be available shortly.";
-
+    // Step 2: AI analysis — classify and assess risk
+    let category, severity, guidance;
+    try {
+      const analysis = await analyzeText(extractedText);
+      category = analysis.category;
+      severity = analysis.severity;
+      guidance = analysis.guidance;
+    } catch (aiErr) {
+      console.error("AI analysis failed:", aiErr.message);
+      // Save report even if AI fails — counselor can review manually
+      category = "pending_analysis";
+      severity = "pending";
+      guidance = "Automated analysis unavailable. A counselor will review this report.";
+    }
     // Step 3: Save report to database
     const report = await Report.create({
       screenshotPath,
@@ -37,7 +47,7 @@ async function uploadReport(req, res) {
     });
 
     res.status(201).json({
-      message: "Report uploaded and text extracted",
+      message: "Report uploaded and analyzed",
       report,
     });
   } catch (err) {
