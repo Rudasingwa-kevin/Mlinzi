@@ -54,7 +54,7 @@ export default function Home() {
         </div>
 
         <div className="max-w-3xl mx-auto text-center relative z-10">
-          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-16 mx-auto mb-6 object-contain" />
+          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-20 mx-auto mb-6 object-contain" />
 
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
             <span className="text-sm">🌍</span>
@@ -158,15 +158,16 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-navy py-8 px-4">
+      <footer className="bg-[#0B1220] py-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-3">
-            <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-24 object-contain" />
+          <div className="flex items-center justify-center gap-2.5 mb-3">
+            <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-8 w-8 object-contain" />
+            <span className="text-lg font-bold text-white">Mlinzi</span>
           </div>
-          <p className="text-sm text-blue-200 mb-2">
+          <p className="text-sm text-[#93C5FD] mb-2">
             AI-powered child digital protection platform
           </p>
-          <p className="text-xs text-slate-gray">
+          <p className="text-xs text-[#64748B]">
             A UNICEF Innovation Project • Protect. Listen. Connect.
           </p>
         </div>
