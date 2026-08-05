@@ -59,9 +59,16 @@ app.use((err, req, res, next) => {
 
 // --------------- Start Server ---------------
 
-app.listen(PORT, () => {
-  console.log(`Mlinzi server running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/`);
-});
+const migrate = require("./models/db");
+
+async function start() {
+  await migrate();
+  app.listen(PORT, () => {
+    console.log(`Mlinzi server running on port ${PORT}`);
+    console.log(`Health check: http://localhost:${PORT}/`);
+  });
+}
+
+start();
 
 module.exports = app;
