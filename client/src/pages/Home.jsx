@@ -54,6 +54,8 @@ export default function Home() {
         </div>
 
         <div className="max-w-3xl mx-auto text-center relative z-10">
+          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-16 mx-auto mb-6 object-contain" />
+
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
             <span className="text-sm">🌍</span>
             <span className="text-sm font-medium text-blue-200">UNICEF Innovation Project</span>
@@ -159,7 +161,7 @@ export default function Home() {
       <footer className="bg-navy py-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="text-xl">🛡️</span>
+            <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-6 w-6 object-contain" />
             <span className="text-lg font-bold text-white">Mlinzi</span>
           </div>
           <p className="text-sm text-blue-200 mb-2">
