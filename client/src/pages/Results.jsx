@@ -1,4 +1,5 @@
-import { useLocation, Link } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import PatternDivider from "../components/PatternDivider";
 
 const severityConfig = {
@@ -38,7 +39,9 @@ const severityConfig = {
 
 export default function Results() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const report = state?.report;
+  const [showEscalation, setShowEscalation] = useState(false);
 
   if (!report) {
     return (
@@ -141,8 +144,44 @@ export default function Results() {
           </div>
         )}
 
+        {/* Escalation Prompt */}
+        {!showEscalation ? (
+          <div className="bg-blue-bg border border-blue/10 rounded-2xl p-6 mb-6 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <div className="flex items-start gap-3 mb-4">
+              <span className="text-xl">🤝</span>
+              <div>
+                <p className="font-semibold text-navy">
+                  Would you like help from a trained child protection counselor?
+                </p>
+                <p className="text-sm text-slate-gray mt-1">
+                  You can stay anonymous or connect with someone who can help.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
+              <button
+                onClick={() => {
+                  localStorage.setItem(`report_${report.id}_anonymous`, "true");
+                  navigate("/");
+                }}
+                className="flex-1 bg-white border border-soft text-navy font-medium py-3 rounded-2xl hover:bg-cloud transition-all duration-200"
+              >
+                Keep this anonymous
+              </button>
+              <button
+                onClick={() => setShowEscalation(true)}
+                className="flex-1 bg-blue text-white font-medium py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md"
+              >
+                Connect me to a counselor
+              </button>
+            </div>
+          </div>
+        ) : (
+          <ReferralForm reportId={report.id} />
+        )}
+
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+        <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
           <Link
             to="/report"
             className="flex-1 text-center bg-blue text-white font-semibold py-4 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
@@ -166,6 +205,162 @@ export default function Results() {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ReferralForm({ reportId }) {
+  const navigate = useNavigate();
+  const [districts, setDistricts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [form, setForm] = useState({
+    district: "",
+    preferredContact: "phone",
+    contactValue: "",
+    bestTime: "",
+    isSafe: "",
+  });
+
+  useState(() => {
+    getDistricts()
+      .then(setDistricts)
+      .catch(() => setDistricts([]));
+  }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!form.district || !form.contactValue) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await escalateReport({ reportId, ...form });
+      navigate("/refer/success");
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to submit referral");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="bg-white border border-blue/20 rounded-2xl p-6 mb-6 animate-fade-in-up">
+      <div className="flex items-start gap-3 mb-4">
+        <span className="text-xl">📋</span>
+        <div>
+          <p className="font-semibold text-navy">Connect with a Counselor</p>
+          <p className="text-sm text-slate-gray">
+            We only collect the minimum information needed to help you.
+          </p>
+        </div>
+      </div>
+
+      {error && (
+        <div className="bg-red-soft/50 border border-red/20 text-red px-4 py-3 rounded-xl mb-4 text-sm">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <div>
+          <label className="block text-sm font-medium text-navy mb-2">
+            District <span className="text-red">*</span>
+          </label>
+          <select
+            required
+            value={form.district}
+            onChange={(e) => setForm({ ...form, district: e.target.value })}
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
+          >
+            <option value="">Select your district</option>
+            {districts.map((d) => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-navy mb-2">
+            Preferred contact method <span className="text-red">*</span>
+          </label>
+          <select
+            value={form.preferredContact}
+            onChange={(e) => setForm({ ...form, preferredContact: e.target.value })}
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
+          >
+            <option value="phone">Phone call</option>
+            <option value="sms">SMS</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-navy mb-2">
+            {form.preferredContact === "email" ? "Email" : "Phone/WhatsApp number"} <span className="text-red">*</span>
+          </label>
+          <input
+            type={form.preferredContact === "email" ? "email" : "tel"}
+            required
+            value={form.contactValue}
+            onChange={(e) => setForm({ ...form, contactValue: e.target.value })}
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all"
+            placeholder={form.preferredContact === "email" ? "you@example.com" : "+250 7XX XXX XXX"}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-navy mb-2">
+            Best time to contact
+          </label>
+          <input
+            type="text"
+            value={form.bestTime}
+            onChange={(e) => setForm({ ...form, bestTime: e.target.value })}
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all"
+            placeholder="e.g., Morning, After school, Anytime"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-navy mb-2">
+            Are you currently safe?
+          </label>
+          <div className="flex gap-3">
+            {["Yes", "No", "Not sure"].map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setForm({ ...form, isSafe: option })}
+                className={`flex-1 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                  form.isSafe === option
+                    ? "bg-blue text-white"
+                    : "bg-cloud text-slate-gray hover:bg-soft"
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue text-white font-semibold py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md disabled:opacity-50"
+        >
+          {loading ? "Submitting..." : "Submit Referral"}
+        </button>
+
+        <p className="text-xs text-slate-gray text-center">
+          Your contact information is encrypted and only shared with your assigned counselor.
+        </p>
+      </form>
     </div>
   );
 }

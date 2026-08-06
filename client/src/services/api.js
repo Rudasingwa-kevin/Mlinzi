@@ -7,7 +7,49 @@ const api = axios.create({
   timeout: 30000,
 });
 
-// Upload screenshot and get analysis
+// Add auth token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Auth functions
+export async function loginUser(email, password) {
+  const { data } = await api.post("/auth/login", { email, password });
+  return data;
+}
+
+export async function registerUser(userData) {
+  const { data } = await api.post("/auth/register", userData);
+  return data;
+}
+
+export function logout() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  window.location.href = "/login";
+}
+
+export function getUser() {
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
+}
+
+// Counselor management
+export async function getCounselors() {
+  const { data } = await api.get("/auth/counselors");
+  return data.counselors;
+}
+
+export async function approveCounselor(id) {
+  const { data } = await api.patch(`/auth/approve/${id}`);
+  return data.user;
+}
+
+// Report functions
 export async function uploadScreenshot(file) {
   const formData = new FormData();
   formData.append("screenshot", file);
@@ -17,7 +59,6 @@ export async function uploadScreenshot(file) {
   return data;
 }
 
-// Get all reports (counselor dashboard)
 export async function getReports(filters = {}) {
   const params = new URLSearchParams();
   if (filters.status) params.append("status", filters.status);
@@ -27,22 +68,59 @@ export async function getReports(filters = {}) {
   return data.reports;
 }
 
-// Get single report
 export async function getReport(id) {
   const { data } = await api.get(`/reports/${id}`);
   return data.report;
 }
 
-// Update report status
-export async function updateReportStatus(id, status) {
-  const { data } = await api.patch(`/reports/${id}/status`, { status });
-  return data.report;
+// Referral functions
+export async function getDistricts() {
+  const { data } = await api.get("/districts");
+  return data.districts;
 }
 
-// Get national stats
-export async function getStats() {
-  const { data } = await api.get("/reports/stats");
-  return data.stats;
+export async function escalateReport(referralData) {
+  const { data } = await api.post("/report/escalate", referralData);
+  return data.referral;
+}
+
+export async function getCounselorCases(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.status) params.append("status", filters.status);
+  const { data } = await api.get(`/counselor/cases?${params.toString()}`);
+  return data.cases;
+}
+
+export async function getUnassignedCases(filters = {}) {
+  const params = new URLSearchParams();
+  if (filters.status) params.append("status", filters.status);
+  const { data } = await api.get(`/counselor/unassigned?${params.toString()}`);
+  return data.cases;
+}
+
+export async function getCaseById(id) {
+  const { data } = await api.get(`/counselor/cases/${id}`);
+  return data;
+}
+
+export async function claimCase(id) {
+  const { data } = await api.post(`/counselor/cases/${id}/claim`);
+  return data.case;
+}
+
+export async function updateCaseStatus(id, status) {
+  const { data } = await api.patch(`/counselor/cases/${id}/status`, { status });
+  return data.case;
+}
+
+export async function addCaseNote(id, note) {
+  const { data } = await api.post(`/counselor/cases/${id}/notes`, { note });
+  return data.note;
+}
+
+export async function getNationalAnalytics() {
+  const { data } = await api.get("/national/analytics");
+  return data;
 }
 
 export default api;

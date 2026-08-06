@@ -7,16 +7,23 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["child-safety", "AI", "OCR", "UNICEF"],
+  "keywords": [
+    "child-safety",
+    "AI",
+    "OCR",
+    "UNICEF"
+  ],
   "license": "UNICEF Innovation",
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.3",
     "multer": "^1.4.5-lts.1",
     "pg": "^8.13.0",
-    "tesseract.js": "^5.1.1",
-    "@google/generative-ai": "^0.21.0"
+    "tesseract.js": "^5.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

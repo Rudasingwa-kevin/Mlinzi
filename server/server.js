@@ -49,9 +49,17 @@ app.get("/", (req, res) => {
 
 // --------------- Route Registration ---------------
 
-// Routes
+// Auth routes
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);
+
+// Report routes
 const reportRoutes = require("./routes/reportRoutes");
 app.use("/api/reports", reportRoutes);
+
+// Referral routes
+const referralRoutes = require("./routes/referralRoutes");
+app.use("/api", referralRoutes);
 
 // --------------- 404 Handler ---------------
 
