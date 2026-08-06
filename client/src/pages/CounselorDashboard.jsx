@@ -10,7 +10,7 @@ const severityConfig = {
 };
 
 const statusConfig = {
-  new: { bg: "bg-blue-bg", text: "text-blue", label: "New" },
+  new: { bg: "bg-green-50", text: "text-blue", label: "New" },
   under_review: { bg: "bg-purple-50", text: "text-purple-600", label: "Under Review" },
   resolved: { bg: "bg-green-50", text: "text-green", label: "Resolved" },
 };
@@ -126,7 +126,7 @@ export default function CounselorDashboard() {
           <select
             value={filters.status}
             onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))}
-            className="border border-soft rounded-2xl px-4 py-2.5 text-sm bg-white focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all"
+            className="border border-soft rounded-2xl px-4 py-2.5 text-sm bg-white focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
           >
             <option value="">All Statuses</option>
             <option value="new">New</option>

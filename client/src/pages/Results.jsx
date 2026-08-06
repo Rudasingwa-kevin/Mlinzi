@@ -49,7 +49,7 @@ export default function Results() {
     return (
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-bg flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-50 flex items-center justify-center">
             <Search size={32} className="text-blue" />
           </div>
           <p className="text-navy font-semibold mb-2">No report data found</p>
@@ -107,7 +107,7 @@ export default function Results() {
         {/* AI Message Card */}
         <div className="ai-card mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center flex-shrink-0">
               <Bot size={16} className="text-blue" />
             </div>
             <div>
@@ -129,7 +129,7 @@ export default function Results() {
         {/* Guidance Card */}
         <div className="bg-white border border-soft rounded-2xl p-6 mb-6 shadow-sm animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-start gap-3 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center flex-shrink-0">
               <Heart size={16} className="text-blue" />
             </div>
             <div>
@@ -160,9 +160,9 @@ export default function Results() {
 
         {/* Escalation Prompt */}
         {!showEscalation ? (
-          <div className="bg-blue-bg border border-blue/10 rounded-2xl p-6 mb-6 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+          <div className="bg-green-50 border border-green/10 rounded-2xl p-6 mb-6 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center flex-shrink-0">
                 <HandHelping size={16} className="text-blue" />
               </div>
               <div>
@@ -265,7 +265,7 @@ function ReferralForm({ reportId }) {
   }
 
   return (
-    <div className="bg-white border border-blue/20 rounded-2xl p-6 mb-6 animate-fade-in-up">
+    <div className="bg-white border border-green/20 rounded-2xl p-6 mb-6 animate-fade-in-up">
       <div className="flex items-start gap-3 mb-4">
         <span className="text-xl">📋</span>
         <div>
@@ -291,7 +291,7 @@ function ReferralForm({ reportId }) {
             required
             value={form.district}
             onChange={(e) => setForm({ ...form, district: e.target.value })}
-            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
           >
             <option value="">Select your district</option>
             {districts.map((d) => (
@@ -307,7 +307,7 @@ function ReferralForm({ reportId }) {
           <select
             value={form.preferredContact}
             onChange={(e) => setForm({ ...form, preferredContact: e.target.value })}
-            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
           >
             <option value="phone">Phone call</option>
             <option value="sms">SMS</option>
@@ -325,7 +325,7 @@ function ReferralForm({ reportId }) {
             required
             value={form.contactValue}
             onChange={(e) => setForm({ ...form, contactValue: e.target.value })}
-            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all"
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
             placeholder={form.preferredContact === "email" ? "you@example.com" : "+250 7XX XXX XXX"}
           />
         </div>
@@ -338,7 +338,7 @@ function ReferralForm({ reportId }) {
             type="text"
             value={form.bestTime}
             onChange={(e) => setForm({ ...form, bestTime: e.target.value })}
-            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all"
+            className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
             placeholder="e.g., Morning, After school, Anytime"
           />
         </div>

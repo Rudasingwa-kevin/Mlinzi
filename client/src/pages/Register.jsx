@@ -9,7 +9,7 @@ const roles = [
     title: "Counselor",
     description: "Review and support children with cases",
     icon: Users,
-    color: "bg-[#2563EB]",
+    color: "bg-[#2E7D32]",
   },
   {
     id: "national_society",
@@ -60,7 +60,7 @@ export default function Register() {
   return (
     <div className="min-h-[calc(100vh-56px)] flex">
       {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#0B1220] via-[#1a2744] to-[#2563EB] relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#0B1220] via-[#1a2744] to-[#2E7D32] relative overflow-hidden">
         {/* Decorative pattern */}
         <div className="absolute inset-0 opacity-5">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -113,7 +113,7 @@ export default function Register() {
 
         {/* Floating elements */}
         <div className="absolute top-32 right-16 w-40 h-40 bg-[#60A5FA]/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-24 left-10 w-32 h-32 bg-[#2563EB]/30 rounded-full blur-2xl" />
+        <div className="absolute bottom-24 left-10 w-32 h-32 bg-[#2E7D32]/30 rounded-full blur-2xl" />
       </div>
 
       {/* Right side - Form */}
@@ -139,7 +139,7 @@ export default function Register() {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
                     step >= s
-                      ? "bg-[#2563EB] text-white"
+                      ? "bg-[#2E7D32] text-white"
                       : "bg-[#e2e8f0] text-[#94a3b8]"
                   }`}
                 >
@@ -148,7 +148,7 @@ export default function Register() {
                 {s < 2 && (
                   <div
                     className={`w-12 h-1 rounded-full transition-all ${
-                      step > s ? "bg-[#2563EB]" : "bg-[#e2e8f0]"
+                      step > s ? "bg-[#2E7D32]" : "bg-[#e2e8f0]"
                     }`}
                   />
                 )}
@@ -181,7 +181,7 @@ export default function Register() {
                       required
                       value={form.full_name}
                       onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 outline-none transition-all"
+                      className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                       placeholder="John Doe"
                     />
                   </div>
@@ -200,7 +200,7 @@ export default function Register() {
                       required
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 outline-none transition-all"
+                      className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                       placeholder="you@example.com"
                     />
                   </div>
@@ -220,7 +220,7 @@ export default function Register() {
                           onClick={() => setForm({ ...form, role: r.id })}
                           className={`p-4 rounded-xl border-2 text-left transition-all ${
                             form.role === r.id
-                              ? "border-[#2563EB] bg-[#2563EB]/5"
+                              ? "border-[#2E7D32] bg-[#2E7D32]/5"
                               : "border-[#e2e8f0] hover:border-[#cbd5e1]"
                           }`}
                         >
@@ -239,7 +239,7 @@ export default function Register() {
                   type="button"
                   onClick={handleNext}
                   disabled={!form.full_name || !form.email}
-                  className="w-full bg-[#2563EB] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1d4ed8] transition-all duration-200 shadow-lg shadow-[#2563EB]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-[#2E7D32] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1B5E20] transition-all duration-200 shadow-lg shadow-[#2E7D32]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   Continue
                   <Check size={18} />
@@ -261,7 +261,7 @@ export default function Register() {
                       minLength={6}
                       value={form.password}
                       onChange={(e) => setForm({ ...form, password: e.target.value })}
-                      className="w-full pl-11 pr-12 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 outline-none transition-all"
+                      className="w-full pl-11 pr-12 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                       placeholder="Create a strong password"
                     />
                     <button
@@ -309,7 +309,7 @@ export default function Register() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-[2] bg-[#2563EB] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1d4ed8] transition-all duration-200 shadow-lg shadow-[#2563EB]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-[2] bg-[#2E7D32] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1B5E20] transition-all duration-200 shadow-lg shadow-[#2E7D32]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>
@@ -331,7 +331,7 @@ export default function Register() {
           <div className="mt-8 text-center">
             <p className="text-[#64748B] text-sm">
               Already have an account?{" "}
-              <Link to="/login" className="text-[#2563EB] font-semibold hover:text-[#1d4ed8]">
+              <Link to="/login" className="text-[#2E7D32] font-semibold hover:text-[#1B5E20]">
                 Sign in
               </Link>
             </p>

@@ -116,10 +116,10 @@ export default function ReportAbuse() {
             onClick={() => inputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-200 ${
               dragOver
-                ? "border-blue bg-blue-bg scale-[1.01]"
+                ? "border-green bg-green-50 scale-[1.01]"
                 : preview
                 ? "border-green bg-green-50"
-                : "border-soft hover:border-blue hover:bg-blue-bg"
+                : "border-soft hover:border-green hover:bg-green-50"
             }`}
           >
             <input
@@ -144,7 +144,7 @@ export default function ReportAbuse() {
               </div>
             ) : (
               <div>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-bg flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-50 flex items-center justify-center">
                   <Camera size={32} className="text-blue" />
                 </div>
                 <p className="font-semibold text-navy mb-2">
@@ -185,7 +185,7 @@ export default function ReportAbuse() {
                 value={manualText}
                 onChange={(e) => setManualText(e.target.value)}
                 placeholder="Type or paste the harmful message here..."
-                className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
+                className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
                 rows={4}
               />
               <p className="text-xs text-slate-gray mt-1">
@@ -227,7 +227,7 @@ export default function ReportAbuse() {
         {/* Help text */}
         <div className="mt-8 ai-card">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center flex-shrink-0">
               <Shield size={16} className="text-blue" />
             </div>
             <div>

@@ -60,7 +60,7 @@ export default function ReferralSuccess() {
           </div>
         </div>
 
-        <div className="bg-blue-bg border border-blue/10 rounded-2xl p-6 mb-8">
+        <div className="bg-green-50 border border-green/10 rounded-2xl p-6 mb-8">
           <div className="flex items-start gap-3">
             <span className="text-xl">💙</span>
             <div className="text-left">

@@ -30,12 +30,12 @@ export default function Navbar() {
   const links = getLinks();
 
   return (
-    <nav className="bg-[#0B1220] shadow-lg">
+    <nav className="bg-[#1B5E20] shadow-lg">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
           <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-9 w-9 object-contain" />
           <span className="text-xl font-bold text-white tracking-tight">Mlinzi</span>
-          <span className="text-[11px] text-[#60A5FA] hidden sm:inline font-medium uppercase tracking-wider">
+          <span className="text-[11px] text-[#A5D6A7] hidden sm:inline font-medium uppercase tracking-wider">
             Child Digital Protection
           </span>
         </Link>
@@ -49,7 +49,7 @@ export default function Navbar() {
                 to={link.to}
                 className={`px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
                   pathname === link.to
-                    ? "bg-[#2563EB] text-white shadow-md"
+                    ? "bg-[#2E7D32] text-white shadow-md"
                     : "text-gray-300 hover:bg-[#1e2d4a] hover:text-white"
                 }`}
               >
@@ -66,7 +66,7 @@ export default function Navbar() {
               </span>
               <button
                 onClick={logout}
-                className="px-3 py-2 rounded-2xl text-sm font-medium text-gray-300 hover:bg-[#1e2d4a] hover:text-white transition-all flex items-center gap-1.5"
+                className="px-3 py-2 rounded-2xl text-sm font-medium text-gray-100 hover:bg-[#1a4d22] hover:text-white transition-all flex items-center gap-1.5"
               >
                 <LogOut size={16} />
                 <span className="hidden sm:inline">Logout</span>
@@ -75,11 +75,11 @@ export default function Navbar() {
           ) : (
             <Link
               to="/login"
-              className={`px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ml-2 ${
-                pathname === "/login"
-                  ? "bg-[#2563EB] text-white shadow-md"
-                  : "text-gray-300 hover:bg-[#1e2d4a] hover:text-white"
-              }`}
+                className={`px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ml-2 ${
+                  pathname === "/login"
+                    ? "bg-[#2E7D32] text-white shadow-md"
+                    : "text-gray-100 hover:bg-[#1a4d22] hover:text-white"
+                }`}
             >
               <LogIn size={16} />
               <span className="hidden sm:inline">Login</span>
