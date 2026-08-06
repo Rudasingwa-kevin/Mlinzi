@@ -198,7 +198,7 @@ export default function ReportAbuse() {
           <button
             type="submit"
             disabled={!file || loading}
-            className="mt-6 w-full bg-blue text-white font-semibold py-4 rounded-2xl hover:bg-blue-dark disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-lg"
+            className="mt-6 w-full bg-[#2E7D32] text-white font-semibold py-4 rounded-2xl hover:bg-[#1B5E20] disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-lg"
           >
             {loading ? (
               <>
