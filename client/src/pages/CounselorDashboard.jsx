@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCounselorCases, getUnassignedCases, claimCase } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
+import { Loader2, ClipboardList, RefreshCw } from "lucide-react";
 
 const severityConfig = {
   low: { bg: "bg-green-50", text: "text-green", label: "Low" },
@@ -135,8 +136,9 @@ export default function CounselorDashboard() {
           </select>
           <button
             onClick={loadCases}
-            className="bg-blue text-white px-5 py-2.5 rounded-2xl text-sm font-medium hover:bg-blue-dark transition-all duration-200 shadow-sm"
+            className="bg-green text-white px-5 py-2.5 rounded-2xl text-sm font-medium hover:bg-green-dark transition-all duration-200 shadow-sm flex items-center gap-2"
           >
+            <RefreshCw size={14} />
             Refresh
           </button>
         </div>
@@ -145,16 +147,13 @@ export default function CounselorDashboard() {
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-flex items-center gap-3 text-slate-gray">
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+              <Loader2 className="animate-spin h-5 w-5" />
               Loading cases...
             </div>
           </div>
         ) : activeCases.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-4xl mb-4">📋</div>
+            <ClipboardList size={48} className="mx-auto text-soft mb-4" />
             <p className="text-navy font-semibold">No cases found</p>
             <p className="text-sm text-slate-gray">
               {activeTab === "my-cases"

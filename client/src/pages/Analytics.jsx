@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getNationalAnalytics } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
+import { Loader2, BarChart3, Folder, MapPin, ClipboardList, TrendingUp } from "lucide-react";
 
 const severityConfig = {
   low: { color: "bg-green", label: "Low Risk" },
@@ -30,10 +31,7 @@ export default function Analytics() {
     return (
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center">
         <div className="inline-flex items-center gap-3 text-slate-gray">
-          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
+          <Loader2 className="animate-spin h-5 w-5" />
           Loading analytics...
         </div>
       </div>
@@ -44,7 +42,7 @@ export default function Analytics() {
     return (
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">📊</div>
+          <BarChart3 size={48} className="mx-auto text-soft mb-4" />
           <p className="text-navy font-semibold">Unable to load analytics</p>
           <p className="text-sm text-slate-gray">Please try refreshing the page.</p>
         </div>
@@ -104,7 +102,7 @@ export default function Analytics() {
           {/* By Severity */}
           <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
-              <span className="text-xl">📊</span>
+              <BarChart3 size={20} className="text-green" />
               <h2 className="font-semibold text-navy">By Severity</h2>
             </div>
             {reportStats.bySeverity.length === 0 ? (
@@ -138,7 +136,7 @@ export default function Analytics() {
           {/* By Category */}
           <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
-              <span className="text-xl">📁</span>
+              <Folder size={20} className="text-green" />
               <h2 className="font-semibold text-navy">By Category</h2>
             </div>
             {reportStats.byCategory.length === 0 ? (
@@ -160,7 +158,7 @@ export default function Analytics() {
           {/* By District */}
           <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
-              <span className="text-xl">📍</span>
+              <MapPin size={20} className="text-green" />
               <h2 className="font-semibold text-navy">By District</h2>
             </div>
             {reportStats.byDistrict.length === 0 ? (
@@ -185,7 +183,7 @@ export default function Analytics() {
           {/* Referral Status */}
           <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
-              <span className="text-xl">📋</span>
+              <ClipboardList size={20} className="text-green" />
               <h2 className="font-semibold text-navy">Referral Status</h2>
             </div>
             {referralStats.byStatus.length === 0 ? (
@@ -214,7 +212,7 @@ export default function Analytics() {
           {/* Monthly Trend */}
           <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
-              <span className="text-xl">📈</span>
+              <TrendingUp size={20} className="text-green" />
               <h2 className="font-semibold text-navy">Monthly Trend</h2>
             </div>
             {reportStats.monthlyTrend.length === 0 ? (
@@ -239,7 +237,7 @@ export default function Analytics() {
         {/* Summary note */}
         <div className="mt-8 ai-card">
           <div className="flex items-start gap-3">
-            <span className="text-xl">📋</span>
+            <ClipboardList size={20} className="text-green mt-0.5" />
             <div>
               <p className="font-semibold text-navy mb-1">Data Summary</p>
               <p className="text-sm text-slate-gray">
