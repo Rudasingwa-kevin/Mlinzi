@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import { getDistricts, escalateReport } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
 
 const severityConfig = {
@@ -222,7 +223,7 @@ function ReferralForm({ reportId }) {
     isSafe: "",
   });
 
-  useState(() => {
+  useEffect(() => {
     getDistricts()
       .then(setDistricts)
       .catch(() => setDistricts([]));

@@ -6,7 +6,7 @@ const { requireRole, requireApproved } = require("../middleware/auth");
 
 router.get("/districts", ctrl.getDistricts);
 
-router.post("/escalate", ctrl.escalate);
+router.post("/report/escalate", ctrl.escalate);
 
 router.get("/counselor/cases", authenticateToken, requireRole("counselor"), requireApproved, ctrl.getCounselorCases);
 router.get("/counselor/unassigned", authenticateToken, requireRole("counselor"), requireApproved, ctrl.getUnassignedCases);
