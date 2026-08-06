@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { uploadScreenshot } from "../services/api";
+import { uploadScreenshot, submitManualReport } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
 
 export default function ReportAbuse() {
@@ -9,6 +9,8 @@ export default function ReportAbuse() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+  const [manualText, setManualText] = useState("");
+  const [showManualInput, setShowManualInput] = useState(false);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -57,8 +59,8 @@ export default function ReportAbuse() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!file) {
-      setError("Please select a screenshot first.");
+    if (!file && !manualText.trim()) {
+      setError("Please select a screenshot or type the message.");
       return;
     }
 
@@ -66,12 +68,17 @@ export default function ReportAbuse() {
     setError(null);
 
     try {
-      const result = await uploadScreenshot(file);
+      let result;
+      if (file) {
+        result = await uploadScreenshot(file);
+      } else {
+        result = await submitManualReport(manualText);
+      }
       navigate("/results", { state: { report: result.report } });
     } catch (err) {
       const msg =
         err.response?.data?.error ||
-        "We couldn't read the image clearly. Try another screenshot or type the message.";
+        "Something went wrong. Please try again.";
       setError(msg);
     } finally {
       setLoading(false);
@@ -155,6 +162,32 @@ export default function ReportAbuse() {
             <div className="mt-4 p-4 bg-red-soft border border-red/20 rounded-2xl text-red text-sm animate-fade-in-up">
               <span className="mr-2">⚠️</span>
               {error}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowManualInput(true);
+                  setError(null);
+                }}
+                className="ml-2 underline font-medium hover:text-red-dark"
+              >
+                Type the message instead
+              </button>
+            </div>
+          )}
+
+          {/* Manual text input */}
+          {showManualInput && (
+            <div className="mt-4 animate-fade-in-up">
+              <textarea
+                value={manualText}
+                onChange={(e) => setManualText(e.target.value)}
+                placeholder="Type or paste the harmful message here..."
+                className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-blue focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
+                rows={4}
+              />
+              <p className="text-xs text-slate-gray mt-1">
+                You can type the message directly if the screenshot doesn't work.
+              </p>
             </div>
           )}
 

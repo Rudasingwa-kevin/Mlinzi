@@ -6,7 +6,7 @@ async function extractText(imagePath) {
     ? imagePath
     : path.join(__dirname, "..", imagePath);
 
-  const result = await Tesseract.recognize(filePath, "eng", {
+  const result = await Tesseract.recognize(filePath, "eng+kin+fra", {
     logger: (info) => {
       if (info.status === "recognizing text") {
         process.stdout.write(`\rOCR progress: ${Math.round(info.progress * 100)}%`);

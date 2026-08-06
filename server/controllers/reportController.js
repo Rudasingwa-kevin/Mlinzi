@@ -1,6 +1,47 @@
-const { extractText } = require("../services/ocrService");
-const { analyzeText } = require("../services/aiService");
+const { analyzeText, analyzeImage } = require("../services/aiService");
 const Report = require("../models/Report");
+
+// POST /api/reports/manual
+async function manualReport(req, res) {
+  try {
+    const { text } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: "Text is required" });
+    }
+
+    const extractedText = text.trim();
+
+    let category, severity, guidance;
+    try {
+      const analysis = await analyzeText(extractedText);
+      category = analysis.category;
+      severity = analysis.severity;
+      guidance = analysis.guidance;
+    } catch (aiErr) {
+      console.error("AI analysis failed:", aiErr.message);
+      category = "pending_analysis";
+      severity = "pending";
+      guidance = "Automated analysis unavailable. A counselor will review this report.";
+    }
+
+    const report = await Report.create({
+      screenshotPath: null,
+      extractedText,
+      category,
+      severity,
+      guidance,
+      isAnonymous: true,
+    });
+
+    res.status(201).json({
+      message: "Report submitted and analyzed",
+      report,
+    });
+  } catch (err) {
+    console.error("Manual report error:", err);
+    res.status(500).json({ error: "Failed to process report" });
+  }
+}
 
 // POST /api/reports/upload
 async function uploadReport(req, res) {
@@ -11,32 +52,22 @@ async function uploadReport(req, res) {
 
     const screenshotPath = `/uploads/${req.file.filename}`;
 
-    // Step 1: OCR — extract text from screenshot
-    let extractedText;
-    try {
-      extractedText = await extractText(req.file.path);
-    } catch (ocrErr) {
-      return res.status(422).json({
-        error: "Could not extract text from image",
-        detail: ocrErr.message,
-      });
-    }
+    let extractedText, category, severity, guidance;
 
-    // Step 2: AI analysis — classify and assess risk
-    let category, severity, guidance;
     try {
-      const analysis = await analyzeText(extractedText);
+      const analysis = await analyzeImage(req.file.path);
+      extractedText = analysis.extractedText;
       category = analysis.category;
       severity = analysis.severity;
       guidance = analysis.guidance;
     } catch (aiErr) {
-      console.error("AI analysis failed:", aiErr.message);
-      // Save report even if AI fails — counselor can review manually
+      console.error("AI vision analysis failed:", aiErr.message);
+      extractedText = "Could not analyze image";
       category = "pending_analysis";
       severity = "pending";
       guidance = "Automated analysis unavailable. A counselor will review this report.";
     }
-    // Step 3: Save report to database
+
     const report = await Report.create({
       screenshotPath,
       extractedText,
@@ -118,6 +149,7 @@ async function getStats(req, res) {
 }
 
 module.exports = {
+  manualReport,
   uploadReport,
   getReports,
   getReportById,

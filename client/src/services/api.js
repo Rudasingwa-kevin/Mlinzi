@@ -59,6 +59,11 @@ export async function uploadScreenshot(file) {
   return data;
 }
 
+export async function submitManualReport(text) {
+  const { data } = await api.post("/reports/manual", { text });
+  return data;
+}
+
 export async function getReports(filters = {}) {
   const params = new URLSearchParams();
   if (filters.status) params.append("status", filters.status);

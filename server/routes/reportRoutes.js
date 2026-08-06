@@ -5,6 +5,9 @@ const ctrl = require("../controllers/reportController");
 const authenticateToken = require("../middleware/auth");
 const { requireRole } = require("../middleware/auth");
 
+// Manual text submission (public - children submit)
+router.post("/manual", ctrl.manualReport);
+
 // Upload screenshot → OCR → save report (public - children submit)
 router.post("/upload", upload.single("screenshot"), ctrl.uploadReport);
 
