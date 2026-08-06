@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Search, CheckCircle, AlertTriangle, AlertCircle, Bot, Heart, FileText, Home, Shield, HandHelping } from "lucide-react";
 import { getDistricts, escalateReport } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
 
@@ -9,7 +10,7 @@ const severityConfig = {
     border: "border-green",
     text: "text-green",
     label: "Low Risk",
-    icon: "✅",
+    icon: CheckCircle,
     message: "This message appears to be safe. You are doing great!",
   },
   medium: {
@@ -17,7 +18,7 @@ const severityConfig = {
     border: "border-gold",
     text: "text-gold",
     label: "Medium Risk",
-    icon: "⚠️",
+    icon: AlertTriangle,
     message: "This message may need attention. Let's protect you together.",
   },
   high: {
@@ -25,7 +26,7 @@ const severityConfig = {
     border: "border-red",
     text: "text-red",
     label: "High Risk",
-    icon: "🚨",
+    icon: AlertCircle,
     message: "This message may be unsafe. Let's protect you together.",
   },
   pending: {
@@ -33,7 +34,7 @@ const severityConfig = {
     border: "border-soft",
     text: "text-slate-gray",
     label: "Analyzing...",
-    icon: "🔍",
+    icon: Search,
     message: "Our AI is reviewing your report.",
   },
 };
@@ -48,7 +49,9 @@ export default function Results() {
     return (
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="text-4xl mb-4">🔍</div>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-bg flex items-center justify-center">
+            <Search size={32} className="text-blue" />
+          </div>
           <p className="text-navy font-semibold mb-2">No report data found</p>
           <p className="text-slate-gray text-sm mb-4">
             Upload a screenshot to get started.
@@ -57,7 +60,7 @@ export default function Results() {
             to="/report"
             className="inline-flex items-center gap-2 bg-blue text-white font-semibold px-6 py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200"
           >
-            <span>🛡️</span>
+            <Shield size={18} />
             Report Abuse
           </Link>
         </div>
@@ -66,6 +69,7 @@ export default function Results() {
   }
 
   const sev = severityConfig[report.severity] || severityConfig.pending;
+  const SeverityIcon = sev.icon;
 
   return (
     <div className="min-h-[calc(100vh-56px)]">
@@ -87,7 +91,9 @@ export default function Results() {
           className={`${sev.bg} border ${sev.border} rounded-2xl p-6 mb-6 animate-fade-in-up`}
         >
           <div className="flex items-center gap-4">
-            <span className="text-4xl">{sev.icon}</span>
+            <div className="w-12 h-12 rounded-xl bg-white/80 flex items-center justify-center">
+              <SeverityIcon size={24} className={sev.text} />
+            </div>
             <div>
               <p className={`text-sm font-medium ${sev.text} uppercase tracking-wide`}>
                 Risk Level
@@ -101,7 +107,9 @@ export default function Results() {
         {/* AI Message Card */}
         <div className="ai-card mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
           <div className="flex items-start gap-3 mb-4">
-            <span className="text-xl">🤖</span>
+            <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+              <Bot size={16} className="text-blue" />
+            </div>
             <div>
               <p className="font-semibold text-navy">Mlinzi AI Analysis</p>
               <p className="text-sm text-slate-gray">What we found in the message</p>
@@ -121,7 +129,9 @@ export default function Results() {
         {/* Guidance Card */}
         <div className="bg-white border border-soft rounded-2xl p-6 mb-6 shadow-sm animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-start gap-3 mb-3">
-            <span className="text-xl">💙</span>
+            <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+              <Heart size={16} className="text-blue" />
+            </div>
             <div>
               <p className="font-semibold text-navy">
                 What You Should Do
@@ -136,9 +146,12 @@ export default function Results() {
         {/* Extracted Text */}
         {report.extracted_text && (
           <div className="bg-cloud rounded-2xl p-6 mb-6 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-            <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-2">
-              Extracted Text
-            </p>
+            <div className="flex items-center gap-2 mb-2">
+              <FileText size={14} className="text-slate-gray" />
+              <p className="text-xs font-medium text-slate-gray uppercase tracking-wide">
+                Extracted Text
+              </p>
+            </div>
             <p className="text-sm text-charcoal italic whitespace-pre-wrap bg-white p-4 rounded-xl border border-soft">
               "{report.extracted_text}"
             </p>
@@ -149,7 +162,9 @@ export default function Results() {
         {!showEscalation ? (
           <div className="bg-blue-bg border border-blue/10 rounded-2xl p-6 mb-6 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
             <div className="flex items-start gap-3 mb-4">
-              <span className="text-xl">🤝</span>
+              <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+                <HandHelping size={16} className="text-blue" />
+              </div>
               <div>
                 <p className="font-semibold text-navy">
                   Would you like help from a trained child protection counselor?
@@ -187,14 +202,14 @@ export default function Results() {
             to="/report"
             className="flex-1 text-center bg-blue text-white font-semibold py-4 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
           >
-            <span className="text-lg">🛡️</span>
+            <Shield size={18} />
             Report Another
           </Link>
           <Link
             to="/"
             className="flex-1 text-center bg-white border border-navy text-navy font-semibold py-4 rounded-2xl hover:bg-cloud transition-all duration-200 flex items-center justify-center gap-2"
           >
-            <span className="text-lg">🏠</span>
+            <Home size={18} />
             Back to Home
           </Link>
         </div>

@@ -1,27 +1,28 @@
 import { Link } from "react-router-dom";
+import { Shield, Brain, Heart, Lock, Ear, Hand, Zap, ArrowRight } from "lucide-react";
 import PatternDivider from "../components/PatternDivider";
 
 const features = [
   {
-    icon: "📸",
+    icon: Shield,
     title: "Upload a Screenshot",
     desc: "Take a screenshot of any harmful message and upload it here. You are safe.",
     color: "bg-blue-bg",
   },
   {
-    icon: "🤖",
+    icon: Brain,
     title: "AI Reads & Classifies",
     desc: "Our AI instantly analyzes the message to understand the risk and keep you informed.",
     color: "bg-green-50",
   },
   {
-    icon: "🛡️",
+    icon: Heart,
     title: "Get Protection",
     desc: "Receive clear, simple guidance on what to do next. You are never alone.",
     color: "bg-gold-50",
   },
   {
-    icon: "🔒",
+    icon: Lock,
     title: "100% Anonymous",
     desc: "No personal data needed. Your identity is always protected and private.",
     color: "bg-slate-50",
@@ -29,10 +30,10 @@ const features = [
 ];
 
 const values = [
-  { icon: "❤️", label: "Protect", desc: "We safeguard children from digital harm." },
-  { icon: "👂", label: "Listen", desc: "Every child deserves to be heard." },
-  { icon: "🤝", label: "Support", desc: "Guidance, counseling, and connection." },
-  { icon: "💪", label: "Empower", desc: "Confidence and digital safety knowledge." },
+  { icon: Shield, label: "Protect", desc: "We safeguard children from digital harm." },
+  { icon: Ear, label: "Listen", desc: "Every child deserves to be heard." },
+  { icon: Hand, label: "Support", desc: "Guidance, counseling, and connection." },
+  { icon: Zap, label: "Empower", desc: "Confidence and digital safety knowledge." },
 ];
 
 export default function Home() {
@@ -75,8 +76,9 @@ export default function Home() {
             to="/report"
             className="inline-flex items-center gap-2 bg-blue text-white font-semibold px-8 py-4 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-lg"
           >
-            <span className="text-xl">🛡️</span>
+            <Shield size={20} />
             Report Online Abuse
+            <ArrowRight size={18} />
           </Link>
 
           <p className="mt-4 text-sm text-blue-200">
@@ -99,17 +101,22 @@ export default function Home() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((f, i) => (
-            <div
-              key={f.title}
-              className={`${f.color} rounded-2xl p-6 text-center animate-fade-in-up`}
-              style={{ animationDelay: `${i * 0.1}s` }}
-            >
-              <div className="text-4xl mb-3">{f.icon}</div>
-              <h3 className="font-semibold text-navy mb-2">{f.title}</h3>
-              <p className="text-sm text-slate-gray leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
+          {features.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div
+                key={f.title}
+                className={`${f.color} rounded-2xl p-6 text-center animate-fade-in-up`}
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
+                  <Icon size={24} className="text-navy" />
+                </div>
+                <h3 className="font-semibold text-navy mb-2">{f.title}</h3>
+                <p className="text-sm text-slate-gray leading-relaxed">{f.desc}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -121,13 +128,18 @@ export default function Home() {
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((v) => (
-              <div key={v.label} className="text-center">
-                <div className="text-3xl mb-3">{v.icon}</div>
-                <h3 className="font-semibold text-white mb-1">{v.label}</h3>
-                <p className="text-sm text-blue-200">{v.desc}</p>
-              </div>
-            ))}
+            {values.map((v) => {
+              const Icon = v.icon;
+              return (
+                <div key={v.label} className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/10 flex items-center justify-center">
+                    <Icon size={24} className="text-white" />
+                  </div>
+                  <h3 className="font-semibold text-white mb-1">{v.label}</h3>
+                  <p className="text-sm text-blue-200">{v.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -138,7 +150,9 @@ export default function Home() {
       <section className="py-16 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <div className="bg-blue-bg rounded-2xl p-8 border border-blue/10">
-            <div className="text-3xl mb-4">💙</div>
+            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-blue/10 flex items-center justify-center">
+              <Heart size={24} className="text-blue" />
+            </div>
             <h3 className="text-xl font-bold text-navy mb-3">
               Every child. Everywhere. Protected.
             </h3>
@@ -151,6 +165,7 @@ export default function Home() {
               to="/report"
               className="inline-flex items-center gap-2 bg-blue text-white font-semibold px-6 py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200"
             >
+              <Shield size={18} />
               Get Help Now
             </Link>
           </div>

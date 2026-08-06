@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Upload, Camera, AlertTriangle, CheckCircle, Loader2, Shield } from "lucide-react";
 import { uploadScreenshot, submitManualReport } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
 
@@ -143,7 +144,9 @@ export default function ReportAbuse() {
               </div>
             ) : (
               <div>
-                <div className="text-5xl mb-4">📸</div>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-bg flex items-center justify-center">
+                  <Camera size={32} className="text-blue" />
+                </div>
                 <p className="font-semibold text-navy mb-2">
                   Drop your screenshot here
                 </p>
@@ -159,9 +162,9 @@ export default function ReportAbuse() {
 
           {/* Error */}
           {error && (
-            <div className="mt-4 p-4 bg-red-soft border border-red/20 rounded-2xl text-red text-sm animate-fade-in-up">
-              <span className="mr-2">⚠️</span>
-              {error}
+            <div className="mt-4 p-4 bg-red-soft border border-red/20 rounded-2xl text-red text-sm animate-fade-in-up flex items-center gap-2">
+              <AlertTriangle size={16} />
+              <span>{error}</span>
               <button
                 type="button"
                 onClick={() => {
@@ -199,27 +202,12 @@ export default function ReportAbuse() {
           >
             {loading ? (
               <>
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    fill="none"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
+                <Loader2 size={20} className="animate-spin" />
                 Analyzing your screenshot...
               </>
             ) : (
               <>
-                <span className="text-xl">🤖</span>
+                <Upload size={20} />
                 Upload & Analyze
               </>
             )}
@@ -229,7 +217,7 @@ export default function ReportAbuse() {
         {/* Reassurance */}
         <div className="mt-6 text-center">
           <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
-            <span className="text-green">✓</span>
+            <CheckCircle size={16} className="text-green" />
             <span className="text-sm text-green font-medium">
               100% anonymous — no personal data collected
             </span>
@@ -239,7 +227,9 @@ export default function ReportAbuse() {
         {/* Help text */}
         <div className="mt-8 ai-card">
           <div className="flex items-start gap-3">
-            <span className="text-xl mt-0.5">💙</span>
+            <div className="w-8 h-8 rounded-lg bg-blue/10 flex items-center justify-center flex-shrink-0">
+              <Shield size={16} className="text-blue" />
+            </div>
             <div>
               <p className="font-semibold text-navy mb-1">
                 You did the right thing by asking for help.
