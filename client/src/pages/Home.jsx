@@ -137,14 +137,14 @@ export default function Home() {
       <PatternDivider />
 
       {/* Video Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-navy mb-3">
-              Watch How Mlinzi Works
+              The Problem We're Solving
             </h2>
             <p className="text-slate-gray max-w-lg mx-auto">
-              See how we're protecting children across Rwanda and Africa.
+              Children across Africa face growing threats online — from cyberbullying to sextortion. Most suffer in silence.
             </p>
           </div>
 
@@ -159,10 +159,17 @@ export default function Home() {
             </video>
           </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-slate-gray">
-              A UNICEF Innovation Project — Protecting children in the digital world
-            </p>
+          <div className="mt-8 grid sm:grid-cols-3 gap-6">
+            {[
+              { stat: "1 in 3", label: "children experience online bullying" },
+              { stat: "80%", label: "of cases go unreported" },
+              { stat: "0", label: "child should feel alone" },
+            ].map((item, i) => (
+              <div key={i} className="text-center">
+                <p className="text-3xl font-bold text-[#2E7D32]">{item.stat}</p>
+                <p className="text-sm text-slate-gray mt-1">{item.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -224,9 +231,8 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-[#1B5E20] py-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2.5 mb-3">
-            <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-8 w-8 object-contain" />
-            <span className="text-lg font-bold text-white">Mlinzi</span>
+          <div className="flex items-center justify-center mb-3">
+            <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-10 object-contain" />
           </div>
           <p className="text-sm text-[#A5D6A7] mb-2">
             AI-powered child digital protection platform
