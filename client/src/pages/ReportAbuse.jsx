@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadScreenshot } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
@@ -35,6 +35,25 @@ export default function ReportAbuse() {
     const dropped = e.dataTransfer.files[0];
     handleFile(dropped);
   }
+
+  function handlePaste(e) {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        e.preventDefault();
+        const blob = item.getAsFile();
+        handleFile(blob);
+        return;
+      }
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("paste", handlePaste);
+    return () => document.removeEventListener("paste", handlePaste);
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -122,7 +141,10 @@ export default function ReportAbuse() {
                   Drop your screenshot here
                 </p>
                 <p className="text-sm text-slate-gray">
-                  or click to browse (jpg, png, gif, webp — max 5MB)
+                  or click to browse, or paste from clipboard (Ctrl+V)
+                </p>
+                <p className="text-xs text-slate-gray mt-2">
+                  jpg, png, gif, webp — max 5MB
                 </p>
               </div>
             )}
