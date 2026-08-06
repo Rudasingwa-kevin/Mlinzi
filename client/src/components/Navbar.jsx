@@ -22,8 +22,8 @@ export default function Navbar() {
 
   const getLinks = () => {
     if (!user) return publicLinks;
-    if (user.role === "counselor") return [...publicLinks, ...counselorLinks];
-    if (user.role === "national_society") return [...publicLinks, ...nationalLinks];
+    if (user.role === "counselor") return counselorLinks;
+    if (user.role === "national_society") return nationalLinks;
     return publicLinks;
   };
 

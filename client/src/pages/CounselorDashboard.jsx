@@ -2,22 +2,22 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCounselorCases, getUnassignedCases, claimCase } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
-import { Loader2, ClipboardList, RefreshCw } from "lucide-react";
+import { Loader2, ClipboardList, RefreshCw, Users, AlertCircle, Clock, MapPin, Phone, Eye, Hand } from "lucide-react";
 
 const severityConfig = {
-  low: { bg: "bg-green-50", text: "text-green", label: "Low" },
-  medium: { bg: "bg-yellow-50", text: "text-gold", label: "Medium" },
-  high: { bg: "bg-red-soft", text: "text-red", label: "High" },
+  low: { bg: "bg-emerald-100", text: "text-emerald-700", dot: "bg-emerald-500", label: "Low" },
+  medium: { bg: "bg-amber-100", text: "text-amber-700", dot: "bg-amber-500", label: "Medium" },
+  high: { bg: "bg-red-100", text: "text-red-700", dot: "bg-red-500", label: "High" },
 };
 
 const statusConfig = {
-  new: { bg: "bg-green-50", text: "text-blue", label: "New" },
-  under_review: { bg: "bg-purple-50", text: "text-purple-600", label: "Under Review" },
-  resolved: { bg: "bg-green-50", text: "text-green", label: "Resolved" },
+  new: { bg: "bg-blue-100", text: "text-blue-700", label: "New" },
+  under_review: { bg: "bg-purple-100", text: "text-purple-700", label: "In Review" },
+  resolved: { bg: "bg-emerald-100", text: "text-emerald-700", label: "Resolved" },
 };
 
 const contactLabels = {
-  phone: "Phone Call",
+  phone: "Phone",
   sms: "SMS",
   whatsapp: "WhatsApp",
   email: "Email",
@@ -64,58 +64,91 @@ export default function CounselorDashboard() {
   const reviewCount = myCases.filter((c) => c.status === "under_review").length;
 
   return (
-    <div className="min-h-[calc(100vh-56px)]">
+    <div className="min-h-[calc(100vh-56px)] bg-cloud">
       {/* Header */}
-      <section className="bg-navy py-10 px-4">
+      <section className="bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#1B5E20] py-12 px-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-2">Counselor Dashboard</h1>
-          <p className="text-blue-200">
-            Manage referrals and support children in need.
-          </p>
-
-          {/* Quick stats */}
-          <div className="flex gap-4 mt-6">
-            <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-2xl">
-              <p className="text-2xl font-bold text-white">{myCases.length}</p>
-              <p className="text-xs text-blue-200">My Cases</p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-white/20 p-2 rounded-xl">
+              <Users size={24} className="text-white" />
             </div>
-            <div className="bg-blue/20 backdrop-blur-sm px-4 py-2 rounded-2xl">
-              <p className="text-2xl font-bold text-white">{newCount}</p>
-              <p className="text-xs text-blue-200">New</p>
-            </div>
-            <div className="bg-purple/20 backdrop-blur-sm px-4 py-2 rounded-2xl">
-              <p className="text-2xl font-bold text-white">{reviewCount}</p>
-              <p className="text-xs text-blue-200">In Review</p>
-            </div>
-            <div className="bg-green/20 backdrop-blur-sm px-4 py-2 rounded-2xl">
-              <p className="text-2xl font-bold text-white">{unassignedCases.length}</p>
-              <p className="text-xs text-blue-200">Unclaimed</p>
-            </div>
+            <h1 className="text-3xl font-bold text-white">Counselor Dashboard</h1>
           </div>
+          <p className="text-emerald-100 ml-12">
+            Manage referrals and support children in need
+          </p>
         </div>
       </section>
 
       <PatternDivider />
 
       <div className="max-w-6xl mx-auto py-8 px-4">
+        {/* Stat Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 -mt-6">
+          <div className="bg-white rounded-2xl border border-soft p-5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-100 p-2.5 rounded-xl">
+                <ClipboardList size={20} className="text-blue-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-navy">{myCases.length}</p>
+                <p className="text-xs text-slate-gray">My Cases</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-soft p-5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="bg-emerald-100 p-2.5 rounded-xl">
+                <AlertCircle size={20} className="text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-navy">{newCount}</p>
+                <p className="text-xs text-slate-gray">New Cases</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-soft p-5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="bg-purple-100 p-2.5 rounded-xl">
+                <Clock size={20} className="text-purple-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-navy">{reviewCount}</p>
+                <p className="text-xs text-slate-gray">In Review</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-soft p-5 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="bg-amber-100 p-2.5 rounded-xl">
+                <Hand size={20} className="text-amber-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-navy">{unassignedCases.length}</p>
+                <p className="text-xs text-slate-gray">Unclaimed</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab("my-cases")}
-            className={`px-5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+            className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
               activeTab === "my-cases"
-                ? "bg-blue text-white shadow-md"
-                : "bg-cloud text-slate-gray hover:bg-soft"
+                ? "bg-[#2E7D32] text-white shadow-md"
+                : "bg-white text-slate-gray hover:bg-cloud border border-soft"
             }`}
           >
             My Cases ({myCases.length})
           </button>
           <button
             onClick={() => setActiveTab("unassigned")}
-            className={`px-5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+            className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
               activeTab === "unassigned"
-                ? "bg-blue text-white shadow-md"
-                : "bg-cloud text-slate-gray hover:bg-soft"
+                ? "bg-[#2E7D32] text-white shadow-md"
+                : "bg-white text-slate-gray hover:bg-cloud border border-soft"
             }`}
           >
             Unclaimed ({unassignedCases.length})
@@ -127,7 +160,7 @@ export default function CounselorDashboard() {
           <select
             value={filters.status}
             onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))}
-            className="border border-soft rounded-2xl px-4 py-2.5 text-sm bg-white focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
+            className="border border-soft rounded-xl px-4 py-2.5 text-sm bg-white focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
           >
             <option value="">All Statuses</option>
             <option value="new">New</option>
@@ -136,87 +169,88 @@ export default function CounselorDashboard() {
           </select>
           <button
             onClick={loadCases}
-            className="bg-green text-white px-5 py-2.5 rounded-2xl text-sm font-medium hover:bg-green-dark transition-all duration-200 shadow-sm flex items-center gap-2"
+            className="bg-white border border-soft text-navy px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-cloud transition-all duration-200 shadow-sm flex items-center gap-2"
           >
             <RefreshCw size={14} />
             Refresh
           </button>
         </div>
 
-        {/* Cases table */}
+        {/* Cases */}
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-16">
             <div className="inline-flex items-center gap-3 text-slate-gray">
-              <Loader2 className="animate-spin h-5 w-5" />
+              <Loader2 className="animate-spin h-6 w-6" />
               Loading cases...
             </div>
           </div>
         ) : activeCases.length === 0 ? (
-          <div className="text-center py-12">
-            <ClipboardList size={48} className="mx-auto text-soft mb-4" />
-            <p className="text-navy font-semibold">No cases found</p>
-            <p className="text-sm text-slate-gray">
+          <div className="text-center py-16 bg-white rounded-2xl border border-soft">
+            <ClipboardList size={56} className="mx-auto text-soft mb-4" />
+            <p className="text-navy font-semibold text-lg">No cases found</p>
+            <p className="text-sm text-slate-gray mt-1">
               {activeTab === "my-cases"
                 ? "You don't have any assigned cases yet."
                 : "All cases have been claimed."}
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-soft overflow-hidden shadow-sm">
-            <table className="w-full text-sm">
-              <thead className="bg-cloud border-b border-soft">
-                <tr>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">Case ID</th>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">District</th>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">Category</th>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">Severity</th>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">Contact</th>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">Status</th>
-                  <th className="text-left px-5 py-4 font-semibold text-navy">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-soft">
-                {activeCases.map((c) => {
-                  const sev = severityConfig[c.severity] || { bg: "bg-cloud", text: "text-slate-gray", label: c.severity };
-                  const stat = statusConfig[c.status] || { bg: "bg-cloud", text: "text-slate-gray", label: c.status };
-                  return (
-                    <tr key={c.id} className="hover:bg-cloud transition-colors">
-                      <td className="px-5 py-4 font-mono text-slate-gray">#{c.id}</td>
-                      <td className="px-5 py-4 text-navy font-medium">{c.district}</td>
-                      <td className="px-5 py-4 text-navy font-medium">{c.category}</td>
-                      <td className="px-5 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${sev.bg} ${sev.text}`}>
+          <div className="grid gap-4">
+            {activeCases.map((c) => {
+              const sev = severityConfig[c.severity] || { bg: "bg-gray-100", text: "text-gray-700", dot: "bg-gray-500", label: c.severity };
+              const stat = statusConfig[c.status] || { bg: "bg-gray-100", text: "text-gray-700", label: c.status };
+              return (
+                <div key={c.id} className="bg-white rounded-2xl border border-soft p-5 hover:shadow-md transition-all">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="font-mono text-sm text-slate-gray bg-cloud px-2 py-1 rounded-lg">#{c.id}</span>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${sev.bg} ${sev.text}`}>
+                          <span className={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot} mr-1.5`}></span>
                           {sev.label}
                         </span>
-                      </td>
-                      <td className="px-5 py-4 text-slate-gray">{contactLabels[c.preferred_contact]}</td>
-                      <td className="px-5 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${stat.bg} ${stat.text}`}>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${stat.bg} ${stat.text}`}>
                           {stat.label}
                         </span>
-                      </td>
-                      <td className="px-5 py-4">
-                        {activeTab === "unassigned" ? (
-                          <button
-                            onClick={() => handleClaimCase(c.id)}
-                            className="text-blue font-medium hover:text-blue-dark transition-colors"
-                          >
-                            Claim
-                          </button>
-                        ) : (
-                          <Link
-                            to={`/counselor/${c.id}`}
-                            className="text-blue font-medium hover:text-blue-dark transition-colors"
-                          >
-                            View Details
-                          </Link>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-slate-gray">
+                        <span className="flex items-center gap-1.5">
+                          <MapPin size={14} className="text-[#2E7D32]" />
+                          {c.district}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <AlertCircle size={14} className="text-[#2E7D32]" />
+                          {c.category}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Phone size={14} className="text-[#2E7D32]" />
+                          {contactLabels[c.preferred_contact]}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      {activeTab === "unassigned" ? (
+                        <button
+                          onClick={() => handleClaimCase(c.id)}
+                          className="bg-[#2E7D32] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#1B5E20] transition-all flex items-center gap-2"
+                        >
+                          <Hand size={16} />
+                          Claim
+                        </button>
+                      ) : (
+                        <Link
+                          to={`/counselor/${c.id}`}
+                          className="bg-cloud text-navy px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-soft transition-all flex items-center gap-2 border border-soft"
+                        >
+                          <Eye size={16} />
+                          View Details
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
