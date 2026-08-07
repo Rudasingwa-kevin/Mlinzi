@@ -69,8 +69,6 @@ export default function Home() {
         <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-white/5 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
 
         <div className="max-w-3xl mx-auto text-center relative z-10">
-          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-20 mx-auto mb-6 object-contain drop-shadow-lg" />
-
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
             <Globe size={14} className="text-white" />
             <span className="text-sm font-medium text-white">UNICEF Innovation Project</span>

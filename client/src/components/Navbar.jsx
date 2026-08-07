@@ -33,7 +33,7 @@ export default function Navbar() {
     <nav className="bg-[#1B5E20] shadow-lg">
       <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
         <Link to="/" className="flex items-center group">
-          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-12 object-contain" />
+          <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-36 object-contain" />
         </Link>
 
         <div className="flex gap-1 items-center">
@@ -45,7 +45,7 @@ export default function Navbar() {
                 to={link.to}
                 className={`px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${pathname === link.to
                   ? "bg-[#2E7D32] text-white shadow-md"
-                    : "text-gray-300 hover:bg-[#2E7D32] hover:text-white"
+                  : "text-gray-300 hover:bg-[#2E7D32] hover:text-white"
                   }`}
               >
                 <Icon size={16} />
@@ -72,7 +72,7 @@ export default function Navbar() {
               to="/login"
               className={`px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ml-2 ${pathname === "/login"
                 ? "bg-[#2E7D32] text-white shadow-md"
-                    : "text-gray-100 hover:bg-[#2E7D32] hover:text-white"
+                : "text-gray-100 hover:bg-[#2E7D32] hover:text-white"
                 }`}
             >
               <LogIn size={16} />
