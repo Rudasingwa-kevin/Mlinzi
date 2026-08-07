@@ -4,23 +4,27 @@ const Report = require("../models/Report");
 // POST /api/reports/manual
 async function manualReport(req, res) {
   try {
-    const { text } = req.body;
+    const { text, channel } = req.body;
     if (!text || !text.trim()) {
       return res.status(400).json({ error: "Text is required" });
     }
 
     const extractedText = text.trim();
 
-    let category, severity, guidance;
+    let category, severity, confidence, recommendedAction, guidance;
     try {
       const analysis = await analyzeText(extractedText);
       category = analysis.category;
       severity = analysis.severity;
+      confidence = analysis.confidence;
+      recommendedAction = analysis.recommendedAction;
       guidance = analysis.guidance;
     } catch (aiErr) {
       console.error("AI analysis failed:", aiErr.message);
       category = "pending_analysis";
       severity = "pending";
+      confidence = null;
+      recommendedAction = "anonymous_report";
       guidance = "Automated analysis unavailable. A counselor will review this report.";
     }
 
@@ -29,7 +33,10 @@ async function manualReport(req, res) {
       extractedText,
       category,
       severity,
+      confidence,
+      recommendedAction,
       guidance,
+      channel: channel || "web",
       isAnonymous: true,
     });
 
@@ -51,20 +58,25 @@ async function uploadReport(req, res) {
     }
 
     const screenshotPath = `/uploads/${req.file.filename}`;
+    const channel = req.body.channel || "web";
 
-    let extractedText, category, severity, guidance;
+    let extractedText, category, severity, confidence, recommendedAction, guidance;
 
     try {
       const analysis = await analyzeImage(req.file.path);
       extractedText = analysis.extractedText;
       category = analysis.category;
       severity = analysis.severity;
+      confidence = analysis.confidence;
+      recommendedAction = analysis.recommendedAction;
       guidance = analysis.guidance;
     } catch (aiErr) {
       console.error("AI vision analysis failed:", aiErr.message);
       extractedText = "Could not analyze image";
       category = "pending_analysis";
       severity = "pending";
+      confidence = null;
+      recommendedAction = "anonymous_report";
       guidance = "Automated analysis unavailable. A counselor will review this report.";
     }
 
@@ -73,7 +85,10 @@ async function uploadReport(req, res) {
       extractedText,
       category,
       severity,
+      confidence,
+      recommendedAction,
       guidance,
+      channel,
       isAnonymous: true,
     });
 
@@ -90,11 +105,12 @@ async function uploadReport(req, res) {
 // GET /api/reports
 async function getReports(req, res) {
   try {
-    const { status, category, severity, limit, offset } = req.query;
+    const { status, category, severity, district, channel, limit, offset } = req.query;
     const reports = await Report.findAll({
-      status,
       category,
       severity,
+      district,
+      channel,
       limit: limit ? parseInt(limit, 10) : undefined,
       offset: offset ? parseInt(offset, 10) : undefined,
     });

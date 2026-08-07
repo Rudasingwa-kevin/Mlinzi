@@ -11,33 +11,43 @@ async function migrate() {
         full_name       VARCHAR(255) NOT NULL,
         role            VARCHAR(20) NOT NULL CHECK (role IN ('counselor', 'national_society')),
         is_approved     BOOLEAN DEFAULT FALSE,
+        phone           VARCHAR(30),
+        district        VARCHAR(100),
         created_at      TIMESTAMP DEFAULT NOW()
       )
     `);
 
-    // Add is_approved to existing users table
+    // Add new columns to existing users table
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_approved BOOLEAN DEFAULT FALSE`);
+    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(30)`);
+    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS district VARCHAR(100)`);
 
-    // Reports table
+    // Reports table (Phase 2: add channel, confidence, recommended_action)
     await pool.query(`
       CREATE TABLE IF NOT EXISTS reports (
-        id              SERIAL PRIMARY KEY,
-        screenshot_path TEXT,
-        extracted_text  TEXT,
-        category        VARCHAR(50),
-        severity        VARCHAR(20),
-        guidance        TEXT,
-        district        VARCHAR(100),
-        escalated       BOOLEAN DEFAULT FALSE,
-        is_anonymous    BOOLEAN DEFAULT TRUE,
-        created_at      TIMESTAMP DEFAULT NOW(),
-        updated_at      TIMESTAMP DEFAULT NOW()
+        id                  SERIAL PRIMARY KEY,
+        screenshot_path     TEXT,
+        extracted_text      TEXT,
+        category            VARCHAR(50),
+        severity            VARCHAR(20),
+        confidence          DECIMAL(5,2),
+        recommended_action  VARCHAR(30) DEFAULT 'guidance_only',
+        guidance            TEXT,
+        channel             VARCHAR(20) DEFAULT 'web',
+        district            VARCHAR(100),
+        escalated           BOOLEAN DEFAULT FALSE,
+        is_anonymous        BOOLEAN DEFAULT TRUE,
+        created_at          TIMESTAMP DEFAULT NOW(),
+        updated_at          TIMESTAMP DEFAULT NOW()
       )
     `);
 
     // Add new columns to existing reports table
     await pool.query(`ALTER TABLE reports ADD COLUMN IF NOT EXISTS district VARCHAR(100)`);
     await pool.query(`ALTER TABLE reports ADD COLUMN IF NOT EXISTS escalated BOOLEAN DEFAULT FALSE`);
+    await pool.query(`ALTER TABLE reports ADD COLUMN IF NOT EXISTS channel VARCHAR(20) DEFAULT 'web'`);
+    await pool.query(`ALTER TABLE reports ADD COLUMN IF NOT EXISTS confidence DECIMAL(5,2)`);
+    await pool.query(`ALTER TABLE reports ADD COLUMN IF NOT EXISTS recommended_action VARCHAR(30) DEFAULT 'guidance_only'`);
     await pool.query(`ALTER TABLE reports ALTER COLUMN screenshot_path DROP NOT NULL`);
 
     // Referral cases table
@@ -69,15 +79,49 @@ async function migrate() {
       )
     `);
 
+    // SMS/WhatsApp sessions - tracks conversation state per phone number
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS sms_sessions (
+        id              SERIAL PRIMARY KEY,
+        phone_number    VARCHAR(30) NOT NULL,
+        channel         VARCHAR(20) NOT NULL DEFAULT 'sms',
+        state           VARCHAR(30) DEFAULT 'idle',
+        report_id       INTEGER REFERENCES reports(id) ON DELETE SET NULL,
+        district        VARCHAR(100),
+        last_message    TEXT,
+        created_at      TIMESTAMP DEFAULT NOW(),
+        updated_at      TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    // Notifications table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS notifications (
+        id              SERIAL PRIMARY KEY,
+        recipient_type  VARCHAR(20) NOT NULL CHECK (recipient_type IN ('counselor', 'child')),
+        recipient_id    INTEGER,
+        channel         VARCHAR(20) NOT NULL CHECK (channel IN ('sms', 'whatsapp', 'email', 'in_app')),
+        title           VARCHAR(255),
+        message         TEXT NOT NULL,
+        read            BOOLEAN DEFAULT FALSE,
+        sent            BOOLEAN DEFAULT FALSE,
+        error           TEXT,
+        created_at      TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
     // Indexes
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_category     ON reports(category)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_severity     ON reports(severity)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_escalated    ON reports(escalated)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_channel      ON reports(channel)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_created_at   ON reports(created_at DESC)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_referral_status      ON referral_cases(status)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_referral_counselor   ON referral_cases(assigned_counselor_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_referral_district    ON referral_cases(district)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_referral_created     ON referral_cases(created_at DESC)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_sms_sessions_phone   ON sms_sessions(phone_number)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_notifications_recip  ON notifications(recipient_type, recipient_id)`);
 
     console.log("Database migration complete");
   } catch (err) {

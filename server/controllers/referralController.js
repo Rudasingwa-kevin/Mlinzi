@@ -2,6 +2,7 @@ const pool = require("../config/database");
 const ReferralCase = require("../models/ReferralCase");
 const CounselorNote = require("../models/CounselorNote");
 const Report = require("../models/Report");
+const { notifyCounselorNewCase, notifyHighRiskCase, notifyCaseStatusChange } = require("../services/notificationService");
 
 const RWANDA_DISTRICTS = [
   "Bugesera", "Gatsibo", "Kayonza", "Kirehe", "Ngoma", "Nyagatare", "Rwamagana",
@@ -43,6 +44,25 @@ exports.escalate = async (req, res) => {
     });
 
     await Report.updateEscalated(reportId);
+
+    // Notify counselors in the district
+    try {
+      if (report.severity === "high") {
+        await notifyHighRiskCase({ id: referral.id, district, category: report.category, severity: report.severity });
+      }
+      // Auto-assign to first available counselor in district
+      const counselorResult = await pool.query(
+        "SELECT id FROM users WHERE role = 'counselor' AND is_approved = TRUE AND district = $1 LIMIT 1",
+        [district]
+      );
+      if (counselorResult.rows.length > 0) {
+        const counselorId = counselorResult.rows[0].id;
+        await ReferralCase.assignCounselor(referral.id, counselorId);
+        await notifyCounselorNewCase(counselorId, { id: referral.id, district, category: report.category, severity: report.severity });
+      }
+    } catch (notifErr) {
+      console.error("Notification error (non-blocking):", notifErr.message);
+    }
 
     res.status(201).json({ referral });
   } catch (err) {
@@ -119,6 +139,14 @@ exports.updateCaseStatus = async (req, res) => {
     if (!caseData) {
       return res.status(404).json({ error: "Case not found" });
     }
+
+    // Notify on status change
+    try {
+      await notifyCaseStatusChange(req.params.id, status, req.user.id);
+    } catch (notifErr) {
+      console.error("Status change notification error:", notifErr.message);
+    }
+
     res.json({ case: caseData });
   } catch (err) {
     console.error("UpdateCaseStatus error:", err);
@@ -159,7 +187,30 @@ exports.getNationalAnalytics = async (req, res) => {
   try {
     const reportStats = await Report.getStats();
     const referralStats = await ReferralCase.getStats();
-    res.json({ reportStats, referralStats });
+
+    // Additional analytics: response time breakdown, district heatmap data
+    const responseTimeBreakdown = await pool.query(`
+      SELECT
+        district,
+        COUNT(*) as total_cases,
+        AVG(EXTRACT(EPOCH FROM (first_response_at - created_at)) / 3600) as avg_response_hours,
+        AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 3600) as avg_resolution_hours
+      FROM referral_cases
+      WHERE first_response_at IS NOT NULL
+      GROUP BY district
+      ORDER BY avg_response_hours ASC
+    `);
+
+    const channelBreakdown = await pool.query(`
+      SELECT channel, COUNT(*) as count FROM reports GROUP BY channel ORDER BY count DESC
+    `);
+
+    res.json({
+      reportStats,
+      referralStats,
+      responseTimeByDistrict: responseTimeBreakdown.rows,
+      channelBreakdown: channelBreakdown.rows,
+    });
   } catch (err) {
     console.error("GetNationalAnalytics error:", err);
     res.status(500).json({ error: "Failed to fetch analytics" });

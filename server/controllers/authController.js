@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "mlinzi-dev-secret-change-in-produc
 
 exports.register = async (req, res) => {
   try {
-    const { email, password, full_name, role } = req.body;
+    const { email, password, full_name, role, district, phone } = req.body;
 
     if (!email || !password || !full_name || !role) {
       return res.status(400).json({ error: "All fields are required" });
@@ -24,8 +24,8 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      "INSERT INTO users (email, password, full_name, role) VALUES ($1, $2, $3, $4) RETURNING id, email, full_name, role, is_approved",
-      [email, hashedPassword, full_name, role]
+      "INSERT INTO users (email, password, full_name, role, district, phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email, full_name, role, is_approved, district, phone",
+      [email, hashedPassword, full_name, role, district || null, phone || null]
     );
 
     const user = result.rows[0];

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Brain, Heart, Lock, Ear, Hand, Zap, ArrowRight, Globe } from "lucide-react";
+import { Shield, Brain, Heart, Lock, Ear, Hand, Zap, ArrowRight, Globe, MessageSquare, Smartphone } from "lucide-react";
 import PatternDivider from "../components/PatternDivider";
 
 const features = [
@@ -129,6 +129,46 @@ export default function Home() {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      <PatternDivider />
+
+      {/* Multichannel Access */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy mb-3">
+              Access Mlinzi Your Way
+            </h2>
+            <p className="text-slate-gray max-w-lg mx-auto">
+              No smartphone? No internet? No problem. Mlinzi works across multiple channels so every child can get help.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
+                <Globe size={24} className="text-navy" />
+              </div>
+              <h3 className="font-semibold text-navy mb-2">Web App</h3>
+              <p className="text-sm text-slate-gray leading-relaxed">Upload screenshots and get instant AI analysis on any device with a browser.</p>
+            </div>
+            <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
+                <Smartphone size={24} className="text-navy" />
+              </div>
+              <h3 className="font-semibold text-navy mb-2">SMS</h3>
+              <p className="text-sm text-slate-gray leading-relaxed">Text Mlinzi from any basic phone. Get safety advice and connect with counselors via SMS menus.</p>
+            </div>
+            <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
+                <MessageSquare size={24} className="text-navy" />
+              </div>
+              <h3 className="font-semibold text-navy mb-2">WhatsApp</h3>
+              <p className="text-sm text-slate-gray leading-relaxed">Send messages, screenshots, and voice notes through WhatsApp for AI-powered guidance.</p>
+            </div>
+          </div>
         </div>
       </section>
 

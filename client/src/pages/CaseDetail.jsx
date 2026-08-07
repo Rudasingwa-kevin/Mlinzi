@@ -2,11 +2,19 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getCaseById, updateCaseStatus, addCaseNote } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
+import { ArrowLeft, FileText, Heart, Clock, MapPin, MessageSquare, AlertTriangle, CheckCircle, AlertCircle, Info, Search } from "lucide-react";
 
 const severityConfig = {
-  low: { bg: "bg-green-50", text: "text-green", label: "Low Risk" },
-  medium: { bg: "bg-yellow-50", text: "text-gold", label: "Medium Risk" },
-  high: { bg: "bg-red-soft", text: "text-red", label: "High Risk" },
+  low: { bg: "bg-green-50", text: "text-green", label: "Low Risk", icon: CheckCircle },
+  medium: { bg: "bg-gold-50", text: "text-gold", label: "Medium Risk", icon: AlertTriangle },
+  high: { bg: "bg-red-soft", text: "text-red", label: "High Risk", icon: AlertCircle },
+  pending: { bg: "bg-slate-50", text: "text-slate-gray", label: "Analyzing...", icon: Clock },
+};
+
+const statusConfig = {
+  new: { bg: "bg-blue-100", text: "text-blue-700", label: "New" },
+  under_review: { bg: "bg-purple-100", text: "text-purple-700", label: "In Review" },
+  resolved: { bg: "bg-emerald-100", text: "text-emerald-700", label: "Resolved" },
 };
 
 const contactLabels = {
@@ -14,6 +22,19 @@ const contactLabels = {
   sms: "SMS",
   whatsapp: "WhatsApp",
   email: "Email",
+};
+
+const channelLabels = {
+  web: "Web",
+  sms: "SMS",
+  whatsapp: "WhatsApp",
+};
+
+const recommendedActionLabels = {
+  guidance_only: { label: "Guidance Only", color: "text-green", bg: "bg-green-50" },
+  anonymous_report: { label: "Anonymous Report", color: "text-gold", bg: "bg-gold-50" },
+  connect_counselor: { label: "Connect to Counselor", color: "text-blue", bg: "bg-blue-50" },
+  emergency_referral: { label: "Emergency Referral", color: "text-red", bg: "bg-red-soft" },
 };
 
 export default function CaseDetail() {
@@ -42,7 +63,7 @@ export default function CaseDetail() {
   async function handleStatusChange(newStatus) {
     try {
       const updated = await updateCaseStatus(id, newStatus);
-      setCaseData(updated);
+      setCaseData((prev) => ({ ...prev, ...updated.case }));
     } catch (err) {
       console.error("Failed to update status:", err);
     }
@@ -82,7 +103,9 @@ export default function CaseDetail() {
     return (
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">🔍</div>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-50 flex items-center justify-center">
+            <Search size={32} className="text-blue" />
+          </div>
           <p className="text-navy font-semibold mb-2">Case not found</p>
           <Link to="/counselor" className="text-blue font-medium hover:text-blue-dark">
             Back to Dashboard
@@ -92,20 +115,33 @@ export default function CaseDetail() {
     );
   }
 
-  const sev = severityConfig[caseData.severity] || { bg: "bg-cloud", text: "text-slate-gray", label: caseData.severity };
+  const sev = severityConfig[caseData.severity] || { bg: "bg-cloud", text: "text-slate-gray", label: caseData.severity, icon: Info };
+  const SevIcon = sev.icon;
+  const recAction = recommendedActionLabels[caseData.recommended_action] || recommendedActionLabels.guidance_only;
 
   return (
     <div className="min-h-[calc(100vh-56px)]">
       {/* Header */}
       <section className="bg-navy py-10 px-4">
         <div className="max-w-4xl mx-auto">
-          <Link to="/counselor" className="text-blue-200 hover:text-white text-sm mb-4 inline-block">
-            ← Back to Dashboard
+          <Link to="/counselor" className="text-blue-200 hover:text-white text-sm mb-4 inline-flex items-center gap-1">
+            <ArrowLeft size={14} />
+            Back to Dashboard
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Case #{caseData.id}</h1>
-          <p className="text-blue-200">
-            {caseData.district} • {new Date(caseData.created_at).toLocaleDateString()}
-          </p>
+          <div className="flex flex-wrap items-center gap-3 text-blue-200 text-sm">
+            <span className="flex items-center gap-1">
+              <MapPin size={14} />
+              {caseData.district}
+            </span>
+            <span>•</span>
+            <span>{new Date(caseData.created_at).toLocaleDateString()}</span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <MessageSquare size={14} />
+              {channelLabels[caseData.channel] || "Web"}
+            </span>
+          </div>
         </div>
       </section>
 
@@ -115,33 +151,56 @@ export default function CaseDetail() {
         <div className="grid md:grid-cols-3 gap-6">
           {/* Left column - Case info */}
           <div className="md:col-span-2 space-y-6">
-            {/* Category & Severity */}
+            {/* Category, Severity & Confidence */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
               <h2 className="font-semibold text-navy mb-4">Report Details</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Category</p>
-                  <p className="text-navy font-semibold">{caseData.category}</p>
+                  <p className="text-navy font-semibold text-sm">{caseData.category}</p>
                 </div>
                 <div>
                   <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Severity</p>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${sev.bg} ${sev.text}`}>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${sev.bg} ${sev.text}`}>
+                    <SevIcon size={12} />
                     {sev.label}
                   </span>
                 </div>
+                {caseData.confidence != null && (
+                  <div>
+                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Confidence</p>
+                    <p className="text-navy font-semibold">{caseData.confidence}%</p>
+                  </div>
+                )}
+                {caseData.recommended_action && (
+                  <div>
+                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Recommended</p>
+                    <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${recAction.bg} ${recAction.color}`}>
+                      {recAction.label}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* AI Guidance */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-              <h2 className="font-semibold text-navy mb-4">AI Guidance</h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center">
+                  <Heart size={16} className="text-blue" />
+                </div>
+                <h2 className="font-semibold text-navy">AI Guidance</h2>
+              </div>
               <p className="text-slate-gray leading-relaxed">{caseData.guidance}</p>
             </div>
 
             {/* Extracted Text */}
             {caseData.extracted_text && (
               <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-                <h2 className="font-semibold text-navy mb-4">Extracted Text</h2>
+                <div className="flex items-center gap-2 mb-4">
+                  <FileText size={16} className="text-slate-gray" />
+                  <h2 className="font-semibold text-navy">Extracted Text</h2>
+                </div>
                 <p className="text-sm text-charcoal italic bg-cloud p-4 rounded-xl border border-soft whitespace-pre-wrap">
                   "{caseData.extracted_text}"
                 </p>
@@ -164,7 +223,6 @@ export default function CaseDetail() {
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
               <h2 className="font-semibold text-navy mb-4">Follow-up Notes</h2>
 
-              {/* Add note form */}
               <form onSubmit={handleAddNote} className="mb-6">
                 <textarea
                   value={newNote}
@@ -182,7 +240,6 @@ export default function CaseDetail() {
                 </button>
               </form>
 
-              {/* Notes list */}
               {notes.length === 0 ? (
                 <p className="text-sm text-slate-gray text-center py-4">No notes yet</p>
               ) : (
@@ -262,29 +319,70 @@ export default function CaseDetail() {
 
             {/* Timeline */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-              <h2 className="font-semibold text-navy mb-4">Timeline</h2>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Created</p>
-                  <p className="text-navy text-sm">{new Date(caseData.created_at).toLocaleString()}</p>
-                </div>
+              <div className="flex items-center gap-2 mb-4">
+                <Clock size={16} className="text-slate-gray" />
+                <h2 className="font-semibold text-navy">Timeline</h2>
+              </div>
+              <div className="relative ml-3 border-l-2 border-soft pl-6 space-y-4">
+                <TimelineItem
+                  label="Submitted"
+                  time={caseData.created_at}
+                  color="bg-blue"
+                  active
+                />
+                <TimelineItem
+                  label="AI Analyzed"
+                  time={caseData.created_at}
+                  color="bg-green"
+                  active
+                />
+                {caseData.assigned_counselor_id && (
+                  <TimelineItem
+                    label="Counselor Assigned"
+                    time={caseData.created_at}
+                    color="bg-purple"
+                    active
+                  />
+                )}
                 {caseData.first_response_at && (
-                  <div>
-                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">First Response</p>
-                    <p className="text-navy text-sm">{new Date(caseData.first_response_at).toLocaleString()}</p>
-                  </div>
+                  <TimelineItem
+                    label="First Response"
+                    time={caseData.first_response_at}
+                    color="bg-gold"
+                    active
+                  />
+                )}
+                {caseData.status === "under_review" && (
+                  <TimelineItem
+                    label="Under Review"
+                    time={new Date()}
+                    color="bg-purple"
+                    active
+                  />
                 )}
                 {caseData.resolved_at && (
-                  <div>
-                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Resolved</p>
-                    <p className="text-navy text-sm">{new Date(caseData.resolved_at).toLocaleString()}</p>
-                  </div>
+                  <TimelineItem
+                    label="Resolved"
+                    time={caseData.resolved_at}
+                    color="bg-green"
+                    active
+                  />
                 )}
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function TimelineItem({ label, time, color, active }) {
+  return (
+    <div className="relative">
+      <div className={`absolute -left-[29px] top-1 w-3 h-3 rounded-full ${color} ${active ? "" : "opacity-40"}`} />
+      <p className={`text-sm font-medium ${active ? "text-navy" : "text-slate-gray"}`}>{label}</p>
+      <p className="text-xs text-slate-gray">{new Date(time).toLocaleString()}</p>
     </div>
   );
 }

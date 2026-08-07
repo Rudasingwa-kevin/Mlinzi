@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { Search, CheckCircle, AlertTriangle, AlertCircle, Bot, Heart, FileText, Home, Shield, HandHelping } from "lucide-react";
+import { Search, CheckCircle, AlertTriangle, AlertCircle, Bot, Heart, FileText, Home, Shield, HandHelping, Info } from "lucide-react";
 import { getDistricts, escalateReport } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
 
@@ -39,6 +39,13 @@ const severityConfig = {
   },
 };
 
+const actionLabels = {
+  guidance_only: { label: "Safety Guidance", color: "text-green", bg: "bg-green-50", description: "Follow the safety advice below" },
+  anonymous_report: { label: "Anonymous Report", color: "text-gold", bg: "bg-gold-50", description: "This has been logged for national statistics" },
+  connect_counselor: { label: "Counselor Support", color: "text-blue", bg: "bg-blue-50", description: "We recommend connecting with a counselor" },
+  emergency_referral: { label: "Emergency", color: "text-red", bg: "bg-red-soft", description: "Please seek immediate help" },
+};
+
 export default function Results() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -70,6 +77,7 @@ export default function Results() {
 
   const sev = severityConfig[report.severity] || severityConfig.pending;
   const SeverityIcon = sev.icon;
+  const action = actionLabels[report.recommended_action] || actionLabels.guidance_only;
 
   return (
     <div className="min-h-[calc(100vh-56px)]">
@@ -78,7 +86,7 @@ export default function Results() {
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-3xl font-bold text-white mb-2">Analysis Results</h1>
           <p className="text-blue-200">
-            Our AI has reviewed the screenshot. Here is what we found.
+            Our AI has reviewed the message. Here is what we found.
           </p>
         </div>
       </section>
@@ -94,12 +102,29 @@ export default function Results() {
             <div className="w-12 h-12 rounded-xl bg-white/80 flex items-center justify-center">
               <SeverityIcon size={24} className={sev.text} />
             </div>
-            <div>
+            <div className="flex-1">
               <p className={`text-sm font-medium ${sev.text} uppercase tracking-wide`}>
                 Risk Level
               </p>
               <p className="text-2xl font-bold text-navy">{sev.label}</p>
               <p className="text-sm text-slate-gray mt-1">{sev.message}</p>
+            </div>
+            {report.confidence != null && (
+              <div className="text-right">
+                <p className="text-xs text-slate-gray uppercase">Confidence</p>
+                <p className="text-2xl font-bold text-navy">{report.confidence}%</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Recommended Action Banner */}
+        <div className={`${action.bg} border border-soft rounded-2xl p-4 mb-6 animate-fade-in-up`} style={{ animationDelay: "0.05s" }}>
+          <div className="flex items-center gap-3">
+            <Info size={18} className={action.color} />
+            <div>
+              <p className={`text-sm font-semibold ${action.color}`}>{action.label}</p>
+              <p className="text-xs text-slate-gray">{action.description}</p>
             </div>
           </div>
         </div>
@@ -267,7 +292,9 @@ function ReferralForm({ reportId }) {
   return (
     <div className="bg-white border border-green/20 rounded-2xl p-6 mb-6 animate-fade-in-up">
       <div className="flex items-start gap-3 mb-4">
-        <span className="text-xl">📋</span>
+        <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center flex-shrink-0">
+          <HandHelping size={16} className="text-blue" />
+        </div>
         <div>
           <p className="font-semibold text-navy">Connect with a Counselor</p>
           <p className="text-sm text-slate-gray">

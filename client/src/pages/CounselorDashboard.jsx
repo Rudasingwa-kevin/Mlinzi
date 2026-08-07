@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCounselorCases, getUnassignedCases, claimCase } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
-import { Loader2, ClipboardList, RefreshCw, Users, AlertCircle, Clock, MapPin, Phone, Eye, Hand } from "lucide-react";
+import { Loader2, ClipboardList, RefreshCw, Users, AlertCircle, Clock, MapPin, Phone, Eye, Hand, MessageSquare } from "lucide-react";
 
 const severityConfig = {
   low: { bg: "bg-emerald-100", text: "text-emerald-700", dot: "bg-emerald-500", label: "Low" },
@@ -21,6 +21,18 @@ const contactLabels = {
   sms: "SMS",
   whatsapp: "WhatsApp",
   email: "Email",
+};
+
+const channelLabels = {
+  web: "Web",
+  sms: "SMS",
+  whatsapp: "WhatsApp",
+};
+
+const channelColors = {
+  web: "bg-blue-100 text-blue-700",
+  sms: "bg-emerald-100 text-emerald-700",
+  whatsapp: "bg-purple-100 text-purple-700",
 };
 
 export default function CounselorDashboard() {
@@ -226,6 +238,12 @@ export default function CounselorDashboard() {
                           <Phone size={14} className="text-[#2E7D32]" />
                           {contactLabels[c.preferred_contact]}
                         </span>
+                        {c.channel && (
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${channelColors[c.channel] || "bg-gray-100 text-gray-700"}`}>
+                            <MessageSquare size={10} className="inline mr-1" />
+                            {channelLabels[c.channel] || c.channel}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div>

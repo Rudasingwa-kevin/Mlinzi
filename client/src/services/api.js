@@ -69,6 +69,7 @@ export async function getReports(filters = {}) {
   if (filters.status) params.append("status", filters.status);
   if (filters.category) params.append("category", filters.category);
   if (filters.severity) params.append("severity", filters.severity);
+  if (filters.channel) params.append("channel", filters.channel);
   const { data } = await api.get(`/reports?${params.toString()}`);
   return data.reports;
 }
@@ -126,6 +127,22 @@ export async function addCaseNote(id, note) {
 export async function getNationalAnalytics() {
   const { data } = await api.get("/national/analytics");
   return data;
+}
+
+// Notification functions
+export async function getNotifications(unreadOnly = false) {
+  const params = new URLSearchParams();
+  if (unreadOnly) params.append("unreadOnly", "true");
+  const { data } = await api.get(`/notifications?${params.toString()}`);
+  return data.notifications;
+}
+
+export async function markNotificationRead(id) {
+  await api.patch(`/notifications/${id}/read`);
+}
+
+export async function markAllNotificationsRead() {
+  await api.post("/notifications/read-all");
 }
 
 export default api;

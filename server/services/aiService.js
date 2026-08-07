@@ -22,6 +22,14 @@ Analyze the following text or image of an online message. Classify it into exact
 
 Assess severity as exactly ONE of: low, medium, high
 
+Provide a confidence score from 0 to 100 for your classification.
+
+Determine the recommended action based on severity and category:
+- "guidance_only" — for safe or low concern messages
+- "anonymous_report" — for medium severity that should be logged
+- "connect_counselor" — for high severity that needs human support
+- "emergency_referral" — for immediate danger situations
+
 Provide child-friendly guidance that a young person (age 10-17) can understand and follow.
 
 Also extract the text you can read from the message (in whatever language it is written).
@@ -31,6 +39,8 @@ IMPORTANT: Respond ONLY with valid JSON in this exact format, no extra text:
   "extractedText": "the text you read from the image, or the text provided",
   "category": "category name from the list above",
   "severity": "low | medium | high",
+  "confidence": 85,
+  "recommendedAction": "guidance_only | anonymous_report | connect_counselor | emergency_referral",
   "guidance": "clear, simple safety advice for the child"
 }`;
 
@@ -56,6 +66,42 @@ async function callZenAPI(messages) {
   return data.choices[0].message.content;
 }
 
+function validateAndNormalize(parsed, fallbackText) {
+  if (!parsed.category || !parsed.severity || !parsed.guidance) {
+    throw new Error("Missing required fields in AI response");
+  }
+
+  const validSeverities = ["low", "medium", "high"];
+  if (!validSeverities.includes(parsed.severity.toLowerCase())) {
+    parsed.severity = "low";
+  }
+  parsed.severity = parsed.severity.toLowerCase();
+
+  // Validate confidence (0-100)
+  let confidence = parseInt(parsed.confidence, 10);
+  if (isNaN(confidence) || confidence < 0 || confidence > 100) {
+    confidence = 70; // default moderate confidence
+  }
+
+  // Validate recommended action
+  const validActions = ["guidance_only", "anonymous_report", "connect_counselor", "emergency_referral"];
+  let recommendedAction = parsed.recommendedAction || "guidance_only";
+  if (!validActions.includes(recommendedAction)) {
+    // Auto-assign based on severity
+    const actionMap = { low: "guidance_only", medium: "anonymous_report", high: "connect_counselor" };
+    recommendedAction = actionMap[parsed.severity] || "guidance_only";
+  }
+
+  return {
+    extractedText: parsed.extractedText || fallbackText,
+    category: parsed.category,
+    severity: parsed.severity,
+    confidence,
+    recommendedAction,
+    guidance: parsed.guidance,
+  };
+}
+
 async function analyzeText(text) {
   const messages = [
     { role: "system", content: ANALYSIS_PROMPT },
@@ -67,23 +113,7 @@ async function analyzeText(text) {
 
   try {
     const parsed = JSON.parse(cleaned);
-
-    if (!parsed.category || !parsed.severity || !parsed.guidance) {
-      throw new Error("Missing required fields in AI response");
-    }
-
-    const validSeverities = ["low", "medium", "high"];
-    if (!validSeverities.includes(parsed.severity.toLowerCase())) {
-      parsed.severity = "low";
-    }
-    parsed.severity = parsed.severity.toLowerCase();
-
-    return {
-      extractedText: parsed.extractedText || text,
-      category: parsed.category,
-      severity: parsed.severity,
-      guidance: parsed.guidance,
-    };
+    return validateAndNormalize(parsed, text);
   } catch (parseErr) {
     console.error("AI response parse error:", parseErr.message);
     console.error("Raw AI response:", raw);
@@ -119,23 +149,7 @@ async function analyzeImage(imagePath) {
 
   try {
     const parsed = JSON.parse(cleaned);
-
-    if (!parsed.category || !parsed.severity || !parsed.guidance) {
-      throw new Error("Missing required fields in AI response");
-    }
-
-    const validSeverities = ["low", "medium", "high"];
-    if (!validSeverities.includes(parsed.severity.toLowerCase())) {
-      parsed.severity = "low";
-    }
-    parsed.severity = parsed.severity.toLowerCase();
-
-    return {
-      extractedText: parsed.extractedText || "",
-      category: parsed.category,
-      severity: parsed.severity,
-      guidance: parsed.guidance,
-    };
+    return validateAndNormalize(parsed, "");
   } catch (parseErr) {
     console.error("AI vision response parse error:", parseErr.message);
     console.error("Raw AI response:", raw);

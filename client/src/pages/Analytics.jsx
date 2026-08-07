@@ -1,12 +1,24 @@
 import { useState, useEffect } from "react";
 import { getNationalAnalytics } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
-import { Loader2, BarChart3, Folder, MapPin, ClipboardList, TrendingUp, AlertTriangle, Users, Clock, FileText } from "lucide-react";
+import { Loader2, BarChart3, Folder, MapPin, ClipboardList, TrendingUp, AlertTriangle, Users, Clock, FileText, Radio, Timer } from "lucide-react";
 
 const severityConfig = {
   low: { color: "bg-emerald-500", bg: "bg-emerald-100", text: "text-emerald-700", label: "Low Risk" },
   medium: { color: "bg-amber-500", bg: "bg-amber-100", text: "text-amber-700", label: "Medium Risk" },
   high: { color: "bg-red-500", bg: "bg-red-100", text: "text-red-700", label: "High Risk" },
+};
+
+const channelColors = {
+  web: "bg-blue-500",
+  sms: "bg-emerald-500",
+  whatsapp: "bg-purple-500",
+};
+
+const channelLabels = {
+  web: "Web",
+  sms: "SMS",
+  whatsapp: "WhatsApp",
 };
 
 export default function Analytics() {
@@ -50,7 +62,7 @@ export default function Analytics() {
     );
   }
 
-  const { reportStats, referralStats } = data;
+  const { reportStats, referralStats, responseTimeByDistrict, channelBreakdown } = data;
 
   return (
     <div className="min-h-[calc(100vh-56px)] bg-cloud">
@@ -102,7 +114,7 @@ export default function Analytics() {
                 <AlertTriangle size={20} className="text-red-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-navy">{reportStats.bySeverity.find(s => s.severity === "high")?.count || 0}</p>
+                <p className="text-2xl font-bold text-navy">{reportStats.highSeverity || reportStats.bySeverity.find(s => s.severity === "high")?.count || 0}</p>
                 <p className="text-xs text-slate-gray">High Severity</p>
               </div>
             </div>
@@ -230,6 +242,67 @@ export default function Analytics() {
           </div>
         </div>
 
+        {/* Channel Breakdown & Response Time */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* By Channel */}
+          <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="bg-purple-100 p-2 rounded-lg">
+                <Radio size={18} className="text-purple-600" />
+              </div>
+              <h2 className="font-semibold text-navy">By Channel</h2>
+            </div>
+            {!channelBreakdown || channelBreakdown.length === 0 ? (
+              <p className="text-sm text-slate-gray text-center py-8">No data yet</p>
+            ) : (
+              <div className="space-y-3">
+                {channelBreakdown.map((ch) => {
+                  const pct = reportStats.total > 0 ? Math.round((ch.count / reportStats.total) * 100) : 0;
+                  return (
+                    <div key={ch.channel}>
+                      <div className="flex justify-between text-sm mb-1.5">
+                        <span className="text-navy font-medium">{channelLabels[ch.channel] || ch.channel}</span>
+                        <span className="text-slate-gray text-xs">{ch.count} ({pct}%)</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2.5">
+                        <div className={`h-2.5 rounded-full ${channelColors[ch.channel] || "bg-gray-400"}`} style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Response Time by District */}
+          <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="bg-amber-100 p-2 rounded-lg">
+                <Timer size={18} className="text-amber-600" />
+              </div>
+              <h2 className="font-semibold text-navy">Response Time by District</h2>
+            </div>
+            {!responseTimeByDistrict || responseTimeByDistrict.length === 0 ? (
+              <p className="text-sm text-slate-gray text-center py-8">No response time data yet</p>
+            ) : (
+              <div className="space-y-3">
+                {responseTimeByDistrict.slice(0, 6).map((rt) => {
+                  const hours = rt.avg_response_hours ? parseFloat(rt.avg_response_hours).toFixed(1) : "N/A";
+                  return (
+                    <div key={rt.district} className="flex items-center justify-between py-2 border-b border-soft last:border-0">
+                      <div>
+                        <p className="text-sm font-medium text-navy">{rt.district}</p>
+                        <p className="text-xs text-slate-gray">{rt.total_cases} cases</p>
+                      </div>
+                      <span className="text-sm font-semibold text-navy">{hours}h</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Referral Stats */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Referral Status */}
@@ -308,9 +381,10 @@ export default function Analytics() {
               <p className="font-semibold text-navy mb-1">Data Summary</p>
               <p className="text-sm text-slate-gray">
                 This dashboard provides an overview of all reports submitted through Mlinzi.
-                Data is updated in real-time as new reports are received. All data is anonymous
-                and aggregated to protect children's privacy. Use these insights to inform
-                policy decisions and allocate resources where they are needed most.
+                Data is updated in real-time as new reports are received. Reports come from web,
+                SMS, and WhatsApp channels. All data is anonymous and aggregated to protect
+                children's privacy. Use these insights to inform policy decisions and allocate
+                resources where they are needed most.
               </p>
             </div>
           </div>

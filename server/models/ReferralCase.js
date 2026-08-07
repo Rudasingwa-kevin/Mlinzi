@@ -13,7 +13,7 @@ const ReferralCase = {
 
   async findById(id) {
     const result = await pool.query(
-      `SELECT rc.*, r.category, r.severity, r.guidance, r.extracted_text, r.screenshot_path
+      `SELECT rc.*, r.category, r.severity, r.guidance, r.extracted_text, r.screenshot_path, r.channel, r.confidence, r.recommended_action
        FROM referral_cases rc
        JOIN reports r ON rc.report_id = r.id
        WHERE rc.id = $1`,
@@ -23,7 +23,7 @@ const ReferralCase = {
   },
 
   async findByCounselor(counselorId, { status, limit = 50, offset = 0 } = {}) {
-    let query = "SELECT rc.*, r.category, r.severity FROM referral_cases rc JOIN reports r ON rc.report_id = r.id WHERE rc.assigned_counselor_id = $1";
+    let query = "SELECT rc.*, r.category, r.severity, r.channel FROM referral_cases rc JOIN reports r ON rc.report_id = r.id WHERE rc.assigned_counselor_id = $1";
     const conditions = [];
     const values = [counselorId];
     let paramIndex = 2;
@@ -45,7 +45,7 @@ const ReferralCase = {
   },
 
   async findUnassigned({ status, limit = 50, offset = 0 } = {}) {
-    let query = "SELECT rc.*, r.category, r.severity FROM referral_cases rc JOIN reports r ON rc.report_id = r.id WHERE rc.assigned_counselor_id IS NULL";
+    let query = "SELECT rc.*, r.category, r.severity, r.channel FROM referral_cases rc JOIN reports r ON rc.report_id = r.id WHERE rc.assigned_counselor_id IS NULL";
     const conditions = [];
     const values = [];
     let paramIndex = 1;

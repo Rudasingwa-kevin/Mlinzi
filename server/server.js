@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
   res.json({
     status: "ok",
     service: "Mlinzi API",
-    version: "1.0.0",
+    version: "2.0.0",
     timestamp: new Date().toISOString(),
   });
 });
@@ -60,6 +60,18 @@ app.use("/api/reports", reportRoutes);
 // Referral routes
 const referralRoutes = require("./routes/referralRoutes");
 app.use("/api", referralRoutes);
+
+// SMS channel routes
+const smsRoutes = require("./routes/smsRoutes");
+app.use("/api/sms", smsRoutes);
+
+// WhatsApp channel routes
+const whatsappRoutes = require("./routes/whatsappRoutes");
+app.use("/api/whatsapp", whatsappRoutes);
+
+// Notification routes
+const notificationRoutes = require("./routes/notificationRoutes");
+app.use("/api/notifications", notificationRoutes);
 
 // --------------- 404 Handler ---------------
 

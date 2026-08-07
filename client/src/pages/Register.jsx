@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, User, Eye, EyeOff, UserPlus, Shield, Users, BarChart3, Loader2, Check } from "lucide-react";
-import { registerUser } from "../services/api";
+import { Mail, Lock, User, Eye, EyeOff, UserPlus, Shield, Users, BarChart3, Loader2, Check, MapPin, Phone } from "lucide-react";
+import { registerUser, getDistricts } from "../services/api";
 
 const roles = [
   {
@@ -22,11 +22,16 @@ const roles = [
 
 export default function Register() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "", full_name: "", role: "counselor" });
+  const [form, setForm] = useState({ email: "", password: "", full_name: "", role: "counselor", district: "", phone: "" });
+  const [districts, setDistricts] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    getDistricts().then(setDistricts).catch(() => setDistricts([]));
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -235,6 +240,49 @@ export default function Register() {
                   </div>
                 </div>
 
+                {form.role === "counselor" && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-[#0B1220] mb-2">
+                        District
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <MapPin size={18} className="text-[#94a3b8]" />
+                        </div>
+                        <select
+                          value={form.district}
+                          onChange={(e) => setForm({ ...form, district: e.target.value })}
+                          className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
+                        >
+                          <option value="">Select your district</option>
+                          {districts.map((d) => (
+                            <option key={d} value={d}>{d}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-[#0B1220] mb-2">
+                        Phone number (for SMS notifications)
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <Phone size={18} className="text-[#94a3b8]" />
+                        </div>
+                        <input
+                          type="tel"
+                          value={form.phone}
+                          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                          className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
+                          placeholder="+250 7XX XXX XXX"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
                 <button
                   type="button"
                   onClick={handleNext}
@@ -295,6 +343,12 @@ export default function Register() {
                         {form.role.replace("_", " ")}
                       </span>
                     </div>
+                    {form.role === "counselor" && form.district && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-[#64748B]">District</span>
+                        <span className="text-[#0B1220] font-medium">{form.district}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
