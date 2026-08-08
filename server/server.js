@@ -36,6 +36,10 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Serve uploaded files statically (for screenshots)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// General API rate limit (baseline protection for all /api routes)
+const { apiLimiter } = require("./middleware/rateLimit");
+app.use("/api", apiLimiter);
+
 // --------------- Health Check ---------------
 
 app.get("/", (req, res) => {

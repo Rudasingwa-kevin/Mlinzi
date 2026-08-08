@@ -3,10 +3,11 @@ const router = express.Router();
 const ctrl = require("../controllers/referralController");
 const authenticateToken = require("../middleware/auth");
 const { requireRole, requireApproved } = require("../middleware/auth");
+const { escalationLimiter } = require("../middleware/rateLimit");
 
 router.get("/districts", ctrl.getDistricts);
 
-router.post("/report/escalate", ctrl.escalate);
+router.post("/report/escalate", escalationLimiter, ctrl.escalate);
 
 router.get("/counselor/cases", authenticateToken, requireRole("counselor"), requireApproved, ctrl.getCounselorCases);
 router.get("/counselor/unassigned", authenticateToken, requireRole("counselor"), requireApproved, ctrl.getUnassignedCases);

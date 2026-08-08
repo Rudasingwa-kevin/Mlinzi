@@ -4,12 +4,13 @@ const upload = require("../middleware/upload");
 const ctrl = require("../controllers/reportController");
 const authenticateToken = require("../middleware/auth");
 const { requireRole } = require("../middleware/auth");
+const { reportLimiter } = require("../middleware/rateLimit");
 
-// Manual text submission (public - children submit)
-router.post("/manual", ctrl.manualReport);
+// Manual text submission (public - children submit) - rate limited
+router.post("/manual", reportLimiter, ctrl.manualReport);
 
-// Upload screenshot → OCR → save report (public - children submit)
-router.post("/upload", upload.single("screenshot"), ctrl.uploadReport);
+// Upload screenshot → OCR → save report (public - children submit) - rate limited
+router.post("/upload", reportLimiter, upload.single("screenshot"), ctrl.uploadReport);
 
 // Counselor: list reports with optional filters (protected)
 router.get("/", authenticateToken, requireRole("counselor"), ctrl.getReports);
