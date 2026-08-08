@@ -58,14 +58,6 @@ const Report = {
     return result.rows[0];
   },
 
-  async updateStatus(id, status) {
-    const result = await pool.query(
-      `UPDATE reports SET severity = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
-      [status, id]
-    );
-    return result.rows[0];
-  },
-
   async getStats() {
     const total = await pool.query("SELECT COUNT(*) FROM reports");
     const escalated = await pool.query("SELECT COUNT(*) FROM reports WHERE escalated = TRUE");

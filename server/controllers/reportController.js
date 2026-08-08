@@ -135,24 +135,6 @@ async function getReportById(req, res) {
   }
 }
 
-// PATCH /api/reports/:id/status
-async function updateReportStatus(req, res) {
-  try {
-    const { status } = req.body;
-    if (!status) {
-      return res.status(400).json({ error: "Status is required" });
-    }
-    const report = await Report.updateStatus(req.params.id, status);
-    if (!report) {
-      return res.status(404).json({ error: "Report not found" });
-    }
-    res.json({ report });
-  } catch (err) {
-    console.error("Update error:", err);
-    res.status(500).json({ error: "Failed to update report" });
-  }
-}
-
 // GET /api/reports/stats
 async function getStats(req, res) {
   try {
@@ -169,6 +151,5 @@ module.exports = {
   uploadReport,
   getReports,
   getReportById,
-  updateReportStatus,
   getStats,
 };

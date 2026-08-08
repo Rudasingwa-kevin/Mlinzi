@@ -3,8 +3,6 @@ const { analyzeText, analyzeImage } = require("./aiService");
 const Report = require("../models/Report");
 const fs = require("fs");
 const path = require("path");
-const https = require("https");
-const http = require("http");
 
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;

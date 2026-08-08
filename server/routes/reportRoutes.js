@@ -21,7 +21,4 @@ router.get("/stats", authenticateToken, requireRole("national_society"), ctrl.ge
 // Single report detail (protected - both roles)
 router.get("/:id", authenticateToken, requireRole("counselor", "national_society"), ctrl.getReportById);
 
-// Counselor: update report status (protected)
-router.patch("/:id/status", authenticateToken, requireRole("counselor"), ctrl.updateReportStatus);
-
 module.exports = router;
