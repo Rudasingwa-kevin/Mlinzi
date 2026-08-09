@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Search, CheckCircle, AlertTriangle, AlertCircle, Bot, Heart, FileText, Home, Shield, HandHelping, Info } from "lucide-react";
 import { getDistricts, escalateReport } from "../services/api";
+import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 
 const severityConfig = {
@@ -49,6 +50,7 @@ const actionLabels = {
 export default function Results() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { t } = useAccessibility();
   const report = state?.report;
   const [showEscalation, setShowEscalation] = useState(false);
 
@@ -68,7 +70,7 @@ export default function Results() {
             className="inline-flex items-center gap-2 bg-blue text-white font-semibold px-6 py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200"
           >
             <Shield size={18} />
-            Report Abuse
+            {t("reportAbuse")}
           </Link>
         </div>
       </div>
@@ -84,7 +86,7 @@ export default function Results() {
       {/* Header */}
       <section className="bg-navy py-10 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">Analysis Results</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">{t("analysisResults")}</h1>
           <p className="text-blue-200">
             Our AI has reviewed the message. Here is what we found.
           </p>
@@ -104,14 +106,14 @@ export default function Results() {
             </div>
             <div className="flex-1">
               <p className={`text-sm font-medium ${sev.text} uppercase tracking-wide`}>
-                Risk Level
+                {t("riskLevel")}
               </p>
               <p className="text-2xl font-bold text-navy">{sev.label}</p>
               <p className="text-sm text-slate-gray mt-1">{sev.message}</p>
             </div>
             {report.confidence != null && (
               <div className="text-right">
-                <p className="text-xs text-slate-gray uppercase">Confidence</p>
+                <p className="text-xs text-slate-gray uppercase">{t("confidence")}</p>
                 <p className="text-2xl font-bold text-navy">{report.confidence}%</p>
               </div>
             )}
@@ -144,7 +146,7 @@ export default function Results() {
           <div className="ml-8">
             <div className="mb-3">
               <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">
-                Category
+                {t("category")}
               </p>
               <p className="text-lg font-semibold text-navy">{report.category}</p>
             </div>
@@ -159,7 +161,7 @@ export default function Results() {
             </div>
             <div>
               <p className="font-semibold text-navy">
-                What You Should Do
+                {t("whatToDo")}
               </p>
               <p className="text-slate-gray leading-relaxed mt-2">
                 {report.guidance}
@@ -174,7 +176,7 @@ export default function Results() {
             <div className="flex items-center gap-2 mb-2">
               <FileText size={14} className="text-slate-gray" />
               <p className="text-xs font-medium text-slate-gray uppercase tracking-wide">
-                Extracted Text
+                {t("extractedText")}
               </p>
             </div>
             <p className="text-sm text-charcoal italic whitespace-pre-wrap bg-white p-4 rounded-xl border border-soft">
@@ -228,14 +230,14 @@ export default function Results() {
             className="flex-1 text-center bg-blue text-white font-semibold py-4 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
           >
             <Shield size={18} />
-            Report Another
+            {t("reportAnother")}
           </Link>
           <Link
             to="/"
             className="flex-1 text-center bg-white border border-navy text-navy font-semibold py-4 rounded-2xl hover:bg-cloud transition-all duration-200 flex items-center justify-center gap-2"
           >
             <Home size={18} />
-            Back to Home
+            {t("backToHome")}
           </Link>
         </div>
 
@@ -252,6 +254,7 @@ export default function Results() {
 
 function ReferralForm({ reportId }) {
   const navigate = useNavigate();
+  const { t } = useAccessibility();
   const [districts, setDistricts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -296,7 +299,7 @@ function ReferralForm({ reportId }) {
           <HandHelping size={16} className="text-blue" />
         </div>
         <div>
-          <p className="font-semibold text-navy">Connect with a Counselor</p>
+          <p className="font-semibold text-navy">{t("connectWithCounselor")}</p>
           <p className="text-sm text-slate-gray">
             We only collect the minimum information needed to help you.
           </p>
@@ -312,7 +315,7 @@ function ReferralForm({ reportId }) {
       <form onSubmit={handleSubmit} className="space-y-4 mt-4">
         <div>
           <label className="block text-sm font-medium text-navy mb-2">
-            District <span className="text-red">*</span>
+            {t("district")} <span className="text-red">*</span>
           </label>
           <select
             required
@@ -359,7 +362,7 @@ function ReferralForm({ reportId }) {
 
         <div>
           <label className="block text-sm font-medium text-navy mb-2">
-            Best time to contact
+            {t("bestTime")}
           </label>
           <input
             type="text"
@@ -372,7 +375,7 @@ function ReferralForm({ reportId }) {
 
         <div>
           <label className="block text-sm font-medium text-navy mb-2">
-            Are you currently safe?
+            {t("areYouSafe")}
           </label>
           <div className="flex gap-3">
             {["Yes", "No", "Not sure"].map((option) => (
@@ -397,7 +400,7 @@ function ReferralForm({ reportId }) {
           disabled={loading}
           className="w-full bg-blue text-white font-semibold py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md disabled:opacity-50"
         >
-          {loading ? "Submitting..." : "Submit Referral"}
+          {loading ? "Submitting..." : t("submitReferral")}
         </button>
 
         <p className="text-xs text-slate-gray text-center">

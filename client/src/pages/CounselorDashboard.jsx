@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCounselorCases, getUnassignedCases, claimCase } from "../services/api";
+import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 import { Loader2, ClipboardList, RefreshCw, Users, AlertCircle, Clock, MapPin, Phone, Eye, Hand, MessageSquare } from "lucide-react";
 
@@ -41,6 +42,7 @@ export default function CounselorDashboard() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ status: "" });
   const [activeTab, setActiveTab] = useState("my-cases");
+  const { t } = useAccessibility();
 
   async function loadCases() {
     setLoading(true);
@@ -84,7 +86,7 @@ export default function CounselorDashboard() {
             <div className="bg-white/20 p-2 rounded-xl">
               <Users size={24} className="text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white">Counselor Dashboard</h1>
+            <h1 className="text-3xl font-bold text-white">{t("counselorDashboard")}</h1>
           </div>
           <p className="text-emerald-100 ml-12">
             Manage referrals and support children in need
@@ -104,7 +106,7 @@ export default function CounselorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{myCases.length}</p>
-                <p className="text-xs text-slate-gray">My Cases</p>
+                <p className="text-xs text-slate-gray">{t("myCases")}</p>
               </div>
             </div>
           </div>
@@ -115,7 +117,7 @@ export default function CounselorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{newCount}</p>
-                <p className="text-xs text-slate-gray">New Cases</p>
+                <p className="text-xs text-slate-gray">{t("newCases")}</p>
               </div>
             </div>
           </div>
@@ -126,7 +128,7 @@ export default function CounselorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{reviewCount}</p>
-                <p className="text-xs text-slate-gray">In Review</p>
+                <p className="text-xs text-slate-gray">{t("inReview")}</p>
               </div>
             </div>
           </div>
@@ -137,7 +139,7 @@ export default function CounselorDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{unassignedCases.length}</p>
-                <p className="text-xs text-slate-gray">Unclaimed</p>
+                <p className="text-xs text-slate-gray">{t("unclaimed")}</p>
               </div>
             </div>
           </div>
@@ -153,7 +155,7 @@ export default function CounselorDashboard() {
                 : "bg-white text-slate-gray hover:bg-cloud border border-soft"
             }`}
           >
-            My Cases ({myCases.length})
+            {t("myCases")} ({myCases.length})
           </button>
           <button
             onClick={() => setActiveTab("unassigned")}
@@ -163,7 +165,7 @@ export default function CounselorDashboard() {
                 : "bg-white text-slate-gray hover:bg-cloud border border-soft"
             }`}
           >
-            Unclaimed ({unassignedCases.length})
+            {t("unclaimed")} ({unassignedCases.length})
           </button>
         </div>
 

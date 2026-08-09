@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getNationalAnalytics } from "../services/api";
+import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 import { Loader2, BarChart3, Folder, MapPin, ClipboardList, TrendingUp, AlertTriangle, Users, Clock, FileText, Radio, Timer } from "lucide-react";
 
@@ -24,6 +25,7 @@ const channelLabels = {
 export default function Analytics() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useAccessibility();
 
   useEffect(() => {
     async function load() {
@@ -73,7 +75,7 @@ export default function Analytics() {
             <div className="bg-white/20 p-2 rounded-xl">
               <BarChart3 size={24} className="text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white">National Dashboard</h1>
+            <h1 className="text-3xl font-bold text-white">{t("nationalDashboard")}</h1>
           </div>
           <p className="text-emerald-100 ml-12">
             Evidence-driven insights for policy and decision makers
@@ -87,7 +89,7 @@ export default function Analytics() {
         {/* Hero Stats */}
         <div className="bg-gradient-to-r from-[#1B5E20] to-[#2E7D32] rounded-2xl p-8 mb-8 text-center text-white shadow-lg -mt-6">
           <p className="text-emerald-100 text-sm uppercase tracking-wide mb-2">
-            Total Reports Submitted
+            {t("totalReports")}
           </p>
           <p className="text-6xl font-extrabold">{reportStats.total}</p>
           <p className="text-emerald-100 mt-2">
@@ -104,7 +106,7 @@ export default function Analytics() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{reportStats.total}</p>
-                <p className="text-xs text-slate-gray">Total Reports</p>
+                <p className="text-xs text-slate-gray">{t("totalReports")}</p>
               </div>
             </div>
           </div>
@@ -115,7 +117,7 @@ export default function Analytics() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{reportStats.highSeverity || reportStats.bySeverity.find(s => s.severity === "high")?.count || 0}</p>
-                <p className="text-xs text-slate-gray">High Severity</p>
+                <p className="text-xs text-slate-gray">{t("highSeverity")}</p>
               </div>
             </div>
           </div>
@@ -126,7 +128,7 @@ export default function Analytics() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{referralStats.total}</p>
-                <p className="text-xs text-slate-gray">Referrals</p>
+                <p className="text-xs text-slate-gray">{t("referrals")}</p>
               </div>
             </div>
           </div>

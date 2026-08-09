@@ -1,61 +1,60 @@
 import { Link } from "react-router-dom";
 import { Shield, Brain, Heart, Lock, Ear, Hand, Zap, ArrowRight, Globe, MessageSquare, Smartphone } from "lucide-react";
+import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 
-const features = [
-  {
-    icon: Shield,
-    title: "Upload a Screenshot",
-    desc: "Take a screenshot of any harmful message and upload it here. You are safe.",
-    color: "bg-green-50",
-  },
-  {
-    icon: Brain,
-    title: "AI Reads & Classifies",
-    desc: "Our AI instantly analyzes the message to understand the risk and keep you informed.",
-    color: "bg-green-50",
-  },
-  {
-    icon: Heart,
-    title: "Get Protection",
-    desc: "Receive clear, simple guidance on what to do next. You are never alone.",
-    color: "bg-gold-50",
-  },
-  {
-    icon: Lock,
-    title: "100% Anonymous",
-    desc: "No personal data needed. Your identity is always protected and private.",
-    color: "bg-slate-50",
-  },
-];
-
-const values = [
-  { icon: Shield, label: "Protect", desc: "We safeguard children from digital harm." },
-  { icon: Ear, label: "Listen", desc: "Every child deserves to be heard." },
-  { icon: Hand, label: "Support", desc: "Guidance, counseling, and connection." },
-  { icon: Zap, label: "Empower", desc: "Confidence and digital safety knowledge." },
-];
-
 export default function Home() {
+  const { t } = useAccessibility();
+
+  const features = [
+    {
+      icon: Shield,
+      title: t("step1Title"),
+      desc: t("step1Desc"),
+      color: "bg-green-50",
+    },
+    {
+      icon: Brain,
+      title: t("step2Title"),
+      desc: t("step2Desc"),
+      color: "bg-green-50",
+    },
+    {
+      icon: Heart,
+      title: t("step3Title"),
+      desc: t("step3Desc"),
+      color: "bg-gold-50",
+    },
+    {
+      icon: Lock,
+      title: "100% Anonymous",
+      desc: t("safetyMessage"),
+      color: "bg-slate-50",
+    },
+  ];
+
+  const values = [
+    { icon: Shield, label: "Protect", desc: "We safeguard children from digital harm." },
+    { icon: Ear, label: "Listen", desc: "Every child deserves to be heard." },
+    { icon: Hand, label: "Support", desc: "Guidance, counseling, and connection." },
+    { icon: Zap, label: "Empower", desc: "Confidence and digital safety knowledge." },
+  ];
+
   return (
     <div className="min-h-[calc(100vh-56px)]">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#388E3C] text-white py-20 px-4 relative overflow-hidden">
-        {/* African Imigongo-inspired pattern */}
         <div className="absolute inset-0">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="opacity-10">
             <defs>
               <pattern id="imigongo" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-                {/* Diamond shapes */}
                 <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="white" strokeWidth="1"/>
                 <path d="M40 10 L70 40 L40 70 L10 40 Z" fill="none" stroke="white" strokeWidth="1"/>
                 <path d="M40 20 L60 40 L40 60 L20 40 Z" fill="none" stroke="white" strokeWidth="1"/>
-                {/* Corner triangles */}
                 <path d="M0 0 L20 0 L0 20 Z" fill="white" opacity="0.3"/>
                 <path d="M80 0 L80 20 L60 0 Z" fill="white" opacity="0.3"/>
                 <path d="M0 80 L0 60 L20 80 Z" fill="white" opacity="0.3"/>
                 <path d="M80 80 L60 80 L80 60 Z" fill="white" opacity="0.3"/>
-                {/* Center dot */}
                 <circle cx="40" cy="40" r="3" fill="white" opacity="0.5"/>
               </pattern>
             </defs>
@@ -63,7 +62,6 @@ export default function Home() {
           </svg>
         </div>
         
-        {/* Decorative floating elements */}
         <div className="absolute top-20 right-20 w-40 h-40 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 left-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-white/5 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
@@ -75,13 +73,11 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 leading-tight">
-            A trusted guardian in the{" "}
-            <span className="text-[#FFD54F]">digital world</span>
+            {t("heroTitle")}
           </h1>
 
           <p className="text-lg text-white/90 mb-8 max-w-xl mx-auto leading-relaxed">
-            You are not alone. Mlinzi helps children stay safe online by analyzing
-            harmful messages and giving you the protection you deserve.
+            {t("heroSubtitle")}
           </p>
 
           <Link
@@ -89,7 +85,7 @@ export default function Home() {
             className="inline-flex items-center gap-2 bg-white text-[#1B5E20] font-semibold px-8 py-4 rounded-2xl hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-lg"
           >
             <Shield size={20} />
-            Report Online Abuse
+            {t("reportNow")}
             <ArrowRight size={18} />
           </Link>
 
@@ -105,7 +101,7 @@ export default function Home() {
       <section className="max-w-5xl mx-auto py-16 px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-navy mb-3">
-            How Mlinzi Protects You
+            {t("howItWorks")}
           </h2>
           <p className="text-slate-gray max-w-lg mx-auto">
             Simple steps to get the help you need. No personal data required.
@@ -117,7 +113,7 @@ export default function Home() {
             const Icon = f.icon;
             return (
               <div
-                key={f.title}
+                key={i}
                 className={`${f.color} rounded-2xl p-6 text-center animate-fade-in-up`}
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
@@ -260,7 +256,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 bg-blue text-white font-semibold px-6 py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200"
             >
               <Shield size={18} />
-              Get Help Now
+              {t("reportNow")}
             </Link>
           </div>
         </div>

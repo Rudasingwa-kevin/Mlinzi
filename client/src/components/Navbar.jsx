@@ -1,24 +1,26 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useAccessibility } from "../context/AccessibilityContext";
 import { Home, Shield, BarChart3, Settings, LogIn, LogOut } from "lucide-react";
-
-const publicLinks = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/report", label: "Report Abuse", icon: Shield },
-];
-
-const counselorLinks = [
-  { to: "/counselor", label: "Cases", icon: BarChart3 },
-];
-
-const nationalLinks = [
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/admin", label: "Admin", icon: Settings },
-];
 
 export default function Navbar() {
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
+  const { t } = useAccessibility();
+
+  const publicLinks = [
+    { to: "/", label: t("home"), icon: Home },
+    { to: "/report", label: t("reportAbuse"), icon: Shield },
+  ];
+
+  const counselorLinks = [
+    { to: "/counselor", label: t("cases"), icon: BarChart3 },
+  ];
+
+  const nationalLinks = [
+    { to: "/analytics", label: t("analytics"), icon: BarChart3 },
+    { to: "/admin", label: t("admin"), icon: Settings },
+  ];
 
   const getLinks = () => {
     if (!user) return publicLinks;
@@ -64,7 +66,7 @@ export default function Navbar() {
                 className="px-3 py-2 rounded-2xl text-sm font-medium text-gray-100 hover:bg-[#2E7D32] hover:text-white transition-all flex items-center gap-1.5"
               >
                 <LogOut size={16} />
-                <span className="hidden sm:inline">Logout</span>
+                <span className="hidden sm:inline">{t("logout")}</span>
               </button>
             </div>
           ) : (
@@ -76,7 +78,7 @@ export default function Navbar() {
                 }`}
             >
               <LogIn size={16} />
-              <span className="hidden sm:inline">Login</span>
+              <span className="hidden sm:inline">{t("login")}</span>
             </Link>
           )}
         </div>

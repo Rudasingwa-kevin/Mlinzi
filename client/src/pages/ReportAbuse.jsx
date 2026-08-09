@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Upload, Camera, AlertTriangle, CheckCircle, Loader2, Shield } from "lucide-react";
 import { uploadScreenshot, submitManualReport } from "../services/api";
+import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 
 export default function ReportAbuse() {
@@ -14,6 +15,7 @@ export default function ReportAbuse() {
   const [showManualInput, setShowManualInput] = useState(false);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const { t } = useAccessibility();
 
   function handleFile(selected) {
     if (!selected) return;
@@ -92,10 +94,10 @@ export default function ReportAbuse() {
       <section className="bg-navy py-10 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-3xl font-bold text-white mb-2">
-            Report Online Abuse
+            {t("reportAbuse")}
           </h1>
           <p className="text-blue-200">
-            Tell us what happened. Your report can remain anonymous.
+            {t("reportDescription")}
           </p>
         </div>
       </section>
@@ -148,7 +150,7 @@ export default function ReportAbuse() {
                   <Camera size={32} className="text-blue" />
                 </div>
                 <p className="font-semibold text-navy mb-2">
-                  Drop your screenshot here
+                  {t("dropScreenshot")}
                 </p>
                 <p className="text-sm text-slate-gray">
                   or click to browse, or paste from clipboard (Ctrl+V)
@@ -173,7 +175,7 @@ export default function ReportAbuse() {
                 }}
                 className="ml-2 underline font-medium hover:text-red-dark"
               >
-                Type the message instead
+                {t("typeInstead")}
               </button>
             </div>
           )}
@@ -203,12 +205,12 @@ export default function ReportAbuse() {
             {loading ? (
               <>
                 <Loader2 size={20} className="animate-spin" />
-                Analyzing your screenshot...
+                {t("analyzing")}
               </>
             ) : (
               <>
                 <Upload size={20} />
-                Upload & Analyze
+                {t("uploadAnalyze")}
               </>
             )}
           </button>
