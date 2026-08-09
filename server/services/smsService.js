@@ -84,8 +84,7 @@ const RWANDA_DISTRICTS = [
   "Burera", "Gakenke", "Gicumbi", "Musanze", "Rulindo",
   "Gasabo", "Kicukiro", "Nyarugenge",
   "Gisagara", "Huye", "Kamonyi", "Muhanga", "Nyamagabe", "Nyanza", "Nyaruguru", "Ruhango",
-  "Bugarama", "Kamembe", "Murundi", "Nyamashepe", "Nyungwe", "Rusizi",
-  "Karongi", "Ngorester", "Nyabihu", "Rubavu", "Rutsiro",
+  "Karongi", "Nyabihu", "Rubavu", "Rusizi", "Rutsiro",
 ];
 
 async function getOrCreateSession(phoneNumber, channel = "sms") {

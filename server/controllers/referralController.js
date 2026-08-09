@@ -5,12 +5,16 @@ const Report = require("../models/Report");
 const { notifyCounselorNewCase, notifyHighRiskCase, notifyCaseStatusChange } = require("../services/notificationService");
 
 const RWANDA_DISTRICTS = [
+  // East Province
   "Bugesera", "Gatsibo", "Kayonza", "Kirehe", "Ngoma", "Nyagatare", "Rwamagana",
+  // North Province
   "Burera", "Gakenke", "Gicumbi", "Musanze", "Rulindo",
+  // Kigali City
   "Gasabo", "Kicukiro", "Nyarugenge",
+  // South Province
   "Gisagara", "Huye", "Kamonyi", "Muhanga", "Nyamagabe", "Nyanza", "Nyaruguru", "Ruhango",
-  "Bugarama", "Kamembe", "Murundi", "Nyamashepe", "Nyungwe", "Rusizi",
-  "Karongi", "Ngorester", "Nyabihu", "Rubavu", "Rutsiro"
+  // West Province
+  "Karongi", "Nyabihu", "Rubavu", "Rusizi", "Rutsiro",
 ];
 
 exports.getDistricts = (req, res) => {
