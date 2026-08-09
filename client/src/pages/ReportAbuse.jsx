@@ -20,11 +20,11 @@ export default function ReportAbuse() {
   function handleFile(selected) {
     if (!selected) return;
     if (!selected.type.startsWith("image/")) {
-      setError("Please upload an image file (jpg, png, gif, webp).");
+      setError(t("imageFileError"));
       return;
     }
     if (selected.size > 5 * 1024 * 1024) {
-      setError("File must be under 5MB.");
+      setError(t("fileSizeError"));
       return;
     }
     setFile(selected);
@@ -63,7 +63,7 @@ export default function ReportAbuse() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!file && !manualText.trim()) {
-      setError("Please select a screenshot or type the message.");
+      setError(t("selectScreenshotOrType"));
       return;
     }
 
@@ -81,7 +81,7 @@ export default function ReportAbuse() {
     } catch (err) {
       const msg =
         err.response?.data?.error ||
-        "Something went wrong. Please try again.";
+        t("somethingWrong");
       setError(msg);
     } finally {
       setLoading(false);
@@ -141,7 +141,7 @@ export default function ReportAbuse() {
                 />
                 <p className="text-sm text-green font-medium">{file.name}</p>
                 <p className="text-xs text-slate-gray mt-1">
-                  Click or drop to replace
+                  {t("clickOrDropReplace")}
                 </p>
               </div>
             ) : (
@@ -153,10 +153,10 @@ export default function ReportAbuse() {
                   {t("dropScreenshot")}
                 </p>
                 <p className="text-sm text-slate-gray">
-                  or click to browse, or paste from clipboard (Ctrl+V)
+                  {t("orClickBrowse")}
                 </p>
                 <p className="text-xs text-slate-gray mt-2">
-                  jpg, png, gif, webp — max 5MB
+                  {t("maxSize")}
                 </p>
               </div>
             )}
@@ -186,12 +186,12 @@ export default function ReportAbuse() {
               <textarea
                 value={manualText}
                 onChange={(e) => setManualText(e.target.value)}
-                placeholder="Type or paste the harmful message here..."
+                placeholder={t("typePasteHarmful")}
                 className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
                 rows={4}
               />
               <p className="text-xs text-slate-gray mt-1">
-                You can type the message directly if the screenshot doesn't work.
+                {t("typeMessageDirectly")}
               </p>
             </div>
           )}
@@ -221,7 +221,7 @@ export default function ReportAbuse() {
           <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
             <CheckCircle size={16} className="text-green" />
             <span className="text-sm text-green font-medium">
-              100% anonymous — no personal data collected
+              {t("anonymousNoData")}
             </span>
           </div>
         </div>
@@ -234,11 +234,10 @@ export default function ReportAbuse() {
             </div>
             <div>
               <p className="font-semibold text-navy mb-1">
-                You did the right thing by asking for help.
+                {t("rightThing")}
               </p>
               <p className="text-sm text-slate-gray">
-                Our AI will analyze the message and provide clear guidance on what
-                to do next. You are safe here.
+                {t("aiWillAnalyze")}
               </p>
             </div>
           </div>

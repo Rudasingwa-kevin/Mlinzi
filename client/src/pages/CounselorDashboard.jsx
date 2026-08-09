@@ -89,7 +89,7 @@ export default function CounselorDashboard() {
             <h1 className="text-3xl font-bold text-white">{t("counselorDashboard")}</h1>
           </div>
           <p className="text-emerald-100 ml-12">
-            Manage referrals and support children in need
+            {t("counselDashboardSubtitle")}
           </p>
         </div>
       </section>
@@ -186,7 +186,7 @@ export default function CounselorDashboard() {
             className="bg-white border border-soft text-navy px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-cloud transition-all duration-200 shadow-sm flex items-center gap-2"
           >
             <RefreshCw size={14} />
-            Refresh
+            {t("refresh")}
           </button>
         </div>
 
@@ -195,17 +195,17 @@ export default function CounselorDashboard() {
           <div className="text-center py-16">
             <div className="inline-flex items-center gap-3 text-slate-gray">
               <Loader2 className="animate-spin h-6 w-6" />
-              Loading cases...
+              {t("loadingCases")}
             </div>
           </div>
         ) : activeCases.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-soft">
             <ClipboardList size={56} className="mx-auto text-soft mb-4" />
-            <p className="text-navy font-semibold text-lg">No cases found</p>
+            <p className="text-navy font-semibold text-lg">{t("noCases")}</p>
             <p className="text-sm text-slate-gray mt-1">
               {activeTab === "my-cases"
-                ? "You don't have any assigned cases yet."
-                : "All cases have been claimed."}
+                ? t("noMyCases")
+                : t("noUnclaimed")}
             </p>
           </div>
         ) : (
@@ -255,7 +255,7 @@ export default function CounselorDashboard() {
                           className="bg-[#2E7D32] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#1B5E20] transition-all flex items-center gap-2"
                         >
                           <Hand size={16} />
-                          Claim
+                          {t("claim")}
                         </button>
                       ) : (
                         <Link
@@ -263,7 +263,7 @@ export default function CounselorDashboard() {
                           className="bg-cloud text-navy px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-soft transition-all flex items-center gap-2 border border-soft"
                         >
                           <Eye size={16} />
-                          View Details
+                          {t("viewDetails")}
                         </Link>
                       )}
                     </div>

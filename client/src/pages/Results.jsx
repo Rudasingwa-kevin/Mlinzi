@@ -10,41 +10,41 @@ const severityConfig = {
     bg: "bg-green-50",
     border: "border-green",
     text: "text-green",
-    label: "Low Risk",
+    labelKey: "lowRisk",
     icon: CheckCircle,
-    message: "This message appears to be safe. You are doing great!",
+    messageKey: "lowRiskMsg",
   },
   medium: {
     bg: "bg-gold-50",
     border: "border-gold",
     text: "text-gold",
-    label: "Medium Risk",
+    labelKey: "mediumRisk",
     icon: AlertTriangle,
-    message: "This message may need attention. Let's protect you together.",
+    messageKey: "mediumRiskMsg",
   },
   high: {
     bg: "bg-red-soft",
     border: "border-red",
     text: "text-red",
-    label: "High Risk",
+    labelKey: "highRisk",
     icon: AlertCircle,
-    message: "This message may be unsafe. Let's protect you together.",
+    messageKey: "highRiskMsg",
   },
   pending: {
     bg: "bg-slate-50",
     border: "border-soft",
     text: "text-slate-gray",
-    label: "Analyzing...",
+    labelKey: "analyzing",
     icon: Search,
-    message: "Our AI is reviewing your report.",
+    messageKey: "analyzingMsg",
   },
 };
 
 const actionLabels = {
-  guidance_only: { label: "Safety Guidance", color: "text-green", bg: "bg-green-50", description: "Follow the safety advice below" },
-  anonymous_report: { label: "Anonymous Report", color: "text-gold", bg: "bg-gold-50", description: "This has been logged for national statistics" },
-  connect_counselor: { label: "Counselor Support", color: "text-blue", bg: "bg-blue-50", description: "We recommend connecting with a counselor" },
-  emergency_referral: { label: "Emergency", color: "text-red", bg: "bg-red-soft", description: "Please seek immediate help" },
+  guidance_only: { labelKey: "safetyGuidance", color: "text-green", bg: "bg-green-50", descKey: "safetyGuidanceDesc" },
+  anonymous_report: { labelKey: "anonymousReport", color: "text-gold", bg: "bg-gold-50", descKey: "anonymousReportDesc" },
+  connect_counselor: { labelKey: "counselorSupport", color: "text-blue", bg: "bg-blue-50", descKey: "counselorSupportDesc" },
+  emergency_referral: { labelKey: "emergency", color: "text-red", bg: "bg-red-soft", descKey: "emergencyDesc" },
 };
 
 export default function Results() {
@@ -61,9 +61,9 @@ export default function Results() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-50 flex items-center justify-center">
             <Search size={32} className="text-blue" />
           </div>
-          <p className="text-navy font-semibold mb-2">No report data found</p>
+          <p className="text-navy font-semibold mb-2">{t("noReportData")}</p>
           <p className="text-slate-gray text-sm mb-4">
-            Upload a screenshot to get started.
+            {t("uploadToStart")}
           </p>
           <Link
             to="/report"
@@ -88,7 +88,7 @@ export default function Results() {
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-3xl font-bold text-white mb-2">{t("analysisResults")}</h1>
           <p className="text-blue-200">
-            Our AI has reviewed the message. Here is what we found.
+            {t("aiReviewedMsg")}
           </p>
         </div>
       </section>
@@ -108,8 +108,8 @@ export default function Results() {
               <p className={`text-sm font-medium ${sev.text} uppercase tracking-wide`}>
                 {t("riskLevel")}
               </p>
-              <p className="text-2xl font-bold text-navy">{sev.label}</p>
-              <p className="text-sm text-slate-gray mt-1">{sev.message}</p>
+              <p className="text-2xl font-bold text-navy">{t(sev.labelKey)}</p>
+              <p className="text-sm text-slate-gray mt-1">{t(sev.messageKey)}</p>
             </div>
             {report.confidence != null && (
               <div className="text-right">
@@ -125,8 +125,8 @@ export default function Results() {
           <div className="flex items-center gap-3">
             <Info size={18} className={action.color} />
             <div>
-              <p className={`text-sm font-semibold ${action.color}`}>{action.label}</p>
-              <p className="text-xs text-slate-gray">{action.description}</p>
+              <p className={`text-sm font-semibold ${action.color}`}>{t(action.labelKey)}</p>
+              <p className="text-xs text-slate-gray">{t(action.descKey)}</p>
             </div>
           </div>
         </div>
@@ -138,8 +138,8 @@ export default function Results() {
               <Bot size={16} className="text-blue" />
             </div>
             <div>
-              <p className="font-semibold text-navy">Mlinzi AI Analysis</p>
-              <p className="text-sm text-slate-gray">What we found in the message</p>
+              <p className="font-semibold text-navy">{t("mlinziAnalysis")}</p>
+              <p className="text-sm text-slate-gray">{t("whatFoundInMessage")}</p>
             </div>
           </div>
 
@@ -194,10 +194,10 @@ export default function Results() {
               </div>
               <div>
                 <p className="font-semibold text-navy">
-                  Would you like help from a trained child protection counselor?
+                  {t("wouldLikeHelp")}
                 </p>
                 <p className="text-sm text-slate-gray mt-1">
-                  You can stay anonymous or connect with someone who can help.
+                  {t("stayAnonymousOrConnect")}
                 </p>
               </div>
             </div>
@@ -209,13 +209,13 @@ export default function Results() {
                 }}
                 className="flex-1 bg-white border border-soft text-navy font-medium py-3 rounded-2xl hover:bg-cloud transition-all duration-200"
               >
-                Keep this anonymous
+                {t("keepAnonymous")}
               </button>
               <button
                 onClick={() => setShowEscalation(true)}
                 className="flex-1 bg-blue text-white font-medium py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md"
               >
-                Connect me to a counselor
+                {t("connectMeCounselor")}
               </button>
             </div>
           </div>
@@ -244,7 +244,7 @@ export default function Results() {
         {/* Reassurance */}
         <div className="mt-8 text-center">
           <p className="text-sm text-slate-gray">
-            Thank you for speaking up. Your report helps protect other children too.
+            {t("thankYou")}
           </p>
         </div>
       </div>
@@ -323,7 +323,7 @@ function ReferralForm({ reportId }) {
             onChange={(e) => setForm({ ...form, district: e.target.value })}
             className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
           >
-            <option value="">Select your district</option>
+            <option value="">{t("selectYourDistrict")}</option>
             {districts.map((d) => (
               <option key={d} value={d}>{d}</option>
             ))}
@@ -332,7 +332,7 @@ function ReferralForm({ reportId }) {
 
         <div>
           <label className="block text-sm font-medium text-navy mb-2">
-            Preferred contact method <span className="text-red">*</span>
+            {t("contactMethod")} <span className="text-red">*</span>
           </label>
           <select
             value={form.preferredContact}
@@ -348,7 +348,7 @@ function ReferralForm({ reportId }) {
 
         <div>
           <label className="block text-sm font-medium text-navy mb-2">
-            {form.preferredContact === "email" ? "Email" : "Phone/WhatsApp number"} <span className="text-red">*</span>
+            {form.preferredContact === "email" ? "Email" : t("phoneWhatsappNumber")} <span className="text-red">*</span>
           </label>
           <input
             type={form.preferredContact === "email" ? "email" : "tel"}
@@ -369,7 +369,7 @@ function ReferralForm({ reportId }) {
             value={form.bestTime}
             onChange={(e) => setForm({ ...form, bestTime: e.target.value })}
             className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
-            placeholder="e.g., Morning, After school, Anytime"
+            placeholder={t("bestTimePlaceholder")}
           />
         </div>
 
@@ -400,11 +400,11 @@ function ReferralForm({ reportId }) {
           disabled={loading}
           className="w-full bg-blue text-white font-semibold py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md disabled:opacity-50"
         >
-          {loading ? "Submitting..." : t("submitReferral")}
+          {loading ? t("submitting") : t("submitReferral")}
         </button>
 
         <p className="text-xs text-slate-gray text-center">
-          Your contact information is encrypted and only shared with your assigned counselor.
+          {t("contactEncryptedNote")}
         </p>
       </form>
     </div>

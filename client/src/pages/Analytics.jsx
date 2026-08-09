@@ -46,7 +46,7 @@ export default function Analytics() {
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center bg-cloud">
         <div className="inline-flex items-center gap-3 text-slate-gray">
           <Loader2 className="animate-spin h-6 w-6" />
-          Loading analytics...
+          {t("loadingAnalytics")}
         </div>
       </div>
     );
@@ -57,8 +57,8 @@ export default function Analytics() {
       <div className="min-h-[calc(100vh-56px)] flex items-center justify-center bg-cloud">
         <div className="text-center bg-white p-8 rounded-2xl border border-soft">
           <BarChart3 size={56} className="mx-auto text-soft mb-4" />
-          <p className="text-navy font-semibold text-lg">Unable to load analytics</p>
-          <p className="text-sm text-slate-gray mt-1">Please try refreshing the page.</p>
+          <p className="text-navy font-semibold text-lg">{t("unableToLoad")}</p>
+          <p className="text-sm text-slate-gray mt-1">{t("tryRefreshing")}</p>
         </div>
       </div>
     );
@@ -78,7 +78,7 @@ export default function Analytics() {
             <h1 className="text-3xl font-bold text-white">{t("nationalDashboard")}</h1>
           </div>
           <p className="text-emerald-100 ml-12">
-            Evidence-driven insights for policy and decision makers
+            {t("evidenceDesc")}
           </p>
         </div>
       </section>
@@ -93,7 +93,7 @@ export default function Analytics() {
           </p>
           <p className="text-6xl font-extrabold">{reportStats.total}</p>
           <p className="text-emerald-100 mt-2">
-            {reportStats.escalated} escalated to counselors
+            {reportStats.escalated} {t("escalatedCounselors")}
           </p>
         </div>
 
@@ -139,7 +139,7 @@ export default function Analytics() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-navy">{referralStats.avgResponseTime ? `${referralStats.avgResponseTime}h` : "N/A"}</p>
-                <p className="text-xs text-slate-gray">Avg Response</p>
+                <p className="text-xs text-slate-gray">{t("avgResponse")}</p>
               </div>
             </div>
           </div>
@@ -153,10 +153,10 @@ export default function Analytics() {
               <div className="bg-red-100 p-2 rounded-lg">
                 <AlertTriangle size={18} className="text-red-600" />
               </div>
-              <h2 className="font-semibold text-navy">By Severity</h2>
+              <h2 className="font-semibold text-navy">{t("bySeverity")}</h2>
             </div>
             {reportStats.bySeverity.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No data yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noDataYet")}</p>
             ) : (
               <div className="space-y-4">
                 {reportStats.bySeverity.map((s) => {
@@ -189,10 +189,10 @@ export default function Analytics() {
               <div className="bg-blue-100 p-2 rounded-lg">
                 <Folder size={18} className="text-blue-600" />
               </div>
-              <h2 className="font-semibold text-navy">By Category</h2>
+              <h2 className="font-semibold text-navy">{t("byCategory")}</h2>
             </div>
             {reportStats.byCategory.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No data yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noDataYet")}</p>
             ) : (
               <div className="space-y-3">
                 {reportStats.byCategory.map((c) => {
@@ -219,10 +219,10 @@ export default function Analytics() {
               <div className="bg-emerald-100 p-2 rounded-lg">
                 <MapPin size={18} className="text-emerald-600" />
               </div>
-              <h2 className="font-semibold text-navy">By District</h2>
+              <h2 className="font-semibold text-navy">{t("byDistrict")}</h2>
             </div>
             {reportStats.byDistrict.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No data yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noDataYet")}</p>
             ) : (
               <div className="space-y-3">
                 {reportStats.byDistrict.slice(0, 8).map((d) => {
@@ -252,10 +252,10 @@ export default function Analytics() {
               <div className="bg-purple-100 p-2 rounded-lg">
                 <Radio size={18} className="text-purple-600" />
               </div>
-              <h2 className="font-semibold text-navy">By Channel</h2>
+              <h2 className="font-semibold text-navy">{t("byChannel")}</h2>
             </div>
             {!channelBreakdown || channelBreakdown.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No data yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noDataYet")}</p>
             ) : (
               <div className="space-y-3">
                 {channelBreakdown.map((ch) => {
@@ -282,10 +282,10 @@ export default function Analytics() {
               <div className="bg-amber-100 p-2 rounded-lg">
                 <Timer size={18} className="text-amber-600" />
               </div>
-              <h2 className="font-semibold text-navy">Response Time by District</h2>
+              <h2 className="font-semibold text-navy">{t("responseTimeByDistrict")}</h2>
             </div>
             {!responseTimeByDistrict || responseTimeByDistrict.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No response time data yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noResponseData")}</p>
             ) : (
               <div className="space-y-3">
                 {responseTimeByDistrict.slice(0, 6).map((rt) => {
@@ -294,7 +294,7 @@ export default function Analytics() {
                     <div key={rt.district} className="flex items-center justify-between py-2 border-b border-soft last:border-0">
                       <div>
                         <p className="text-sm font-medium text-navy">{rt.district}</p>
-                        <p className="text-xs text-slate-gray">{rt.total_cases} cases</p>
+                        <p className="text-xs text-slate-gray">{rt.total_cases} {t("casesLabel")}</p>
                       </div>
                       <span className="text-sm font-semibold text-navy">{hours}h</span>
                     </div>
@@ -313,10 +313,10 @@ export default function Analytics() {
               <div className="bg-purple-100 p-2 rounded-lg">
                 <ClipboardList size={18} className="text-purple-600" />
               </div>
-              <h2 className="font-semibold text-navy">Referral Status</h2>
+              <h2 className="font-semibold text-navy">{t("referralStatus")}</h2>
             </div>
             {referralStats.byStatus.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No referrals yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noReferrals")}</p>
             ) : (
               <div className="space-y-3">
                 {referralStats.byStatus.map((s) => {
@@ -345,10 +345,10 @@ export default function Analytics() {
               <div className="bg-amber-100 p-2 rounded-lg">
                 <TrendingUp size={18} className="text-amber-600" />
               </div>
-              <h2 className="font-semibold text-navy">Monthly Trend</h2>
+              <h2 className="font-semibold text-navy">{t("monthlyTrend")}</h2>
             </div>
             {reportStats.monthlyTrend.length === 0 ? (
-              <p className="text-sm text-slate-gray text-center py-8">No data yet</p>
+              <p className="text-sm text-slate-gray text-center py-8">{t("noDataYet")}</p>
             ) : (
               <div className="space-y-3">
                 {reportStats.monthlyTrend.slice(0, 6).map((m) => {
@@ -380,13 +380,9 @@ export default function Analytics() {
               <ClipboardList size={18} className="text-emerald-600" />
             </div>
             <div>
-              <p className="font-semibold text-navy mb-1">Data Summary</p>
+              <p className="font-semibold text-navy mb-1">{t("dataSummary")}</p>
               <p className="text-sm text-slate-gray">
-                This dashboard provides an overview of all reports submitted through Mlinzi.
-                Data is updated in real-time as new reports are received. Reports come from web,
-                SMS, and WhatsApp channels. All data is anonymous and aggregated to protect
-                children's privacy. Use these insights to inform policy decisions and allocate
-                resources where they are needed most.
+                {t("dataSummaryText")}
               </p>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getCaseById, updateCaseStatus, addCaseNote } from "../services/api";
 import PatternDivider from "../components/PatternDivider";
 import { ArrowLeft, FileText, Heart, Clock, MapPin, MessageSquare, AlertTriangle, CheckCircle, AlertCircle, Info, Search } from "lucide-react";
+import { useAccessibility } from "../context/AccessibilityContext";
 
 const severityConfig = {
   low: { bg: "bg-green-50", text: "text-green", label: "Low Risk", icon: CheckCircle },
@@ -44,6 +45,7 @@ export default function CaseDetail() {
   const [loading, setLoading] = useState(true);
   const [newNote, setNewNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const { t } = useAccessibility();
 
   useEffect(() => {
     async function loadCase() {
@@ -93,7 +95,7 @@ export default function CaseDetail() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          Loading case...
+          {t("loadingCase")}
         </div>
       </div>
     );
@@ -106,9 +108,9 @@ export default function CaseDetail() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-50 flex items-center justify-center">
             <Search size={32} className="text-blue" />
           </div>
-          <p className="text-navy font-semibold mb-2">Case not found</p>
+          <p className="text-navy font-semibold mb-2">{t("caseNotFound")}</p>
           <Link to="/counselor" className="text-blue font-medium hover:text-blue-dark">
-            Back to Dashboard
+            {t("backToDashboard")}
           </Link>
         </div>
       </div>
@@ -126,9 +128,9 @@ export default function CaseDetail() {
         <div className="max-w-4xl mx-auto">
           <Link to="/counselor" className="text-blue-200 hover:text-white text-sm mb-4 inline-flex items-center gap-1">
             <ArrowLeft size={14} />
-            Back to Dashboard
+            {t("backToDashboard")}
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Case #{caseData.id}</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">{t("caseNumber")}{caseData.id}</h1>
           <div className="flex flex-wrap items-center gap-3 text-blue-200 text-sm">
             <span className="flex items-center gap-1">
               <MapPin size={14} />
@@ -153,14 +155,14 @@ export default function CaseDetail() {
           <div className="md:col-span-2 space-y-6">
             {/* Category, Severity & Confidence */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-              <h2 className="font-semibold text-navy mb-4">Report Details</h2>
+              <h2 className="font-semibold text-navy mb-4">{t("reportDetails")}</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Category</p>
+                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("category")}</p>
                   <p className="text-navy font-semibold text-sm">{caseData.category}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Severity</p>
+                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("severity")}</p>
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${sev.bg} ${sev.text}`}>
                     <SevIcon size={12} />
                     {sev.label}
@@ -168,13 +170,13 @@ export default function CaseDetail() {
                 </div>
                 {caseData.confidence != null && (
                   <div>
-                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Confidence</p>
+                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("confidence")}</p>
                     <p className="text-navy font-semibold">{caseData.confidence}%</p>
                   </div>
                 )}
                 {caseData.recommended_action && (
                   <div>
-                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Recommended</p>
+                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("recommended")}</p>
                     <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${recAction.bg} ${recAction.color}`}>
                       {recAction.label}
                     </span>
@@ -189,7 +191,7 @@ export default function CaseDetail() {
                 <div className="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center">
                   <Heart size={16} className="text-blue" />
                 </div>
-                <h2 className="font-semibold text-navy">AI Guidance</h2>
+                <h2 className="font-semibold text-navy">{t("aiGuidance")}</h2>
               </div>
               <p className="text-slate-gray leading-relaxed">{caseData.guidance}</p>
             </div>
@@ -199,7 +201,7 @@ export default function CaseDetail() {
               <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <FileText size={16} className="text-slate-gray" />
-                  <h2 className="font-semibold text-navy">Extracted Text</h2>
+                  <h2 className="font-semibold text-navy">{t("extractedText")}</h2>
                 </div>
                 <p className="text-sm text-charcoal italic bg-cloud p-4 rounded-xl border border-soft whitespace-pre-wrap">
                   "{caseData.extracted_text}"
@@ -210,10 +212,10 @@ export default function CaseDetail() {
             {/* Screenshot */}
             {caseData.screenshot_path && (
               <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-                <h2 className="font-semibold text-navy mb-4">Screenshot</h2>
+                <h2 className="font-semibold text-navy mb-4">{t("screenshot")}</h2>
                 <img
                   src={caseData.screenshot_path}
-                  alt="Screenshot"
+                  alt={t("screenshot")}
                   className="rounded-xl max-h-64 border border-soft"
                 />
               </div>
@@ -221,13 +223,13 @@ export default function CaseDetail() {
 
             {/* Notes */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-              <h2 className="font-semibold text-navy mb-4">Follow-up Notes</h2>
+              <h2 className="font-semibold text-navy mb-4">{t("followUpNotes")}</h2>
 
               <form onSubmit={handleAddNote} className="mb-6">
                 <textarea
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Add a note about this case..."
+                  placeholder={t("addNotePlaceholder")}
                   className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
                   rows={3}
                 />
@@ -236,12 +238,12 @@ export default function CaseDetail() {
                   disabled={submitting || !newNote.trim()}
                   className="mt-2 bg-blue text-white px-5 py-2.5 rounded-2xl text-sm font-medium hover:bg-blue-dark transition-all duration-200 shadow-sm disabled:opacity-50"
                 >
-                  {submitting ? "Adding..." : "Add Note"}
+                  {submitting ? t("adding") : t("addNote")}
                 </button>
               </form>
 
               {notes.length === 0 ? (
-                <p className="text-sm text-slate-gray text-center py-4">No notes yet</p>
+                <p className="text-sm text-slate-gray text-center py-4">{t("noNotesYet")}</p>
               ) : (
                 <div className="space-y-4">
                   {notes.map((note) => (
@@ -264,7 +266,7 @@ export default function CaseDetail() {
           <div className="space-y-6">
             {/* Status */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-              <h2 className="font-semibold text-navy mb-4">Status</h2>
+              <h2 className="font-semibold text-navy mb-4">{t("underReview")}</h2>
               <div className="space-y-2">
                 {["new", "under_review", "resolved"].map((s) => {
                   const config = statusConfig[s];
@@ -288,29 +290,29 @@ export default function CaseDetail() {
 
             {/* Contact Info */}
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
-              <h2 className="font-semibold text-navy mb-4">Contact Information</h2>
+              <h2 className="font-semibold text-navy mb-4">{t("contactInformation")}</h2>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">District</p>
+                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("district")}</p>
                   <p className="text-navy font-medium">{caseData.district}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Preferred Contact</p>
+                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("preferredContactLabel")}</p>
                   <p className="text-navy font-medium">{contactLabels[caseData.preferred_contact]}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Contact Details</p>
+                  <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("contactDetails")}</p>
                   <p className="text-navy font-medium">{caseData.contact_value}</p>
                 </div>
                 {caseData.best_time && (
                   <div>
-                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Best Time</p>
+                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("bestTime")}</p>
                     <p className="text-navy font-medium">{caseData.best_time}</p>
                   </div>
                 )}
                 {caseData.is_safe && (
                   <div>
-                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">Currently Safe?</p>
+                    <p className="text-xs font-medium text-slate-gray uppercase tracking-wide mb-1">{t("currentlySafe")}</p>
                     <p className="text-navy font-medium">{caseData.is_safe}</p>
                   </div>
                 )}
@@ -321,24 +323,24 @@ export default function CaseDetail() {
             <div className="bg-white rounded-2xl border border-soft p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
                 <Clock size={16} className="text-slate-gray" />
-                <h2 className="font-semibold text-navy">Timeline</h2>
+                <h2 className="font-semibold text-navy">{t("timeline")}</h2>
               </div>
               <div className="relative ml-3 border-l-2 border-soft pl-6 space-y-4">
                 <TimelineItem
-                  label="Submitted"
+                  label={t("submitted")}
                   time={caseData.created_at}
                   color="bg-blue"
                   active
                 />
                 <TimelineItem
-                  label="AI Analyzed"
+                  label={t("aiAnalyzed")}
                   time={caseData.created_at}
                   color="bg-green"
                   active
                 />
                 {caseData.assigned_counselor_id && (
                   <TimelineItem
-                    label="Counselor Assigned"
+                    label={t("counselorAssigned")}
                     time={caseData.created_at}
                     color="bg-purple"
                     active
@@ -346,7 +348,7 @@ export default function CaseDetail() {
                 )}
                 {caseData.first_response_at && (
                   <TimelineItem
-                    label="First Response"
+                    label={t("firstResponse")}
                     time={caseData.first_response_at}
                     color="bg-gold"
                     active
@@ -354,7 +356,7 @@ export default function CaseDetail() {
                 )}
                 {caseData.status === "under_review" && (
                   <TimelineItem
-                    label="Under Review"
+                    label={t("underReview")}
                     time={new Date()}
                     color="bg-purple"
                     active
@@ -362,7 +364,7 @@ export default function CaseDetail() {
                 )}
                 {caseData.resolved_at && (
                   <TimelineItem
-                    label="Resolved"
+                    label={t("resolved")}
                     time={caseData.resolved_at}
                     color="bg-green"
                     active

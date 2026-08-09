@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Brain, Heart, Lock, Ear, Hand, Zap, ArrowRight, Globe, MessageSquare, Smartphone } from "lucide-react";
+import { Shield, Brain, Heart, Lock, Hand, ArrowRight, Globe, MessageSquare, Smartphone } from "lucide-react";
 import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 
@@ -27,17 +27,17 @@ export default function Home() {
     },
     {
       icon: Lock,
-      title: "100% Anonymous",
+      title: t("anonymousNoData"),
       desc: t("safetyMessage"),
       color: "bg-slate-50",
     },
   ];
 
   const values = [
-    { icon: Shield, label: "Protect", desc: "We safeguard children from digital harm." },
-    { icon: Ear, label: "Listen", desc: "Every child deserves to be heard." },
-    { icon: Hand, label: "Support", desc: "Guidance, counseling, and connection." },
-    { icon: Zap, label: "Empower", desc: "Confidence and digital safety knowledge." },
+    { icon: Shield, label: t("promise1"), desc: t("promise1Desc") },
+    { icon: Brain, label: t("promise2"), desc: t("promise2Desc") },
+    { icon: Hand, label: t("promise3"), desc: t("promise3Desc") },
+    { icon: Globe, label: t("promise4"), desc: t("promise4Desc") },
   ];
 
   return (
@@ -69,7 +69,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
             <Globe size={14} className="text-white" />
-            <span className="text-sm font-medium text-white">UNICEF Innovation Project</span>
+            <span className="text-sm font-medium text-white">{t("unicefInnovation")}</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 leading-tight">
@@ -90,7 +90,7 @@ export default function Home() {
           </Link>
 
           <p className="mt-4 text-sm text-white/70">
-            AI-powered digital protection for every child
+            {t("aiPoweredPlatform")}
           </p>
         </div>
       </section>
@@ -135,10 +135,10 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-navy mb-3">
-              Access Mlinzi Your Way
+              {t("accessMlinzi")}
             </h2>
             <p className="text-slate-gray max-w-lg mx-auto">
-              No smartphone? No internet? No problem. Mlinzi works across multiple channels so every child can get help.
+              {t("noSmartphone")}
             </p>
           </div>
 
@@ -147,22 +147,22 @@ export default function Home() {
               <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
                 <Globe size={24} className="text-navy" />
               </div>
-              <h3 className="font-semibold text-navy mb-2">Web App</h3>
-              <p className="text-sm text-slate-gray leading-relaxed">Upload screenshots and get instant AI analysis on any device with a browser.</p>
+              <h3 className="font-semibold text-navy mb-2">{t("webApp")}</h3>
+              <p className="text-sm text-slate-gray leading-relaxed">{t("webAppDesc")}</p>
             </div>
             <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
               <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
                 <Smartphone size={24} className="text-navy" />
               </div>
-              <h3 className="font-semibold text-navy mb-2">SMS</h3>
-              <p className="text-sm text-slate-gray leading-relaxed">Text Mlinzi from any basic phone. Get safety advice and connect with counselors via SMS menus.</p>
+              <h3 className="font-semibold text-navy mb-2">{t("sms")}</h3>
+              <p className="text-sm text-slate-gray leading-relaxed">{t("smsDesc")}</p>
             </div>
             <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
                 <MessageSquare size={24} className="text-navy" />
               </div>
-              <h3 className="font-semibold text-navy mb-2">WhatsApp</h3>
-              <p className="text-sm text-slate-gray leading-relaxed">Send messages, screenshots, and voice notes through WhatsApp for AI-powered guidance.</p>
+              <h3 className="font-semibold text-navy mb-2">{t("whatsapp")}</h3>
+              <p className="text-sm text-slate-gray leading-relaxed">{t("whatsappDesc")}</p>
             </div>
           </div>
         </div>
@@ -175,10 +175,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-navy mb-3">
-              The Problem We're Solving
+              {t("problemSolving")}
             </h2>
             <p className="text-slate-gray max-w-lg mx-auto">
-              Children across Africa face growing threats online — from cyberbullying to sextortion. Most suffer in silence.
+              {t("problemDesc")}
             </p>
           </div>
 
@@ -189,15 +189,15 @@ export default function Home() {
               poster="/mlinzi-full-logo.png"
             >
               <source src="/video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
+              {t("videoNotSupported")}
             </video>
           </div>
 
           <div className="mt-8 grid sm:grid-cols-3 gap-6">
             {[
-              { stat: "1 in 3", label: "children experience online bullying" },
-              { stat: "80%", label: "of cases go unreported" },
-              { stat: "0", label: "child should feel alone" },
+              { stat: t("oneInThree"), label: `${t("statChildren")} ${t("statReport")}` },
+              { stat: t("percent80"), label: `${t("statOnline")} ${t("statOnlineDesc")}` },
+              { stat: t("statProtected"), label: t("statProtectedDesc") },
             ].map((item, i) => (
               <div key={i} className="text-center">
                 <p className="text-3xl font-bold text-[#2E7D32]">{item.stat}</p>
@@ -214,7 +214,7 @@ export default function Home() {
       <section className="bg-[#1B5E20] py-16 px-4">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-white text-center mb-12">
-            Our Promise to You
+            {t("ourPromise")}
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -244,12 +244,10 @@ export default function Home() {
               <Heart size={24} className="text-blue" />
             </div>
             <h3 className="text-xl font-bold text-navy mb-3">
-              Every child. Everywhere. Protected.
+              {t("everyChildProtected")}
             </h3>
             <p className="text-slate-gray mb-6 leading-relaxed">
-              Mlinzi is built for children across Rwanda and Africa. If you are in
-              immediate danger, please call local emergency services or talk to a
-              trusted adult right away.
+              {t("builtForAfrica")}
             </p>
             <Link
               to="/report"
@@ -269,10 +267,10 @@ export default function Home() {
             <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-10 object-contain" />
           </div>
           <p className="text-sm text-[#A5D6A7] mb-2">
-            AI-powered child digital protection platform
+            {t("aiPoweredPlatform")}
           </p>
           <p className="text-xs text-[#81C784]">
-            A UNICEF Innovation Project • Protect. Listen. Connect.
+            {t("unicefProject")}
           </p>
         </div>
       </footer>
