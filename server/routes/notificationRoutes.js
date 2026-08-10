@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authenticateToken = require("../middleware/auth");
 const { requireRole } = require("../middleware/auth");
+const v = require("../middleware/validate");
 const {
   getCounselorNotifications,
   markNotificationRead,
@@ -24,7 +25,7 @@ router.get("/", authenticateToken, requireRole("counselor"), async (req, res) =>
 });
 
 // PATCH /api/notifications/:id/read - Mark as read
-router.patch("/:id/read", authenticateToken, requireRole("counselor"), async (req, res) => {
+router.patch("/:id/read", authenticateToken, requireRole("counselor"), v.markNotificationRead, async (req, res) => {
   try {
     await markNotificationRead(req.params.id);
     res.json({ status: "ok" });

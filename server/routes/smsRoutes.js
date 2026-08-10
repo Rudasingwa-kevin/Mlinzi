@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { handleIncomingSMS } = require("../services/smsService");
 const { channelLimiter } = require("../middleware/rateLimit");
+const v = require("../middleware/validate");
 
 // POST /api/sms/incoming - Africa's Talking webhook
-router.post("/incoming", channelLimiter, async (req, res) => {
+router.post("/incoming", channelLimiter, v.incomingSMS, async (req, res) => {
   try {
     const { from, text } = req.body;
 
