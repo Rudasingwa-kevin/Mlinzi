@@ -1,12 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // --------------- Middleware ---------------
+
+// Security headers
+app.use(helmet());
 
 // CORS — allow the React frontend
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
