@@ -215,6 +215,10 @@ const translations = {
     empowerDesc: "Child safety resources",
     unicefInnovation: "UNICEF Innovation Project",
     videoNotSupported: "Your browser does not support the video tag.",
+    cookieTitle: "Cookies & Privacy",
+    cookieMessage: "We use essential cookies to keep Mlinzi running safely. We do not track you or share your data. By accepting, you help us improve child protection services across Africa.",
+    cookieAccept: "Accept Cookies",
+    cookieReject: "Reject",
   },
   fr: {
     home: "Accueil",
@@ -428,6 +432,10 @@ const translations = {
     empowerDesc: "Ressources de sécurité des enfants",
     unicefInnovation: "Projet d'innovation UNICEF",
     videoNotSupported: "Votre navigateur ne prend pas en charge la balise vidéo.",
+    cookieTitle: "Cookies et confidentialité",
+    cookieMessage: "Nous utilisons des cookies essentiels pour garder Mlinzi en fonctionnement en toute sécurité. Nous ne vous suivons pas et ne partageons pas vos données. En acceptant, vous nous aidez à améliorer les services de protection de l'enfance en Afrique.",
+    cookieAccept: "Accepter les cookies",
+    cookieReject: "Refuser",
   },
   rw: {
     home: "Ahabanza",
@@ -641,6 +649,10 @@ const translations = {
     empowerDesc: "Amakuru y'umutekano bw'abana",
     unicefInnovation: "Igikorwa c'ubukungu cwa UNICEF",
     videoNotSupported: "Browser yawe ntiyakiriye ikibaho cyo kureba.",
+    cookieTitle: "Amakuru y'ibanga n'uburindi",
+    cookieMessage: "Dukoresha amakuru meza yo kugira ngo Mlinzi irakora neza. Ntakurondera kandi ntakugira ibiro. Ubwemere bwawe bushobora kugufasha twongere ubufasha bw'urukingo rw'abana mu bushinwa.",
+    cookieAccept: "Emeza amakuru",
+    cookieReject: "Anka",
   },
 };
 

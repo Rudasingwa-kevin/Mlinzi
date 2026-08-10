@@ -4,6 +4,7 @@ import { AccessibilityProvider } from "./context/AccessibilityContext";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AccessibilityToolbar from "./components/AccessibilityToolbar";
+import CookieConsent from "./components/CookieConsent";
 import Home from "./pages/Home";
 import ReportAbuse from "./pages/ReportAbuse";
 import Results from "./pages/Results";
@@ -65,6 +66,7 @@ export default function App() {
               </Routes>
             </main>
             <AccessibilityToolbar />
+            <CookieConsent />
           </div>
         </AccessibilityProvider>
       </AuthProvider>
