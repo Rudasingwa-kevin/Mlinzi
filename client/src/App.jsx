@@ -16,6 +16,7 @@ import CounselorDashboard from "./pages/CounselorDashboard";
 import CaseDetail from "./pages/CaseDetail";
 import Analytics from "./pages/Analytics";
 import AdminPanel from "./pages/AdminPanel";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
                 <Route path="/report" element={<ReportAbuse />} />
                 <Route path="/results" element={<Results />} />
                 <Route path="/refer/success" element={<ReferralSuccess />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route
