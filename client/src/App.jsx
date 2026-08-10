@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AccessibilityToolbar from "./components/AccessibilityToolbar";
 import CookieConsent from "./components/CookieConsent";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
 import ReportAbuse from "./pages/ReportAbuse";
 import Results from "./pages/Results";
@@ -24,7 +25,8 @@ export default function App() {
           <div className="min-h-screen bg-cloud">
             <Navbar />
             <main>
-              <Routes>
+              <ErrorBoundary>
+                <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/report" element={<ReportAbuse />} />
                 <Route path="/results" element={<Results />} />
@@ -64,6 +66,7 @@ export default function App() {
                   }
                 />
               </Routes>
+              </ErrorBoundary>
             </main>
             <AccessibilityToolbar />
             <CookieConsent />
