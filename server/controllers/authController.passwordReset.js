@@ -1,9 +1,20 @@
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 const TOKEN_EXPIRY_HOURS = 1;
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT, 10) || 587,
+  secure: process.env.SMTP_SECURE === "true",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 function generateToken() {
   return crypto.randomBytes(32).toString("hex");
@@ -13,14 +24,11 @@ async function sendResetEmail(email, token) {
   const resetUrl = `${CLIENT_URL}/reset-password?token=${token}`;
 
   try {
-    const { BrevoClient } = require("@getbrevo/brevo");
-    const brevo = new BrevoClient({
-      apiKey: process.env.BREVO_API_KEY,
-    });
-
-    await brevo.transactionalEmails.sendTransacEmail({
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || `"Mlinzi" <${process.env.SMTP_USER}>`,
+      to: email,
       subject: "Mlinzi — Reset Your Password",
-      htmlContent: `
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #2E7D32;">Password Reset Request</h2>
           <p>You requested to reset your password for your Mlinzi counselor account.</p>
@@ -31,15 +39,12 @@ async function sendResetEmail(email, token) {
           <p style="color: #999; font-size: 12px;">Mlinzi — Child Digital Protection Platform • UNICEF Innovation Project</p>
         </div>
       `,
-      sender: { name: "Mlinzi", email: "noreply@mlinzi.org" },
-      to: [{ email }],
     });
 
     console.log(`[PasswordReset] Email sent to ${email}`);
     return true;
   } catch (err) {
     console.error("[PasswordReset] Email send failed:", err.message);
-    // In development, log the reset URL so it can be tested without email
     if (process.env.NODE_ENV !== "production") {
       console.log(`[PasswordReset] DEV RESET URL: ${resetUrl}`);
       return true;
@@ -56,7 +61,6 @@ exports.forgotPassword = async (req, res) => {
       return res.status(400).json({ error: "Email is required" });
     }
 
-    // Always return success to prevent email enumeration
     const result = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
 
     if (result.rows.length === 0) {
@@ -67,16 +71,13 @@ exports.forgotPassword = async (req, res) => {
     const token = generateToken();
     const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
 
-    // Invalidate any existing tokens for this user
     await pool.query("UPDATE password_reset_tokens SET used = TRUE WHERE user_id = $1", [userId]);
 
-    // Save new token
     await pool.query(
       "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)",
       [userId, token, expiresAt]
     );
 
-    // Send email
     await sendResetEmail(email, token);
 
     res.json({ message: "If an account exists with that email, a reset link has been sent." });
@@ -98,7 +99,6 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ error: "Password must be at least 8 characters" });
     }
 
-    // Find valid token
     const result = await pool.query(
       "SELECT * FROM password_reset_tokens WHERE token = $1 AND used = FALSE AND expires_at > NOW()",
       [token]
@@ -109,14 +109,9 @@ exports.resetPassword = async (req, res) => {
     }
 
     const resetEntry = result.rows[0];
-
-    // Hash new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update password
     await pool.query("UPDATE users SET password = $1 WHERE id = $2", [hashedPassword, resetEntry.user_id]);
-
-    // Mark token as used
     await pool.query("UPDATE password_reset_tokens SET used = TRUE WHERE id = $1", [resetEntry.id]);
 
     res.json({ message: "Password reset successful. You can now log in." });
