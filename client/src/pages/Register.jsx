@@ -65,70 +65,55 @@ export default function Register() {
   return (
     <div className="min-h-[calc(100vh-56px)] flex">
       {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#0B1220] via-[#1a2744] to-[#2E7D32] relative overflow-hidden">
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-5">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#388E3C] relative overflow-hidden flex-col justify-center">
+
+        {/* Imigongo pattern */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="2" fill="white" />
+              <pattern id="imi-register" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="white" strokeWidth="1"/>
+                <path d="M40 10 L70 40 L40 70 L10 40 Z" fill="none" stroke="white" strokeWidth="1"/>
+                <path d="M40 20 L60 40 L40 60 L20 40 Z" fill="none" stroke="white" strokeWidth="1"/>
+                <path d="M0 0 L20 0 L0 20 Z" fill="white" opacity="0.3"/>
+                <path d="M80 0 L80 20 L60 0 Z" fill="white" opacity="0.3"/>
+                <path d="M0 80 L0 60 L20 80 Z" fill="white" opacity="0.3"/>
+                <path d="M80 80 L60 80 L80 60 Z" fill="white" opacity="0.3"/>
+                <circle cx="40" cy="40" r="3" fill="white" opacity="0.5"/>
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#dots)" />
+            <rect width="100%" height="100%" fill="url(#imi-register)"/>
           </svg>
         </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-12 lg:px-16">
-          <div className="mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6">
-              <Shield size={32} className="text-white" />
+        {/* Glowing orbs */}
+        <div className="lp-orb1 absolute top-16 right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="lp-orb2 absolute bottom-20 left-8 w-56 h-56 bg-[#1B5E20]/50 rounded-full blur-3xl pointer-events-none" />
+        <div className="lp-orb3 absolute top-1/2 right-1/4 w-28 h-28 bg-white/8 rounded-full blur-2xl pointer-events-none" />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-center px-12 lg:px-16 py-12">
+
+          {/* Shield badge */}
+          <div className="relative inline-block mb-8 lp-pulse" style={{ width: "fit-content" }}>
+            <div className="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/25 shadow-2xl">
+              <Shield size={30} className="text-white drop-shadow" />
             </div>
-            <h1 className="text-4xl font-bold text-white mb-4">
-              Join <span className="text-[#60A5FA]">Mlinzi</span> today
-            </h1>
-            <p className="text-blue-200 text-lg leading-relaxed">
-              Be part of the team protecting children across Rwanda and Africa.
-            </p>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-4 mt-8">
-            {[
-              { value: "1,248+", label: "Reports Handled" },
-              { value: "150+", label: "Counselors" },
-              { value: "30", label: "Districts" },
-              { value: "24/7", label: "Support" },
-            ].map((stat, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-blue-200 mt-1">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+          <h1 className="text-4xl font-extrabold text-white mb-3 leading-tight">
+            Join <span className="lp-shimmer">Mlinzi</span> today
+          </h1>
+          <p className="text-white/70 text-base leading-relaxed max-w-xs mb-10">
+            Be part of the team protecting children across Rwanda and Africa.
+          </p>
 
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <p className="text-blue-200 text-sm">
-              "Every child deserves to be protected in the digital world."
-            </p>
-            <p className="text-blue-300 text-xs mt-2">
-              — Mlinzi Mission Statement
-            </p>
-          </div>
         </div>
-
-        {/* Floating elements */}
-        <div className="absolute top-32 right-16 w-40 h-40 bg-[#60A5FA]/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-24 left-10 w-32 h-32 bg-[#2E7D32]/30 rounded-full blur-2xl" />
       </div>
 
       {/* Right side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-[#f8fafc]">
         <div className="w-full max-w-md">
-          {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-8">
-            <img src="/mlinzi-icon.png" alt="Mlinzi" className="h-12 mx-auto mb-3" />
-            <span className="text-xl font-bold text-[#0B1220]">Mlinzi</span>
-          </div>
 
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-[#0B1220] mb-2">Create account</h2>

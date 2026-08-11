@@ -89,16 +89,14 @@ export default function Navbar() {
           transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .mlinzi-nav.scrolled {
-          background: rgba(27, 94, 32, 0.82);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.22);
-          padding-top: 2px;
-          padding-bottom: 2px;
+          background: rgba(21, 78, 26, 0.88);
+          backdrop-filter: blur(20px) saturate(1.6);
+          -webkit-backdrop-filter: blur(20px) saturate(1.6);
+          box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 8px 32px rgba(0,0,0,0.28);
         }
         .mlinzi-nav.top {
           background: #1B5E20;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          box-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 2px 12px rgba(0,0,0,0.2);
         }
 
         /* ── nav link ── */
@@ -106,77 +104,75 @@ export default function Navbar() {
           position: relative;
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          padding: 8px 14px;
-          border-radius: 999px;
+          gap: 7px;
+          padding: 8px 16px 10px;
+          border-radius: 0;
           font-size: 0.875rem;
           font-weight: 500;
-          color: rgba(255,255,255,0.8);
-          transition: color 0.2s, background 0.2s;
-          overflow: hidden;
+          letter-spacing: 0.01em;
+          color: rgba(255,255,255,0.65);
+          transition: color 0.2s ease;
           white-space: nowrap;
+          text-decoration: none;
         }
-        .nav-link::before {
+        .nav-link:hover {
+          color: rgba(255,255,255,0.95);
+        }
+
+        /* ── sliding underline ── */
+        .nav-link::after {
           content: '';
           position: absolute;
-          inset: 0;
-          border-radius: 999px;
-          background: rgba(255,255,255,0.1);
+          bottom: 4px;
+          left: 16px;
+          right: 16px;
+          height: 2px;
+          border-radius: 99px;
+          background: linear-gradient(90deg, #81C784, #A5D6A7);
+          transform: scaleX(0);
+          transform-origin: center;
+          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                      opacity 0.2s;
           opacity: 0;
-          transform: scale(0.7);
-          transition: opacity 0.25s, transform 0.25s;
         }
-        .nav-link:hover::before,
-        .nav-link.active::before {
-          opacity: 1;
-          transform: scale(1);
+        .nav-link:hover::after {
+          transform: scaleX(0.6);
+          opacity: 0.7;
         }
         .nav-link.active {
           color: #fff;
-          background: rgba(255,255,255,0.15);
-          box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+          font-weight: 600;
         }
-        .nav-link:hover {
-          color: #fff;
-        }
-
-        /* ── active pip ── */
-        .nav-pip {
-          position: absolute;
-          bottom: 4px;
-          left: 50%;
-          transform: translateX(-50%) scaleX(0);
-          width: 20px;
-          height: 3px;
-          border-radius: 99px;
-          background: #A5D6A7;
-          transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-        }
-        .nav-link.active .nav-pip {
-          transform: translateX(-50%) scaleX(1);
+        .nav-link.active::after {
+          transform: scaleX(1);
+          opacity: 1;
+          box-shadow: 0 0 8px rgba(165, 214, 167, 0.6);
         }
 
         /* ── login btn ── */
         .login-btn {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          padding: 8px 18px;
+          gap: 7px;
+          padding: 8px 20px;
           border-radius: 999px;
           font-size: 0.875rem;
-          font-weight: 600;
-          background: rgba(255,255,255,0.15);
-          color: #fff;
-          border: 1px solid rgba(255,255,255,0.25);
-          transition: background 0.2s, border-color 0.2s, transform 0.15s;
+          font-weight: 700;
+          background: #fff;
+          color: #1B5E20;
+          border: none;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+          letter-spacing: 0.01em;
         }
         .login-btn:hover {
-          background: rgba(255,255,255,0.25);
-          border-color: rgba(255,255,255,0.45);
-          transform: translateY(-1px);
+          background: #F1F8E9;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
         .login-btn:active {
           transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         /* ── avatar dropdown ── */
@@ -341,7 +337,6 @@ export default function Navbar() {
                 >
                   <Icon size={15} />
                   <span>{link.label}</span>
-                  <span className="nav-pip" />
                 </Link>
               );
             })}
