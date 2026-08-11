@@ -209,9 +209,6 @@ export default function Login() {
                 />
                 <span className="text-sm text-[#64748B]">Remember me</span>
               </label>
-              <button type="button" className="text-sm text-[#2E7D32] hover:text-[#1B5E20] font-medium">
-                Forgot password?
-              </button>
             </div>
 
             <button
