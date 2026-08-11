@@ -1,98 +1,83 @@
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
 const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
-
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-const TOKEN_EXPIRY_HOURS = 1;
-
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_KEY,
-  },
-});
-
-function generateToken() {
-  return crypto.randomBytes(32).toString("hex");
-}
-
-async function sendResetEmail(email, token) {
-  const resetUrl = `${CLIENT_URL}/reset-password?token=${token}`;
-
-  try {
-    await transporter.sendMail({
-      from: `"${process.env.SENDER_NAME || "Mlinzi"}" <${process.env.SENDER_EMAIL}>`,
-      to: email,
-      subject: "Mlinzi — Reset Your Password",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #2E7D32;">Password Reset Request</h2>
-          <p>You requested to reset your password for your Mlinzi counselor account.</p>
-          <p>Click the button below to set a new password. This link expires in ${TOKEN_EXPIRY_HOURS} hour.</p>
-          <a href="${resetUrl}" style="display: inline-block; background: #2E7D32; color: white; padding: 12px 24px; text-decoration: none; border-radius: 12px; margin: 16px 0;">Reset Password</a>
-          <p style="color: #666; font-size: 13px;">If you didn't request this, you can safely ignore this email. Your password will not change.</p>
-          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-          <p style="color: #999; font-size: 12px;">Mlinzi — Child Digital Protection Platform • UNICEF Innovation Project</p>
-        </div>
-      `,
-    });
-
-    console.log(`[PasswordReset] Email sent to ${email}`);
-    return true;
-  } catch (err) {
-    console.error("[PasswordReset] Email send failed:", err.message);
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`[PasswordReset] DEV RESET URL: ${resetUrl}`);
-      return true;
-    }
-    return false;
-  }
-}
+const { sendOTP, verifyOTP } = require("../services/otpService");
 
 exports.forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { phone } = req.body;
 
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
+    if (!phone) {
+      return res.status(400).json({ error: "Phone number is required" });
     }
 
-    const result = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
-
-    if (result.rows.length === 0) {
-      return res.json({ message: "If an account exists with that email, a reset link has been sent." });
-    }
-
-    const userId = result.rows[0].id;
-    const token = generateToken();
-    const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
-
-    await pool.query("UPDATE password_reset_tokens SET used = TRUE WHERE user_id = $1", [userId]);
-
-    await pool.query(
-      "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)",
-      [userId, token, expiresAt]
+    // Check if a counselor exists with this phone
+    const result = await pool.query(
+      "SELECT id FROM users WHERE phone = $1 AND role = 'counselor'",
+      [phone]
     );
 
-    await sendResetEmail(email, token);
+    // Always return success to prevent phone enumeration
+    if (result.rows.length === 0) {
+      return res.json({ message: "If an account exists with that phone, a verification code has been sent." });
+    }
 
-    res.json({ message: "If an account exists with that email, a reset link has been sent." });
+    await sendOTP(phone, "reset");
+
+    res.json({ message: "If an account exists with that phone, a verification code has been sent." });
   } catch (err) {
     console.error("ForgotPassword error:", err);
     res.status(500).json({ error: "Failed to process request" });
   }
 };
 
+exports.verifyResetOTP = async (req, res) => {
+  try {
+    const { phone, code } = req.body;
+
+    if (!phone || !code) {
+      return res.status(400).json({ error: "Phone and code are required" });
+    }
+
+    const result = await verifyOTP(phone, code, "reset");
+
+    if (!result.valid) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    // Generate a short-lived reset token (5 minutes)
+    const crypto = require("crypto");
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+    // Get user ID from phone
+    const userResult = await pool.query(
+      "SELECT id FROM users WHERE phone = $1 AND role = 'counselor'",
+      [phone]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: "Account not found" });
+    }
+
+    // Save reset token
+    await pool.query(
+      "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)",
+      [userResult.rows[0].id, resetToken, expiresAt]
+    );
+
+    res.json({ verified: true, resetToken });
+  } catch (err) {
+    console.error("VerifyResetOTP error:", err);
+    res.status(500).json({ error: "Failed to verify code" });
+  }
+};
+
 exports.resetPassword = async (req, res) => {
   try {
-    const { token, password } = req.body;
+    const { resetToken, password } = req.body;
 
-    if (!token || !password) {
-      return res.status(400).json({ error: "Token and password are required" });
+    if (!resetToken || !password) {
+      return res.status(400).json({ error: "Reset token and password are required" });
     }
 
     if (password.length < 8) {
@@ -101,11 +86,11 @@ exports.resetPassword = async (req, res) => {
 
     const result = await pool.query(
       "SELECT * FROM password_reset_tokens WHERE token = $1 AND used = FALSE AND expires_at > NOW()",
-      [token]
+      [resetToken]
     );
 
     if (result.rows.length === 0) {
-      return res.status(400).json({ error: "Invalid or expired reset link" });
+      return res.status(400).json({ error: "Invalid or expired reset token" });
     }
 
     const resetEntry = result.rows[0];

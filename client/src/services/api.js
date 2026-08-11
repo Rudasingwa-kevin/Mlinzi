@@ -43,6 +43,21 @@ export async function forgotPassword(email) {
   return data;
 }
 
+export async function sendOTP(phone, purpose) {
+  const { data } = await api.post("/otp/send", { phone, purpose });
+  return data;
+}
+
+export async function verifyOTP(phone, code, purpose) {
+  const { data } = await api.post("/otp/verify", { phone, code, purpose });
+  return data;
+}
+
+export async function verifyResetOTP(phone, code) {
+  const { data } = await api.post("/auth/verify-reset-otp", { phone, code });
+  return data;
+}
+
 export async function resetPassword(token, password) {
   const { data } = await api.post("/auth/reset-password", { token, password });
   return data;

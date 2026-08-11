@@ -81,6 +81,10 @@ app.use("/api/whatsapp", whatsappRoutes);
 const notificationRoutes = require("./routes/notificationRoutes");
 app.use("/api/notifications", notificationRoutes);
 
+// OTP routes (signup verification, password reset)
+const otpRoutes = require("./routes/otpRoutes");
+app.use("/api/otp", otpRoutes);
+
 // --------------- 404 Handler ---------------
 
 app.use((req, res) => {
