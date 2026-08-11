@@ -186,7 +186,7 @@ export default function Home() {
             <video
               controls
               className="w-full aspect-video"
-              poster="/mlinzi-full-logo.png"
+              poster="/full.png"
             >
               <source src="/video.mp4" type="video/mp4" />
               {t("videoNotSupported")}
@@ -264,7 +264,7 @@ export default function Home() {
       <footer className="bg-[#1B5E20] py-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center mb-3">
-            <img src="/mlinzi-full-logo.png" alt="Mlinzi" className="h-10 object-contain" />
+            <img src="/full.png" alt="Mlinzi" className="h-10 object-contain" />
           </div>
           <p className="text-sm text-[#A5D6A7] mb-2">
             {t("aiPoweredPlatform")}
