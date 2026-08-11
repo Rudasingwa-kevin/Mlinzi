@@ -4,26 +4,36 @@ const { sendOTP, verifyOTP } = require("../services/otpService");
 
 exports.forgotPassword = async (req, res) => {
   try {
-    const { phone } = req.body;
+    const { destination, channel } = req.body;
 
-    if (!phone) {
-      return res.status(400).json({ error: "Phone number is required" });
+    if (!destination) {
+      return res.status(400).json({ error: "Phone number or email is required" });
     }
 
-    // Check if a counselor exists with this phone
-    const result = await pool.query(
-      "SELECT id FROM users WHERE phone = $1 AND role = 'counselor'",
-      [phone]
-    );
+    if (!["sms", "email"].includes(channel)) {
+      return res.status(400).json({ error: "Channel must be 'sms' or 'email'" });
+    }
 
-    // Always return success to prevent phone enumeration
+    // Check if a counselor exists with this phone or email
+    let query, params;
+    if (channel === "sms") {
+      query = "SELECT id FROM users WHERE phone = $1 AND role = 'counselor'";
+      params = [destination];
+    } else {
+      query = "SELECT id FROM users WHERE email = $1 AND role = 'counselor'";
+      params = [destination];
+    }
+
+    const result = await pool.query(query, params);
+
+    // Always return success to prevent enumeration
     if (result.rows.length === 0) {
-      return res.json({ message: "If an account exists with that phone, a verification code has been sent." });
+      return res.json({ message: "If an account exists, a verification code has been sent." });
     }
 
-    await sendOTP(phone, "reset");
+    await sendOTP(destination, "reset", channel);
 
-    res.json({ message: "If an account exists with that phone, a verification code has been sent." });
+    res.json({ message: "If an account exists, a verification code has been sent." });
   } catch (err) {
     console.error("ForgotPassword error:", err);
     res.status(500).json({ error: "Failed to process request" });
@@ -32,13 +42,13 @@ exports.forgotPassword = async (req, res) => {
 
 exports.verifyResetOTP = async (req, res) => {
   try {
-    const { phone, code } = req.body;
+    const { destination, code } = req.body;
 
-    if (!phone || !code) {
-      return res.status(400).json({ error: "Phone and code are required" });
+    if (!destination || !code) {
+      return res.status(400).json({ error: "Destination and code are required" });
     }
 
-    const result = await verifyOTP(phone, code, "reset");
+    const result = await verifyOTP(destination, code, "reset");
 
     if (!result.valid) {
       return res.status(400).json({ error: result.error });
@@ -49,11 +59,19 @@ exports.verifyResetOTP = async (req, res) => {
     const resetToken = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    // Get user ID from phone
-    const userResult = await pool.query(
-      "SELECT id FROM users WHERE phone = $1 AND role = 'counselor'",
-      [phone]
-    );
+    // Get user ID from phone or email
+    let userResult;
+    if (destination.includes("@")) {
+      userResult = await pool.query(
+        "SELECT id FROM users WHERE email = $1 AND role = 'counselor'",
+        [destination]
+      );
+    } else {
+      userResult = await pool.query(
+        "SELECT id FROM users WHERE phone = $1 AND role = 'counselor'",
+        [destination]
+      );
+    }
 
     if (userResult.rows.length === 0) {
       return res.status(400).json({ error: "Account not found" });

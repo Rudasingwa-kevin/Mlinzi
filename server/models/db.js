@@ -126,7 +126,7 @@ async function migrate() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS otp_codes (
         id              SERIAL PRIMARY KEY,
-        phone           VARCHAR(30) NOT NULL,
+        destination     VARCHAR(255) NOT NULL,
         code            VARCHAR(6) NOT NULL,
         purpose         VARCHAR(20) NOT NULL CHECK (purpose IN ('signup', 'reset')),
         expires_at      TIMESTAMP NOT NULL,
@@ -135,7 +135,7 @@ async function migrate() {
         created_at      TIMESTAMP DEFAULT NOW()
       )
     `);
-    await pool.query(`CREATE INDEX IF NOT EXISTS idx_otp_phone_purpose ON otp_codes(phone, purpose)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_otp_dest_purpose ON otp_codes(destination, purpose)`);
 
     // Indexes
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_category     ON reports(category)`);

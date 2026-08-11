@@ -15,18 +15,21 @@ function validate(req, res, next) {
   next();
 }
 
-// POST /api/otp/send - Send OTP to phone
+// POST /api/otp/send - Send OTP via SMS or email
 router.post("/send", channelLimiter, [
-  body("phone")
+  body("destination")
     .trim()
-    .matches(/^\+?[0-9]{7,15}$/).withMessage("Invalid phone number"),
+    .notEmpty().withMessage("Destination is required")
+    .isLength({ max: 255 }).withMessage("Destination too long"),
+  body("channel")
+    .isIn(["sms", "email"]).withMessage("Channel must be 'sms' or 'email'"),
   body("purpose")
     .isIn(["signup", "reset"]).withMessage("Purpose must be 'signup' or 'reset'"),
   validate,
 ], async (req, res) => {
   try {
-    const { phone, purpose } = req.body;
-    const result = await sendOTP(phone, purpose);
+    const { destination, channel, purpose } = req.body;
+    const result = await sendOTP(destination, purpose, channel);
     res.json({ message: "Verification code sent", expiresIn: result.expiresIn });
   } catch (err) {
     console.error("SendOTP error:", err);
@@ -36,9 +39,9 @@ router.post("/send", channelLimiter, [
 
 // POST /api/otp/verify - Verify OTP code
 router.post("/verify", channelLimiter, [
-  body("phone")
+  body("destination")
     .trim()
-    .matches(/^\+?[0-9]{7,15}$/).withMessage("Invalid phone number"),
+    .notEmpty().withMessage("Destination is required"),
   body("code")
     .isLength({ min: 6, max: 6 }).withMessage("Code must be 6 digits")
     .isNumeric().withMessage("Code must be numbers only"),
@@ -47,11 +50,11 @@ router.post("/verify", channelLimiter, [
   validate,
 ], async (req, res) => {
   try {
-    const { phone, code, purpose } = req.body;
-    const result = await verifyOTP(phone, code, purpose);
+    const { destination, code, purpose } = req.body;
+    const result = await verifyOTP(destination, code, purpose);
 
     if (result.valid) {
-      res.json({ verified: true, message: "Phone number verified" });
+      res.json({ verified: true, message: "Verified successfully" });
     } else {
       res.status(400).json({ verified: false, error: result.error });
     }

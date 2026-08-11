@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Phone, ArrowLeft, Loader2, CheckCircle, KeyRound } from "lucide-react";
+import { Phone, Mail, ArrowLeft, Loader2, CheckCircle, KeyRound } from "lucide-react";
 import { sendOTP, verifyResetOTP } from "../services/api";
 import { useAccessibility } from "../context/AccessibilityContext";
 import PatternDivider from "../components/PatternDivider";
 
 export default function ForgotPassword() {
-  const [step, setStep] = useState("phone"); // phone → otp → reset
-  const [phone, setPhone] = useState("");
+  const [step, setStep] = useState("channel"); // channel → destination → otp → reset
+  const [channel, setChannel] = useState(""); // sms or email
+  const [destination, setDestination] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [resetToken, setResetToken] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -15,15 +16,21 @@ export default function ForgotPassword() {
   const [countdown, setCountdown] = useState(0);
   const { t } = useAccessibility();
 
+  function handleChannelChoice(choice) {
+    setChannel(choice);
+    setDestination("");
+    setStep("destination");
+  }
+
   async function handleSendOTP(e) {
     e.preventDefault();
-    if (!phone.trim()) return;
+    if (!destination.trim()) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      await sendOTP(phone, "reset");
+      await sendOTP(destination, channel, "reset");
       setStep("otp");
       startCountdown();
     } catch (err) {
@@ -42,7 +49,7 @@ export default function ForgotPassword() {
     setError(null);
 
     try {
-      const result = await verifyResetOTP(phone, code);
+      const result = await verifyResetOTP(destination, code);
       setResetToken(result.resetToken);
       setStep("reset");
     } catch (err) {
@@ -57,7 +64,6 @@ export default function ForgotPassword() {
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
-    // Auto-focus next input
     if (value && index < 5) {
       document.getElementById(`otp-${index + 1}`)?.focus();
     }
@@ -102,15 +108,60 @@ export default function ForgotPassword() {
           {t("backToLogin")}
         </Link>
 
-        {/* Step 1: Enter phone */}
-        {step === "phone" && (
+        {/* Step 1: Choose channel */}
+        {step === "channel" && (
+          <div className="bg-white border border-soft rounded-2xl p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                <KeyRound size={20} className="text-green" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-navy">{t("chooseHowToReset")}</h2>
+                <p className="text-xs text-slate-gray">{t("chooseChannelDesc")}</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => handleChannelChoice("sms")}
+                className="w-full flex items-center gap-4 p-4 border border-soft rounded-2xl hover:border-green hover:bg-green-50 transition-all text-left"
+              >
+                <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                  <Phone size={22} className="text-green" />
+                </div>
+                <div>
+                  <p className="font-semibold text-navy">{t("smsOtp")}</p>
+                  <p className="text-xs text-slate-gray">{t("smsOtpDesc")}</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleChannelChoice("email")}
+                className="w-full flex items-center gap-4 p-4 border border-soft rounded-2xl hover:border-green hover:bg-green-50 transition-all text-left"
+              >
+                <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                  <Mail size={22} className="text-green" />
+                </div>
+                <div>
+                  <p className="font-semibold text-navy">{t("emailOtp")}</p>
+                  <p className="text-xs text-slate-gray">{t("emailOtpDesc")}</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Enter destination */}
+        {step === "destination" && (
           <form onSubmit={handleSendOTP} className="bg-white border border-soft rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-                <Phone size={20} className="text-green" />
+                {channel === "sms" ? <Phone size={20} className="text-green" /> : <Mail size={20} className="text-green" />}
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-navy">{t("enterPhoneNumber")}</h2>
+                <h2 className="text-lg font-semibold text-navy">
+                  {channel === "sms" ? t("enterPhoneNumber") : t("enterEmailAddress")}
+                </h2>
                 <p className="text-xs text-slate-gray">{t("otpWillBeSent")}</p>
               </div>
             </div>
@@ -122,23 +173,29 @@ export default function ForgotPassword() {
             )}
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-navy mb-2">{t("phoneLabel")}</label>
+              <label className="block text-sm font-medium text-navy mb-2">
+                {channel === "sms" ? t("phoneLabel") : t("emailAddress")}
+              </label>
               <div className="relative">
-                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-gray" />
+                {channel === "sms" ? (
+                  <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-gray" />
+                ) : (
+                  <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-gray" />
+                )}
                 <input
-                  type="tel"
+                  type={channel === "sms" ? "tel" : "email"}
                   required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
                   className="w-full border border-soft rounded-2xl pl-11 pr-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-green/20 outline-none transition-all"
-                  placeholder="+250 7XX XXX XXX"
+                  placeholder={channel === "sms" ? "+250 7XX XXX XXX" : "counselor@example.com"}
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              disabled={loading || !phone.trim()}
+              disabled={loading || !destination.trim()}
               className="w-full bg-[#2E7D32] text-white font-semibold py-3 rounded-2xl hover:bg-[#1B5E20] disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2"
             >
               {loading ? (
@@ -148,7 +205,7 @@ export default function ForgotPassword() {
           </form>
         )}
 
-        {/* Step 2: Enter OTP */}
+        {/* Step 3: Enter OTP */}
         {step === "otp" && (
           <form onSubmit={handleVerifyOTP} className="bg-white border border-soft rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
@@ -157,7 +214,7 @@ export default function ForgotPassword() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-navy">{t("enterCode")}</h2>
-                <p className="text-xs text-slate-gray">{t("codeSentTo")} {phone}</p>
+                <p className="text-xs text-slate-gray">{t("codeSentTo")} {destination}</p>
               </div>
             </div>
 
@@ -207,7 +264,7 @@ export default function ForgotPassword() {
           </form>
         )}
 
-        {/* Step 3: Success */}
+        {/* Step 4: Success */}
         {step === "reset" && (
           <div className="bg-white border border-soft rounded-2xl p-8 shadow-sm text-center animate-fade-in-up">
             <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-green-50 flex items-center justify-center">
