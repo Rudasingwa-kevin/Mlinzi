@@ -1,8 +1,20 @@
 const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { validateEmail } = require("deep-email-validator");
 
 const JWT_SECRET = process.env.JWT_SECRET || "mlinzi-dev-secret-change-in-production";
+
+async function isEmailValid(email) {
+  const result = await validateEmail({
+    email,
+    validateMx: true,
+    validateTypo: true,
+    validateDisposable: true,
+    validateSMTP: false,
+  });
+  return result.valid;
+}
 
 exports.register = async (req, res) => {
   try {
@@ -14,6 +26,12 @@ exports.register = async (req, res) => {
 
     if (!["counselor", "national_society"].includes(role)) {
       return res.status(400).json({ error: "Invalid role" });
+    }
+
+    // Validate email format, MX records, typos, disposable domains
+    const validEmail = await isEmailValid(email);
+    if (!validEmail) {
+      return res.status(400).json({ error: "Please use a valid email address" });
     }
 
     const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
