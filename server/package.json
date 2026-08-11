@@ -15,6 +15,7 @@
   ],
   "license": "UNICEF Innovation",
   "dependencies": {
+    "@getbrevo/brevo": "^6.0.3",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "deep-email-validator": "^0.1.27",

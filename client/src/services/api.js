@@ -38,6 +38,16 @@ export function getUser() {
   return user ? JSON.parse(user) : null;
 }
 
+export async function forgotPassword(email) {
+  const { data } = await api.post("/auth/forgot-password", { email });
+  return data;
+}
+
+export async function resetPassword(token, password) {
+  const { data } = await api.post("/auth/reset-password", { token, password });
+  return data;
+}
+
 // Counselor management
 export async function getCounselors() {
   const { data } = await api.get("/auth/counselors");
