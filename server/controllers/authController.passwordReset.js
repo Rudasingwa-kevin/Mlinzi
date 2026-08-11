@@ -7,12 +7,12 @@ const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 const TOKEN_EXPIRY_HOURS = 1;
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT, 10) || 587,
-  secure: process.env.SMTP_SECURE === "true",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_KEY,
   },
 });
 
@@ -25,7 +25,7 @@ async function sendResetEmail(email, token) {
 
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || `"Mlinzi" <${process.env.SMTP_USER}>`,
+      from: `"${process.env.SENDER_NAME || "Mlinzi"}" <${process.env.SENDER_EMAIL}>`,
       to: email,
       subject: "Mlinzi — Reset Your Password",
       html: `
