@@ -126,6 +126,22 @@ exports.assignCase = async (req, res) => {
     if (!caseData) {
       return res.status(404).json({ error: "Case not found" });
     }
+
+    try {
+      const fullCase = await ReferralCase.findById(req.params.id);
+      if (fullCase) {
+        await notifyCounselorNewCase(req.user.id, {
+          id: fullCase.id,
+          district: fullCase.district,
+          category: fullCase.category,
+          severity: fullCase.severity,
+          channel: fullCase.channel,
+        });
+      }
+    } catch (notifErr) {
+      logger.warn({ err: notifErr }, "Assignment notification error (non-blocking)");
+    }
+
     res.json({ case: caseData });
   } catch (err) {
     logger.error({ err }, "AssignCase failed");

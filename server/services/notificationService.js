@@ -1,6 +1,6 @@
 const pool = require("../config/database");
 const { sendSMS } = require("./smsService");
-const { sendWhatsAppMessage } = require("./whatsappService");
+const { sendCaseAssignmentEmail, sendHighRiskAlertEmail } = require("./emailService");
 const logger = require("../config/logger");
 
 async function createNotification({ recipientType, recipientId, channel, title, message }) {
@@ -21,8 +21,7 @@ async function notifyCounselorNewCase(counselorId, caseData) {
     message: `Case #${caseData.id} from ${caseData.district} has been assigned to you. Category: ${caseData.category}, Severity: ${caseData.severity}`,
   });
 
-  // Also send via SMS/WhatsApp if counselor has phone
-  const userResult = await pool.query("SELECT phone, district FROM users WHERE id = $1", [counselorId]);
+  const userResult = await pool.query("SELECT phone, email, full_name FROM users WHERE id = $1", [counselorId]);
   const user = userResult.rows[0];
 
   if (user?.phone) {
@@ -35,13 +34,21 @@ async function notifyCounselorNewCase(counselorId, caseData) {
     }
   }
 
+  if (user?.email) {
+    try {
+      await sendCaseAssignmentEmail(user.email, caseData, user.full_name || "Counselor");
+      logger.info({ email: user.email, caseId: caseData.id }, "Case assignment email sent");
+    } catch (err) {
+      logger.warn({ err }, "Case assignment email failed");
+    }
+  }
+
   return notification;
 }
 
 async function notifyHighRiskCase(caseData) {
-  // Notify all approved counselors in the district
   const counselors = await pool.query(
-    "SELECT id, phone FROM users WHERE role = 'counselor' AND is_approved = TRUE AND district = $1",
+    "SELECT id, phone, email, full_name FROM users WHERE role = 'counselor' AND is_approved = TRUE AND district = $1",
     [caseData.district]
   );
 
@@ -62,6 +69,15 @@ async function notifyHighRiskCase(caseData) {
         await pool.query("UPDATE notifications SET sent = TRUE WHERE id = $1", [notification.id]);
       } catch (err) {
         logger.warn({ err }, "High-risk notification SMS failed");
+      }
+    }
+
+    if (counselor.email) {
+      try {
+        await sendHighRiskAlertEmail(counselor.email, caseData);
+        logger.info({ email: counselor.email, caseId: caseData.id }, "High-risk alert email sent");
+      } catch (err) {
+        logger.warn({ err }, "High-risk notification email failed");
       }
     }
   }
