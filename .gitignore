@@ -1,7 +1,7 @@
 node_modules/
 .env
-*.env
-server/.env
+.env.*
+!.env.example
 server/uploads/*
 !server/uploads/.gitkeep
 uploads/*
@@ -10,3 +10,11 @@ uploads/*
 .DS_Store
 Thumbs.db
 
+# Docker
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

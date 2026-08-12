@@ -1,0 +1,53 @@
+# Render Blueprint — one-click deploy
+# https://render.com/docs/blueprint-spec
+
+services:
+  # ── PostgreSQL Database ──
+  - type: postgresql
+    name: mlinzi-db
+    plan: free
+    databaseName: mlinzi
+    ipAllowList: []
+
+  # ── Backend API ──
+  - type: web
+    name: mlinzi-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mlinzi-db
+          property: connectionString
+      - key: CLIENT_URL
+        sync: false  # set after Vercel deploy
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ZEN_API_KEY
+        sync: false
+      - key: AFRICASTALKING_API_KEY
+        sync: false
+      - key: AFRICASTALKING_USERNAME
+        value: sandbox
+      - key: WHATSAPP_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: BREVO_SMTP_KEY
+        sync: false
+      - key: BREVO_SMTP_USER
+        sync: false
+      - key: SENDER_EMAIL
+        sync: false
+      - key: SENDER_NAME
+        value: Mlinzi
+      - key: RETENTION_DAYS
+        value: "90"
+      - key: MAX_FILE_SIZE
+        value: "5242880"

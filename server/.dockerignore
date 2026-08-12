@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+__tests__
+*.test.js
+jest.config.js
+.git
+.gitignore
+uploads/screenshot-*
+uploads/*.png
+uploads/*.jpg
+README.md
