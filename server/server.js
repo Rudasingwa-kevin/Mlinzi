@@ -12,12 +12,33 @@ const PORT = process.env.PORT || 5000;
 // --------------- Middleware ---------------
 
 // Security headers
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      mediaSrc: ["'self'"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+    },
+  },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+  noSniff: true,
+  frameguard: { action: "deny" },
+}));
 
 // HTTP request logging
 app.use(pinoHttp({ logger, autoLogging: process.env.NODE_ENV === "production" }));
 
 // CORS — allow the React frontend
+const isProduction = process.env.NODE_ENV === "production";
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
   .map((o) => o.trim());
@@ -25,14 +46,25 @@ const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
 app.use(
   cors({
     origin: (origin, cb) => {
-      // Allow requests with no origin (mobile apps, curl, server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Production: reject requests with no origin (non-browser clients must use API keys)
+      if (!origin && isProduction) {
+        return cb(new Error("Missing Origin header"));
+      }
+      // Allow requests with no origin in dev (curl, Postman, server-to-server)
+      if (!origin && !isProduction) {
+        return cb(null, true);
+      }
+      if (allowedOrigins.includes(origin)) {
         cb(null, true);
       } else {
         cb(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    exposedHeaders: ["X-Total-Count"],
+    maxAge: 86400,
   })
 );
 
@@ -104,6 +136,9 @@ app.use((req, res) => {
 // --------------- Global Error Handler ---------------
 
 app.use((err, req, res, next) => {
+  if (err.message === "Not allowed by CORS" || err.message === "Missing Origin header") {
+    return res.status(403).json({ error: "Origin not allowed by CORS policy" });
+  }
   logger.error({ err }, "Unhandled error");
   res.status(err.status || 500).json({
     error: err.message || "Internal server error",
