@@ -95,7 +95,7 @@ export default function ResetPassword() {
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white border border-soft rounded-2xl p-8 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-white border border-soft rounded-2xl p-8 shadow-sm" aria-label={t("setNewPassword")}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
                 <Shield size={20} className="text-green" />
@@ -126,11 +126,13 @@ export default function ResetPassword() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full border border-soft rounded-2xl pl-11 pr-12 py-3 text-sm focus:border-green focus:ring-2 focus:ring-green/20 outline-none transition-all"
                   placeholder="••••••••"
+                  aria-label={t("newPassword")}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-gray hover:text-navy transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -151,6 +153,7 @@ export default function ResetPassword() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full border border-soft rounded-2xl pl-11 pr-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-green/20 outline-none transition-all"
                   placeholder="••••••••"
+                  aria-label={t("confirmPassword")}
                 />
               </div>
               {confirmPassword && password !== confirmPassword && (
@@ -162,6 +165,7 @@ export default function ResetPassword() {
               type="submit"
               disabled={loading || !password || !confirmPassword}
               className="w-full bg-[#2E7D32] text-white font-semibold py-3 rounded-2xl hover:bg-[#1B5E20] disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2"
+              aria-label={t("resetPassword")}
             >
               {loading ? (
                 <>

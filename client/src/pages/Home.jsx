@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <div className="min-h-[calc(100vh-56px)]">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#388E3C] text-white py-20 px-4 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#388E3C] text-white py-20 px-4 relative overflow-hidden" aria-labelledby="hero-heading">
         <div className="absolute inset-0">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="opacity-10">
             <defs>
@@ -72,7 +72,7 @@ export default function Home() {
             <span className="text-sm font-medium text-white">{t("unicefInnovation")}</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 leading-tight" id="hero-heading">
             {t("heroTitle")}
           </h1>
 
@@ -83,6 +83,7 @@ export default function Home() {
           <Link
             to="/report"
             className="inline-flex items-center gap-2 bg-white text-[#1B5E20] font-semibold px-8 py-4 rounded-2xl hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-lg"
+            aria-label={t("reportNow")}
           >
             <Shield size={20} />
             {t("reportNow")}
@@ -98,9 +99,9 @@ export default function Home() {
       <PatternDivider />
 
       {/* How It Works */}
-      <section className="max-w-5xl mx-auto py-16 px-4">
+      <section className="max-w-5xl mx-auto py-16 px-4" aria-labelledby="how-it-works-heading">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-navy mb-3">
+          <h2 className="text-3xl font-bold text-navy mb-3" id="how-it-works-heading">
             {t("howItWorks")}
           </h2>
           <p className="text-slate-gray max-w-lg mx-auto">
@@ -131,10 +132,10 @@ export default function Home() {
       <PatternDivider />
 
       {/* Multichannel Access */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-16 px-4 bg-white" aria-labelledby="access-heading">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-navy mb-3">
+            <h2 className="text-3xl font-bold text-navy mb-3" id="access-heading">
               {t("accessMlinzi")}
             </h2>
             <p className="text-slate-gray max-w-lg mx-auto">
@@ -171,10 +172,10 @@ export default function Home() {
       <PatternDivider />
 
       {/* Video Section */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-16 px-4 bg-white" aria-labelledby="video-heading">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-navy mb-3">
+            <h2 className="text-3xl font-bold text-navy mb-3" id="video-heading">
               {t("problemSolving")}
             </h2>
             <p className="text-slate-gray max-w-lg mx-auto">
@@ -187,6 +188,7 @@ export default function Home() {
               controls
               className="w-full aspect-video"
               poster="/full.png"
+              aria-label={t("problemSolving")}
             >
               <source src="/video.mp4" type="video/mp4" />
               {t("videoNotSupported")}
@@ -211,9 +213,9 @@ export default function Home() {
       <PatternDivider />
 
       {/* Brand Values */}
-      <section className="bg-[#1B5E20] py-16 px-4">
+      <section className="bg-[#1B5E20] py-16 px-4" aria-labelledby="promise-heading">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-white text-center mb-12" id="promise-heading">
             {t("ourPromise")}
           </h2>
 
@@ -237,13 +239,13 @@ export default function Home() {
       <PatternDivider />
 
       {/* Safety Message */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4" aria-labelledby="safety-heading">
         <div className="max-w-2xl mx-auto text-center">
           <div className="bg-green-50 rounded-2xl p-8 border border-green/10">
             <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-green/10 flex items-center justify-center">
               <Heart size={24} className="text-blue" />
             </div>
-            <h3 className="text-xl font-bold text-navy mb-3">
+            <h3 className="text-xl font-bold text-navy mb-3" id="safety-heading">
               {t("everyChildProtected")}
             </h3>
             <p className="text-slate-gray mb-6 leading-relaxed">
@@ -261,7 +263,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#1B5E20] py-8 px-4">
+      <footer className="bg-[#1B5E20] py-8 px-4" role="contentinfo" aria-label={t("footer")}>
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center mb-3">
             <img src="/full.png" alt="Mlinzi" className="h-10 object-contain" />

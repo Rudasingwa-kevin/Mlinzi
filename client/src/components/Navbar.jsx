@@ -312,10 +312,10 @@ export default function Navbar() {
         }
       `}</style>
 
-      <nav className={`mlinzi-nav ${scrolled ? "scrolled" : "top"}`}>
+      <nav className={`mlinzi-nav ${scrolled ? "scrolled" : "top"}`} aria-label={t("mainNavigation")}>
         <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className="flex items-center group" aria-label={t("home")}>
             <img
               src="/full.png"
               alt="Mlinzi"
@@ -325,7 +325,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop links */}
-          <div className="desktop-links flex gap-1 items-center">
+          <div className="desktop-links flex gap-1 items-center" role="menubar" aria-label={t("mainNavigation")}>
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = pathname === link.to;
@@ -334,6 +334,7 @@ export default function Navbar() {
                   key={link.to}
                   to={link.to}
                   className={`nav-link ${isActive ? "active" : ""}`}
+                  role="menuitem"
                 >
                   <Icon size={15} />
                   <span>{link.label}</span>
@@ -349,6 +350,7 @@ export default function Navbar() {
                   onClick={() => setUserMenuOpen((o) => !o)}
                   aria-expanded={userMenuOpen}
                   aria-haspopup="true"
+                  aria-label={t("userMenu")}
                 >
                   <span className="avatar-circle">{getInitials(user.full_name)}</span>
                   <span className="hidden sm:inline max-w-[110px] truncate">
@@ -371,6 +373,7 @@ export default function Navbar() {
                     <button
                       className="dropdown-item danger"
                       onClick={() => { logout(); setUserMenuOpen(false); }}
+                      aria-label={t("logout")}
                     >
                       <LogOut size={15} />
                       {t("logout")}
@@ -379,7 +382,7 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <Link to="/login" className="login-btn ml-2">
+              <Link to="/login" className="login-btn ml-2" aria-label={t("login")}>
                 <LogIn size={15} />
                 <span>{t("login")}</span>
               </Link>
@@ -398,7 +401,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile menu */}
-        <div className={`mobile-menu ${mobileOpen ? "open" : ""}`}>
+        <div className={`mobile-menu ${mobileOpen ? "open" : ""}`} role="menu" aria-label={t("mainNavigation")}>
           <div className="px-4 pb-4 flex flex-col gap-1">
             {links.map((link) => {
               const Icon = link.icon;
@@ -407,6 +410,7 @@ export default function Navbar() {
                   key={link.to}
                   to={link.to}
                   className={`mobile-link ${pathname === link.to ? "active" : ""}`}
+                  role="menuitem"
                 >
                   <Icon size={17} />
                   {link.label}
@@ -421,12 +425,14 @@ export default function Navbar() {
                 className="mobile-link"
                 onClick={logout}
                 style={{ border: "none", background: "none", cursor: "pointer", color: "#ffcdd2" }}
+                role="menuitem"
+                aria-label={t("logout")}
               >
                 <LogOut size={17} />
                 {t("logout")}
               </button>
             ) : (
-              <Link to="/login" className="mobile-link">
+              <Link to="/login" className="mobile-link" role="menuitem" aria-label={t("login")}>
                 <LogIn size={17} />
                 {t("login")}
               </Link>

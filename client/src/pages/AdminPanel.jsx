@@ -112,7 +112,7 @@ export default function AdminPanel() {
 
       <PatternDivider />
 
-      <div className="max-w-6xl mx-auto py-8 px-4">
+      <div className="max-w-6xl mx-auto py-8 px-4" aria-label="Admin Panel">
         {/* Pending Approvals */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
@@ -158,6 +158,7 @@ export default function AdminPanel() {
                     <button
                       onClick={() => handleApprove(c.id)}
                       className="bg-[#2E7D32] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#1B5E20] transition-all flex items-center gap-2"
+                      aria-label={`Approve ${c.full_name}`}
                     >
                       <UserCheck size={16} />
                       Approve
@@ -283,6 +284,7 @@ export default function AdminPanel() {
                     onClick={handlePurge}
                     disabled={purging}
                     className="bg-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition-all flex items-center gap-2 disabled:opacity-50"
+                    aria-label={purging ? "Purging data" : "Purge expired data now"}
                   >
                     {purging ? (
                       <Loader2 size={16} className="animate-spin" />
@@ -319,6 +321,7 @@ export default function AdminPanel() {
                     <button
                       onClick={loadRetentionStats}
                       className="mt-3 text-xs text-emerald-600 hover:text-emerald-800 font-medium flex items-center gap-1"
+                      aria-label="Refresh retention stats"
                     >
                       <RefreshCw size={12} />
                       Refresh stats

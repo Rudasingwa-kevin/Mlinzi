@@ -125,6 +125,7 @@ export default function ForgotPassword() {
               <button
                 onClick={() => handleChannelChoice("sms")}
                 className="w-full flex items-center gap-4 p-4 border border-soft rounded-2xl hover:border-green hover:bg-green-50 transition-all text-left"
+                aria-label={t("smsOtp")}
               >
                 <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
                   <Phone size={22} className="text-green" />
@@ -138,6 +139,7 @@ export default function ForgotPassword() {
               <button
                 onClick={() => handleChannelChoice("email")}
                 className="w-full flex items-center gap-4 p-4 border border-soft rounded-2xl hover:border-green hover:bg-green-50 transition-all text-left"
+                aria-label={t("emailOtp")}
               >
                 <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
                   <Mail size={22} className="text-green" />
@@ -189,6 +191,7 @@ export default function ForgotPassword() {
                   onChange={(e) => setDestination(e.target.value)}
                   className="w-full border border-soft rounded-2xl pl-11 pr-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-green/20 outline-none transition-all"
                   placeholder={channel === "sms" ? "+250 7XX XXX XXX" : "counselor@example.com"}
+                  aria-label={channel === "sms" ? t("phoneLabel") : t("emailAddress")}
                 />
               </div>
             </div>
@@ -197,6 +200,7 @@ export default function ForgotPassword() {
               type="submit"
               disabled={loading || !destination.trim()}
               className="w-full bg-[#2E7D32] text-white font-semibold py-3 rounded-2xl hover:bg-[#1B5E20] disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2"
+              aria-label={t("sendCode")}
             >
               {loading ? (
                 <><Loader2 size={18} className="animate-spin" />{t("sending")}</>
@@ -236,6 +240,7 @@ export default function ForgotPassword() {
                   onChange={(e) => handleOtpChange(i, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(i, e)}
                   className="w-12 h-14 text-center text-xl font-bold border border-soft rounded-xl focus:border-green focus:ring-2 focus:ring-green/20 outline-none transition-all"
+                  aria-label={`OTP digit ${i + 1}`}
                 />
               ))}
             </div>
@@ -244,6 +249,7 @@ export default function ForgotPassword() {
               type="submit"
               disabled={loading || otp.join("").length !== 6}
               className="w-full bg-[#2E7D32] text-white font-semibold py-3 rounded-2xl hover:bg-[#1B5E20] disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2 mb-4"
+              aria-label={t("verifyCode")}
             >
               {loading ? (
                 <><Loader2 size={18} className="animate-spin" />{t("verifying")}</>

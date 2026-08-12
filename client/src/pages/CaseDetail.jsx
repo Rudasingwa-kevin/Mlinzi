@@ -232,11 +232,13 @@ export default function CaseDetail() {
                   placeholder={t("addNotePlaceholder")}
                   className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
                   rows={3}
+                  aria-label={t("addNotePlaceholder")}
                 />
                 <button
                   type="submit"
                   disabled={submitting || !newNote.trim()}
                   className="mt-2 bg-blue text-white px-5 py-2.5 rounded-2xl text-sm font-medium hover:bg-blue-dark transition-all duration-200 shadow-sm disabled:opacity-50"
+                  aria-label={t("addNote")}
                 >
                   {submitting ? t("adding") : t("addNote")}
                 </button>
@@ -280,6 +282,8 @@ export default function CaseDetail() {
                           ? `${config.bg} ${config.text} cursor-not-allowed opacity-60`
                           : "bg-cloud text-slate-gray hover:bg-soft"
                       }`}
+                      aria-label={`Set status to ${config.label}`}
+                      aria-pressed={caseData.status === s}
                     >
                       {config.label}
                     </button>

@@ -79,6 +79,7 @@ export default function ReferralSuccess() {
           <Link
             to="/report"
             className="flex-1 text-center bg-blue text-white font-semibold py-4 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            aria-label="Report Another"
           >
             <span className="text-lg">🛡️</span>
             Report Another
@@ -86,6 +87,7 @@ export default function ReferralSuccess() {
           <Link
             to="/"
             className="flex-1 text-center bg-white border border-navy text-navy font-semibold py-4 rounded-2xl hover:bg-cloud transition-all duration-200 flex items-center justify-center gap-2"
+            aria-label="Back to Home"
           >
             <span className="text-lg">🏠</span>
             Back to Home

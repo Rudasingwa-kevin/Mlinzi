@@ -208,12 +208,14 @@ export default function Results() {
                   navigate("/");
                 }}
                 className="flex-1 bg-white border border-soft text-navy font-medium py-3 rounded-2xl hover:bg-cloud transition-all duration-200"
+                aria-label={t("keepAnonymous")}
               >
                 {t("keepAnonymous")}
               </button>
               <button
                 onClick={() => setShowEscalation(true)}
                 className="flex-1 bg-blue text-white font-medium py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md"
+                aria-label={t("connectMeCounselor")}
               >
                 {t("connectMeCounselor")}
               </button>
@@ -228,6 +230,7 @@ export default function Results() {
           <Link
             to="/report"
             className="flex-1 text-center bg-blue text-white font-semibold py-4 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            aria-label={t("reportAnother")}
           >
             <Shield size={18} />
             {t("reportAnother")}
@@ -235,6 +238,7 @@ export default function Results() {
           <Link
             to="/"
             className="flex-1 text-center bg-white border border-navy text-navy font-semibold py-4 rounded-2xl hover:bg-cloud transition-all duration-200 flex items-center justify-center gap-2"
+            aria-label={t("backToHome")}
           >
             <Home size={18} />
             {t("backToHome")}
@@ -312,7 +316,7 @@ function ReferralForm({ reportId }) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <form onSubmit={handleSubmit} className="space-y-4 mt-4" aria-label={t("connectWithCounselor")}>
         <div>
           <label className="block text-sm font-medium text-navy mb-2">
             {t("district")} <span className="text-red">*</span>
@@ -322,6 +326,7 @@ function ReferralForm({ reportId }) {
             value={form.district}
             onChange={(e) => setForm({ ...form, district: e.target.value })}
             className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
+            aria-label={t("district")}
           >
             <option value="">{t("selectYourDistrict")}</option>
             {districts.map((d) => (
@@ -338,6 +343,7 @@ function ReferralForm({ reportId }) {
             value={form.preferredContact}
             onChange={(e) => setForm({ ...form, preferredContact: e.target.value })}
             className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all bg-white"
+            aria-label={t("contactMethod")}
           >
             <option value="phone">Phone call</option>
             <option value="sms">SMS</option>
@@ -357,6 +363,7 @@ function ReferralForm({ reportId }) {
             onChange={(e) => setForm({ ...form, contactValue: e.target.value })}
             className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
             placeholder={form.preferredContact === "email" ? "you@example.com" : "+250 7XX XXX XXX"}
+            aria-label={form.preferredContact === "email" ? "Email" : t("phoneWhatsappNumber")}
           />
         </div>
 
@@ -370,6 +377,7 @@ function ReferralForm({ reportId }) {
             onChange={(e) => setForm({ ...form, bestTime: e.target.value })}
             className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all"
             placeholder={t("bestTimePlaceholder")}
+            aria-label={t("bestTime")}
           />
         </div>
 
@@ -399,6 +407,7 @@ function ReferralForm({ reportId }) {
           type="submit"
           disabled={loading}
           className="w-full bg-blue text-white font-semibold py-3 rounded-2xl hover:bg-blue-dark transition-all duration-200 shadow-md disabled:opacity-50"
+          aria-label={t("submitReferral")}
         >
           {loading ? t("submitting") : t("submitReferral")}
         </button>

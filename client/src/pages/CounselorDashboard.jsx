@@ -96,7 +96,7 @@ export default function CounselorDashboard() {
 
       <PatternDivider />
 
-      <div className="max-w-6xl mx-auto py-8 px-4">
+      <div className="max-w-6xl mx-auto py-8 px-4" aria-label={t("counselorDashboard")}>
         {/* Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 -mt-6">
           <div className="bg-white rounded-2xl border border-soft p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -154,6 +154,8 @@ export default function CounselorDashboard() {
                 ? "bg-[#2E7D32] text-white shadow-md"
                 : "bg-white text-slate-gray hover:bg-cloud border border-soft"
             }`}
+            aria-label={`${t("myCases")} (${myCases.length})`}
+            aria-pressed={activeTab === "my-cases"}
           >
             {t("myCases")} ({myCases.length})
           </button>
@@ -164,6 +166,8 @@ export default function CounselorDashboard() {
                 ? "bg-[#2E7D32] text-white shadow-md"
                 : "bg-white text-slate-gray hover:bg-cloud border border-soft"
             }`}
+            aria-label={`${t("unclaimed")} (${unassignedCases.length})`}
+            aria-pressed={activeTab === "unassigned"}
           >
             {t("unclaimed")} ({unassignedCases.length})
           </button>
@@ -175,6 +179,7 @@ export default function CounselorDashboard() {
             value={filters.status}
             onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))}
             className="border border-soft rounded-xl px-4 py-2.5 text-sm bg-white focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
+            aria-label="Filter by status"
           >
             <option value="">All Statuses</option>
             <option value="new">New</option>
@@ -184,6 +189,7 @@ export default function CounselorDashboard() {
           <button
             onClick={loadCases}
             className="bg-white border border-soft text-navy px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-cloud transition-all duration-200 shadow-sm flex items-center gap-2"
+            aria-label={t("refresh")}
           >
             <RefreshCw size={14} />
             {t("refresh")}
@@ -253,6 +259,7 @@ export default function CounselorDashboard() {
                         <button
                           onClick={() => handleClaimCase(c.id)}
                           className="bg-[#2E7D32] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#1B5E20] transition-all flex items-center gap-2"
+                          aria-label={`${t("claim")} case #${c.id}`}
                         >
                           <Hand size={16} />
                           {t("claim")}
@@ -261,6 +268,7 @@ export default function CounselorDashboard() {
                         <Link
                           to={`/counselor/${c.id}`}
                           className="bg-cloud text-navy px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-soft transition-all flex items-center gap-2 border border-soft"
+                          aria-label={`${t("viewDetails")} case #${c.id}`}
                         >
                           <Eye size={16} />
                           {t("viewDetails")}

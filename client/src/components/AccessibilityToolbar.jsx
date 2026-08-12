@@ -20,10 +20,10 @@ export default function AccessibilityToolbar() {
 
       {/* Panel */}
       {open && (
-        <div className="fixed bottom-20 right-6 z-50 bg-white rounded-2xl border border-soft shadow-xl p-5 w-72 animate-fade-in-up">
+        <div className="fixed bottom-20 right-6 z-50 bg-white rounded-2xl border border-soft shadow-xl p-5 w-72 animate-fade-in-up" role="dialog" aria-label={t("accessibility")}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-navy">{t("accessibility")}</h3>
-            <button onClick={() => setOpen(false)} className="text-slate-gray hover:text-navy">
+            <button onClick={() => setOpen(false)} className="text-slate-gray hover:text-navy" aria-label={t("closePanel")}>
               <X size={18} />
             </button>
           </div>
@@ -45,6 +45,8 @@ export default function AccessibilityToolbar() {
                         ? "bg-blue text-white"
                         : "bg-cloud text-slate-gray hover:bg-soft"
                     }`}
+                    aria-label={`${t("language")}: ${lang.label}`}
+                    aria-pressed={language === lang.code}
                   >
                     {lang.label}
                   </button>
@@ -60,6 +62,8 @@ export default function AccessibilityToolbar() {
                   ? "bg-navy text-white"
                   : "bg-cloud text-navy hover:bg-soft"
               }`}
+              aria-label={t("highContrast")}
+              aria-pressed={highContrast}
             >
               <Eye size={18} />
               <span className="text-sm font-medium">{t("highContrast")}</span>
@@ -76,6 +80,8 @@ export default function AccessibilityToolbar() {
                   ? "bg-navy text-white"
                   : "bg-cloud text-navy hover:bg-soft"
               }`}
+              aria-label={t("largeText")}
+              aria-pressed={largeText}
             >
               <Type size={18} />
               <span className="text-sm font-medium">{t("largeText")}</span>

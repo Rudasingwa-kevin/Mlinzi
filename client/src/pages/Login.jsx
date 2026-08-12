@@ -155,7 +155,7 @@ export default function Login() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" aria-label="Sign in">
             <div>
               <label className="block text-sm font-medium text-[#0B1220] mb-2">
                 Email address
@@ -171,6 +171,7 @@ export default function Login() {
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                   placeholder="you@example.com"
+                  aria-label="Email address"
                 />
               </div>
             </div>
@@ -190,11 +191,13 @@ export default function Login() {
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   className="w-full pl-11 pr-12 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                   placeholder="Enter your password"
+                  aria-label="Password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#94a3b8] hover:text-[#64748B]"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -206,6 +209,7 @@ export default function Login() {
                 <input
                   type="checkbox"
                   className="w-4 h-4 rounded border-[#e2e8f0] text-[#2E7D32] focus:ring-[#2E7D32]/20"
+                  aria-label="Remember me"
                 />
                 <span className="text-sm text-[#64748B]">Remember me</span>
               </label>
@@ -215,6 +219,7 @@ export default function Login() {
               type="submit"
               disabled={loading}
               className="w-full bg-[#2E7D32] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1B5E20] transition-all duration-200 shadow-lg shadow-[#2E7D32]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              aria-label="Sign in"
             >
               {loading ? (
                 <>
@@ -231,7 +236,7 @@ export default function Login() {
           </form>
 
           <div className="mt-4 text-center">
-            <Link to="/forgot-password" className="text-sm text-[#2E7D32] font-medium hover:text-[#1B5E20] hover:underline">
+            <Link to="/forgot-password" className="text-sm text-[#2E7D32] font-medium hover:text-[#1B5E20] hover:underline" aria-label="Forgot password">
               Forgot password?
             </Link>
           </div>
@@ -239,7 +244,7 @@ export default function Login() {
           <div className="mt-8 text-center">
             <p className="text-[#64748B] text-sm">
               Don't have an account?{" "}
-              <Link to="/register" className="text-[#2E7D32] font-semibold hover:text-[#1B5E20]">
+              <Link to="/register" className="text-[#2E7D32] font-semibold hover:text-[#1B5E20]" aria-label="Create account">
                 Create account
               </Link>
             </p>

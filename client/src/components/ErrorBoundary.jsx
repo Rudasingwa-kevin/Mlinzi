@@ -7,7 +7,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
     <div className="min-h-screen bg-cloud flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         <div className="bg-white rounded-2xl border border-soft shadow-lg p-8">
-          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-red-soft flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-red-soft flex items-center justify-center" role="img" aria-label="Error">
             <AlertTriangle size={32} className="text-red" />
           </div>
           <h1 className="text-xl font-bold text-navy mb-2">Something went wrong</h1>
@@ -23,6 +23,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
             <button
               onClick={resetErrorBoundary}
               className="flex-1 flex items-center justify-center gap-2 bg-[#2E7D32] text-white font-medium py-3 rounded-2xl hover:bg-[#1B5E20] transition-all"
+              aria-label="Try Again"
             >
               <RefreshCw size={16} />
               Try Again
@@ -30,6 +31,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
             <Link
               to="/"
               className="flex-1 flex items-center justify-center gap-2 bg-white border border-soft text-navy font-medium py-3 rounded-2xl hover:bg-cloud transition-all"
+              aria-label="Go Home"
             >
               <Home size={16} />
               Go Home

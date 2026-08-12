@@ -85,7 +85,7 @@ export default function Analytics() {
 
       <PatternDivider />
 
-      <div className="max-w-6xl mx-auto py-8 px-4">
+      <div className="max-w-6xl mx-auto py-8 px-4" aria-label={t("nationalDashboard")}>
         {/* Hero Stats */}
         <div className="bg-gradient-to-r from-[#1B5E20] to-[#2E7D32] rounded-2xl p-8 mb-8 text-center text-white shadow-lg -mt-6">
           <p className="text-emerald-100 text-sm uppercase tracking-wide mb-2">

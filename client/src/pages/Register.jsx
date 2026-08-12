@@ -155,7 +155,7 @@ export default function Register() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} aria-label="Create account">
             {step === 1 ? (
               <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div>
@@ -173,6 +173,7 @@ export default function Register() {
                       onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                       className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                       placeholder="John Doe"
+                      aria-label="Full name"
                     />
                   </div>
                 </div>
@@ -192,6 +193,7 @@ export default function Register() {
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                       placeholder="you@example.com"
+                      aria-label="Email address"
                     />
                   </div>
                 </div>
@@ -213,6 +215,8 @@ export default function Register() {
                               ? "border-[#2E7D32] bg-[#2E7D32]/5"
                               : "border-[#e2e8f0] hover:border-[#cbd5e1]"
                           }`}
+                          aria-label={r.title}
+                          aria-pressed={form.role === r.id}
                         >
                           <div className={`w-10 h-10 rounded-lg ${r.color} flex items-center justify-center mb-3`}>
                             <Icon size={20} className="text-white" />
@@ -239,6 +243,7 @@ export default function Register() {
                           value={form.district}
                           onChange={(e) => setForm({ ...form, district: e.target.value })}
                           className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
+                          aria-label="District"
                         >
                           <option value="">Select your district</option>
                           {districts.map((d) => (
@@ -262,6 +267,7 @@ export default function Register() {
                           onChange={(e) => setForm({ ...form, phone: e.target.value })}
                           className="w-full pl-11 pr-4 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                           placeholder="+250 7XX XXX XXX"
+                          aria-label="Phone number"
                         />
                       </div>
                     </div>
@@ -273,6 +279,7 @@ export default function Register() {
                   onClick={handleNext}
                   disabled={!form.full_name || !form.email}
                   className="w-full bg-[#2E7D32] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1B5E20] transition-all duration-200 shadow-lg shadow-[#2E7D32]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  aria-label="Continue to next step"
                 >
                   Continue
                   <Check size={18} />
@@ -296,11 +303,13 @@ export default function Register() {
                       onChange={(e) => setForm({ ...form, password: e.target.value })}
                       className="w-full pl-11 pr-12 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
                       placeholder="Create a strong password"
+                      aria-label="Password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#94a3b8] hover:text-[#64748B]"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -342,6 +351,7 @@ export default function Register() {
                     type="button"
                     onClick={() => setStep(1)}
                     className="flex-1 bg-[#e2e8f0] text-[#0B1220] py-3.5 rounded-xl font-semibold hover:bg-[#cbd5e1] transition-all"
+                    aria-label="Go back to previous step"
                   >
                     Back
                   </button>
@@ -349,6 +359,7 @@ export default function Register() {
                     type="submit"
                     disabled={loading}
                     className="flex-[2] bg-[#2E7D32] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1B5E20] transition-all duration-200 shadow-lg shadow-[#2E7D32]/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    aria-label="Create account"
                   >
                     {loading ? (
                       <>

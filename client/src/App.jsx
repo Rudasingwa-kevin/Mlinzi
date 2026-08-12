@@ -27,7 +27,7 @@ export default function App() {
         <AccessibilityProvider>
           <div className="min-h-screen bg-cloud">
             <Navbar />
-            <main>
+            <main role="main" aria-label="Main content">
               <ErrorBoundary>
                 <Routes>
                 <Route path="/" element={<Home />} />

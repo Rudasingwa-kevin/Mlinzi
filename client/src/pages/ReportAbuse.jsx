@@ -106,7 +106,7 @@ export default function ReportAbuse() {
 
       {/* Form */}
       <div className="max-w-2xl mx-auto py-10 px-4">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} aria-label={t("reportAbuse")}>
           {/* Drop zone */}
           <div
             onDragOver={(e) => {
@@ -123,6 +123,9 @@ export default function ReportAbuse() {
                 ? "border-green bg-green-50"
                 : "border-soft hover:border-green hover:bg-green-50"
             }`}
+            role="button"
+            tabIndex={0}
+            aria-label={t("dropScreenshot")}
           >
             <input
               ref={inputRef}
@@ -130,6 +133,7 @@ export default function ReportAbuse() {
               accept="image/*"
               className="hidden"
               onChange={(e) => handleFile(e.target.files[0])}
+              aria-label={t("uploadScreenshot")}
             />
 
             {preview ? (
@@ -189,6 +193,7 @@ export default function ReportAbuse() {
                 placeholder={t("typePasteHarmful")}
                 className="w-full border border-soft rounded-2xl px-4 py-3 text-sm focus:border-green focus:ring-2 focus:ring-blue/20 outline-none transition-all resize-none"
                 rows={4}
+                aria-label={t("typePasteHarmful")}
               />
               <p className="text-xs text-slate-gray mt-1">
                 {t("typeMessageDirectly")}
@@ -201,6 +206,7 @@ export default function ReportAbuse() {
             type="submit"
             disabled={!file || loading}
             className="mt-6 w-full bg-[#2E7D32] text-white font-semibold py-4 rounded-2xl hover:bg-[#1B5E20] disabled:bg-soft disabled:text-slate-gray disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-lg"
+            aria-label={t("uploadAnalyze")}
           >
             {loading ? (
               <>
