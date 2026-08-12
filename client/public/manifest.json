@@ -1,0 +1,29 @@
+{
+  "name": "Mlinzi — Child Digital Protection",
+  "short_name": "Mlinzi",
+  "description": "AI-powered digital protection for every child. Report abuse anonymously and get instant guidance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1B5E20",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["social", "safety", "utilities"],
+  "icons": [
+    {
+      "src": "/mlinzi-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/mlinzi-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
