@@ -170,4 +170,20 @@ export async function markAllNotificationsRead() {
   await api.post("/notifications/read-all");
 }
 
+// Data retention functions
+export async function getRetentionStats() {
+  const { data } = await api.get("/retention/stats");
+  return data;
+}
+
+export async function triggerRetentionPurge() {
+  const { data } = await api.post("/retention/purge");
+  return data;
+}
+
+export async function deleteMyAccount() {
+  const { data } = await api.delete("/retention/my-data");
+  return data;
+}
+
 export default api;

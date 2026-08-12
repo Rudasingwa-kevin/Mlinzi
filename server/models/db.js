@@ -135,7 +135,15 @@ async function migrate() {
         created_at      TIMESTAMP DEFAULT NOW()
       )
     `);
+    // Migrate: rename phone → destination if old column exists
+    await pool.query(`DO $$ BEGIN
+      IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'otp_codes' AND column_name = 'phone') THEN
+        ALTER TABLE otp_codes RENAME COLUMN phone TO destination;
+      END IF;
+    END $$;`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_otp_dest_purpose ON otp_codes(destination, purpose)`);
+    // Drop old index if it exists
+    await pool.query(`DROP INDEX IF EXISTS idx_otp_phone_purpose`);
 
     // Indexes
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_reports_category     ON reports(category)`);
@@ -149,6 +157,12 @@ async function migrate() {
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_referral_created     ON referral_cases(created_at DESC)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_sms_sessions_phone   ON sms_sessions(phone_number)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_notifications_recip  ON notifications(recipient_type, recipient_id)`);
+
+    // Data retention indexes (speed up purge queries)
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_otp_created_at         ON otp_codes(created_at)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_prt_created_at         ON password_reset_tokens(created_at)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_sms_sessions_created   ON sms_sessions(created_at)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_notifications_created   ON notifications(created_at)`);
 
     console.log("Database migration complete");
   } catch (err) {

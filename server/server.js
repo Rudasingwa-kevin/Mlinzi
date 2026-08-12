@@ -50,8 +50,9 @@ app.get("/", (req, res) => {
   res.json({
     status: "ok",
     service: "Mlinzi API",
-    version: "2.0.0",
+    version: "2.1.0",
     timestamp: new Date().toISOString(),
+    retention: { days: RETENTION_DAYS },
   });
 });
 
@@ -85,6 +86,10 @@ app.use("/api/notifications", notificationRoutes);
 const otpRoutes = require("./routes/otpRoutes");
 app.use("/api/otp", otpRoutes);
 
+// Data retention routes (admin stats, manual purge, self-deletion)
+const retentionRoutes = require("./routes/retentionRoutes");
+app.use("/api/retention", retentionRoutes);
+
 // --------------- 404 Handler ---------------
 
 app.use((req, res) => {
@@ -103,12 +108,24 @@ app.use((err, req, res, next) => {
 // --------------- Start Server ---------------
 
 const migrate = require("./models/db");
+const { runFullPurge, RETENTION_DAYS } = require("./services/dataRetentionService");
 
 async function start() {
   await migrate();
   app.listen(PORT, () => {
     console.log(`Mlinzi server running on port ${PORT}`);
     console.log(`Health check: http://localhost:${PORT}/`);
+    console.log(`Data retention: auto-purge after ${RETENTION_DAYS} days`);
+
+    // Schedule hourly data retention purge
+    const ONE_HOUR = 60 * 60 * 1000;
+    setInterval(async () => {
+      try {
+        await runFullPurge();
+      } catch (err) {
+        console.error("[DataRetention] Scheduled purge failed:", err.message);
+      }
+    }, ONE_HOUR);
   });
 }
 
