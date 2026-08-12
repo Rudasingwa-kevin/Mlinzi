@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { AccessibilityProvider } from "./context/AccessibilityContext";
@@ -20,12 +21,39 @@ import Analytics from "./pages/Analytics";
 import AdminPanel from "./pages/AdminPanel";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 
+function OfflineBanner() {
+  const [online, setOnline] = useState(navigator.onLine);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const handleOnline = () => { setOnline(true); setShow(true); setTimeout(() => setShow(false), 3000); };
+    const handleOffline = () => { setOnline(false); setShow(true); };
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  if (!show && online) return null;
+
+  return (
+    <div className={`fixed top-0 left-0 right-0 z-[100] text-center text-sm font-medium py-2 px-4 transition-all ${
+      online ? "bg-[#2E7D32] text-white" : "bg-amber-500 text-white"
+    }`}>
+      {online ? "Back online" : "You're offline — some features may be unavailable"}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <AccessibilityProvider>
           <div className="min-h-screen bg-cloud">
+            <OfflineBanner />
             <Navbar />
             <main role="main" aria-label="Main content">
               <ErrorBoundary>
