@@ -129,6 +129,9 @@ async function start() {
   });
 }
 
-start();
+// Only start when run directly (not when required by tests)
+if (require.main === module) {
+  start();
+}
 
 module.exports = app;
