@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const pool = require("../config/database");
 const { sendSMS } = require("./smsService");
+const logger = require("../config/logger");
 
 const OTP_LENGTH = 6;
 const OTP_EXPIRY_MINUTES = 10;
@@ -69,7 +70,7 @@ async function sendOTP(destination, purpose, channel = "sms") {
     await sendOTPSms(destination, code, purpose);
   }
 
-  console.log(`[OTP] Sent to ${destination} (${purpose}/${channel}): ${code}`);
+  logger.info({ destination, purpose, channel }, "OTP sent");
   return { sent: true, expiresIn: OTP_EXPIRY_MINUTES * 60 };
 }
 

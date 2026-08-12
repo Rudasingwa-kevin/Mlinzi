@@ -2,6 +2,7 @@ const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validateEmail } = require("deep-email-validator");
+const logger = require("../config/logger");
 
 const JWT_SECRET = process.env.JWT_SECRET || "mlinzi-dev-secret-change-in-production";
 
@@ -51,7 +52,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ user, token });
   } catch (err) {
-    console.error("Register error:", err);
+    logger.error({ err }, "Register failed");
     res.status(500).json({ error: "Registration failed" });
   }
 };
@@ -82,7 +83,7 @@ exports.login = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("Login error:", err);
+    logger.error({ err }, "Login failed");
     res.status(500).json({ error: "Login failed" });
   }
 };
@@ -98,7 +99,7 @@ exports.getMe = async (req, res) => {
     }
     res.json({ user: result.rows[0] });
   } catch (err) {
-    console.error("GetMe error:", err);
+    logger.error({ err }, "GetMe failed");
     res.status(500).json({ error: "Failed to get user" });
   }
 };
@@ -110,7 +111,7 @@ exports.getPendingCounselors = async (req, res) => {
     );
     res.json({ counselors: result.rows });
   } catch (err) {
-    console.error("GetPendingCounselors error:", err);
+    logger.error({ err }, "GetPendingCounselors failed");
     res.status(500).json({ error: "Failed to fetch counselors" });
   }
 };
@@ -127,7 +128,7 @@ exports.approveCounselor = async (req, res) => {
     }
     res.json({ user: result.rows[0] });
   } catch (err) {
-    console.error("ApproveCounselor error:", err);
+    logger.error({ err }, "ApproveCounselor failed");
     res.status(500).json({ error: "Failed to approve counselor" });
   }
 };

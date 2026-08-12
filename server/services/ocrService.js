@@ -1,5 +1,6 @@
 const Tesseract = require("tesseract.js");
 const path = require("path");
+const logger = require("../config/logger");
 
 async function extractText(imagePath) {
   const filePath = path.isAbsolute(imagePath)
@@ -14,7 +15,7 @@ async function extractText(imagePath) {
     },
   });
 
-  console.log(""); // newline after progress
+  logger.debug("OCR processing complete");
 
   const text = result.data.text.trim();
   if (!text) {

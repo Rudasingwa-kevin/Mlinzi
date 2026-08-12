@@ -3,6 +3,7 @@ const router = express.Router();
 const { sendOTP, verifyOTP } = require("../services/otpService");
 const { channelLimiter } = require("../middleware/rateLimit");
 const { body, validationResult } = require("express-validator");
+const logger = require("../config/logger");
 
 function validate(req, res, next) {
   const errors = validationResult(req);
@@ -32,7 +33,7 @@ router.post("/send", channelLimiter, [
     const result = await sendOTP(destination, purpose, channel);
     res.json({ message: "Verification code sent", expiresIn: result.expiresIn });
   } catch (err) {
-    console.error("SendOTP error:", err);
+    logger.error({ err }, "SendOTP failed");
     res.status(500).json({ error: "Failed to send verification code" });
   }
 });
@@ -59,7 +60,7 @@ router.post("/verify", channelLimiter, [
       res.status(400).json({ verified: false, error: result.error });
     }
   } catch (err) {
-    console.error("VerifyOTP error:", err);
+    logger.error({ err }, "VerifyOTP failed");
     res.status(500).json({ error: "Failed to verify code" });
   }
 });

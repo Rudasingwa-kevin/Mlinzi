@@ -3,14 +3,14 @@ const { analyzeText, analyzeImage } = require("./aiService");
 const Report = require("../models/Report");
 const fs = require("fs");
 const path = require("path");
+const logger = require("../config/logger");
 
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 const WHATSAPP_API_URL = `https://graph.facebook.com/v18.0/${WHATSAPP_PHONE_NUMBER_ID}`;
 
 async function sendWhatsAppMessage(to, message) {
-  console.log(`[WhatsApp] To: ${to}`);
-  console.log(`[WhatsApp] Message: ${message}`);
+  logger.info({ to }, "WhatsApp outgoing");
 
   if (process.env.NODE_ENV === "production" && WHATSAPP_TOKEN) {
     try {
@@ -29,7 +29,7 @@ async function sendWhatsAppMessage(to, message) {
       });
       return await response.json();
     } catch (err) {
-      console.error("WhatsApp send error:", err.message);
+      logger.error({ err }, "WhatsApp send failed");
     }
   }
 
@@ -54,7 +54,7 @@ async function sendWhatsAppImage(to, imageUrl, caption = "") {
       });
       return await response.json();
     } catch (err) {
-      console.error("WhatsApp image send error:", err.message);
+      logger.error({ err }, "WhatsApp image send failed");
     }
   }
   return { status: "sent" };
@@ -84,7 +84,7 @@ async function downloadMedia(mediaId) {
 
     return filepath;
   } catch (err) {
-    console.error("Media download error:", err.message);
+    logger.error({ err }, "Media download failed");
     return null;
   }
 }
@@ -134,7 +134,7 @@ async function handleWebhook(body) {
       ({ category, severity, confidence, recommendedAction, guidance, extractedText } = analysis);
     }
   } catch (aiErr) {
-    console.error("AI analysis failed for WhatsApp:", aiErr.message);
+    logger.warn({ err: aiErr }, "AI analysis failed for WhatsApp, using fallback");
     category = "pending_analysis";
     severity = "pending";
     confidence = null;

@@ -1,6 +1,7 @@
 const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
 const { sendOTP, verifyOTP } = require("../services/otpService");
+const logger = require("../config/logger");
 
 exports.forgotPassword = async (req, res) => {
   try {
@@ -35,7 +36,7 @@ exports.forgotPassword = async (req, res) => {
 
     res.json({ message: "If an account exists, a verification code has been sent." });
   } catch (err) {
-    console.error("ForgotPassword error:", err);
+    logger.error({ err }, "ForgotPassword failed");
     res.status(500).json({ error: "Failed to process request" });
   }
 };
@@ -85,7 +86,7 @@ exports.verifyResetOTP = async (req, res) => {
 
     res.json({ verified: true, resetToken });
   } catch (err) {
-    console.error("VerifyResetOTP error:", err);
+    logger.error({ err }, "VerifyResetOTP failed");
     res.status(500).json({ error: "Failed to verify code" });
   }
 };
@@ -119,7 +120,7 @@ exports.resetPassword = async (req, res) => {
 
     res.json({ message: "Password reset successful. You can now log in." });
   } catch (err) {
-    console.error("ResetPassword error:", err);
+    logger.error({ err }, "ResetPassword failed");
     res.status(500).json({ error: "Failed to reset password" });
   }
 };

@@ -3,6 +3,7 @@ const router = express.Router();
 const { handleIncomingSMS } = require("../services/smsService");
 const { channelLimiter } = require("../middleware/rateLimit");
 const v = require("../middleware/validate");
+const logger = require("../config/logger");
 
 // POST /api/sms/incoming - Africa's Talking webhook
 router.post("/incoming", channelLimiter, v.incomingSMS, async (req, res) => {
@@ -13,7 +14,7 @@ router.post("/incoming", channelLimiter, v.incomingSMS, async (req, res) => {
       return res.status(400).json({ error: "Missing from or text" });
     }
 
-    console.log(`[SMS Incoming] From: ${from}, Text: ${text}`);
+    logger.info({ from, textLength: text.length }, "SMS incoming");
 
     const result = await handleIncomingSMS(from, text);
 
@@ -23,7 +24,7 @@ router.post("/incoming", channelLimiter, v.incomingSMS, async (req, res) => {
       state: result.state,
     });
   } catch (err) {
-    console.error("SMS incoming error:", err);
+    logger.error({ err }, "SMS incoming failed");
     res.status(500).json({ error: "Failed to process SMS" });
   }
 });
@@ -32,7 +33,7 @@ router.post("/incoming", channelLimiter, v.incomingSMS, async (req, res) => {
 router.post("/status", (req, res) => {
   // Log delivery status for analytics
   const { id, status, phoneNumber } = req.body;
-  console.log(`[SMS Status] ID: ${id}, Status: ${status}, Phone: ${phoneNumber}`);
+  logger.info({ id, status, phoneNumber }, "SMS status update");
   res.json({ status: "ok" });
 });
 

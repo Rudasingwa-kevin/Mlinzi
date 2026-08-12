@@ -3,6 +3,7 @@ const ReferralCase = require("../models/ReferralCase");
 const CounselorNote = require("../models/CounselorNote");
 const Report = require("../models/Report");
 const { notifyCounselorNewCase, notifyHighRiskCase, notifyCaseStatusChange } = require("../services/notificationService");
+const logger = require("../config/logger");
 
 const RWANDA_DISTRICTS = [
   // East Province
@@ -65,12 +66,12 @@ exports.escalate = async (req, res) => {
         await notifyCounselorNewCase(counselorId, { id: referral.id, district, category: report.category, severity: report.severity });
       }
     } catch (notifErr) {
-      console.error("Notification error (non-blocking):", notifErr.message);
+      logger.warn({ err: notifErr }, "Notification error (non-blocking)");
     }
 
     res.status(201).json({ referral });
   } catch (err) {
-    console.error("Escalate error:", err);
+    logger.error({ err }, "Escalate failed");
     res.status(500).json({ error: "Failed to create referral" });
   }
 };
@@ -85,7 +86,7 @@ exports.getCounselorCases = async (req, res) => {
     });
     res.json({ cases });
   } catch (err) {
-    console.error("GetCounselorCases error:", err);
+    logger.error({ err }, "GetCounselorCases failed");
     res.status(500).json({ error: "Failed to fetch cases" });
   }
 };
@@ -100,7 +101,7 @@ exports.getUnassignedCases = async (req, res) => {
     });
     res.json({ cases });
   } catch (err) {
-    console.error("GetUnassignedCases error:", err);
+    logger.error({ err }, "GetUnassignedCases failed");
     res.status(500).json({ error: "Failed to fetch cases" });
   }
 };
@@ -114,7 +115,7 @@ exports.getCaseById = async (req, res) => {
     const notes = await CounselorNote.findByCase(req.params.id);
     res.json({ case: caseData, notes });
   } catch (err) {
-    console.error("GetCaseById error:", err);
+    logger.error({ err }, "GetCaseById failed");
     res.status(500).json({ error: "Failed to fetch case" });
   }
 };
@@ -127,7 +128,7 @@ exports.assignCase = async (req, res) => {
     }
     res.json({ case: caseData });
   } catch (err) {
-    console.error("AssignCase error:", err);
+    logger.error({ err }, "AssignCase failed");
     res.status(500).json({ error: "Failed to assign case" });
   }
 };
@@ -148,12 +149,12 @@ exports.updateCaseStatus = async (req, res) => {
     try {
       await notifyCaseStatusChange(req.params.id, status, req.user.id);
     } catch (notifErr) {
-      console.error("Status change notification error:", notifErr.message);
+      logger.warn({ err: notifErr }, "Status change notification error");
     }
 
     res.json({ case: caseData });
   } catch (err) {
-    console.error("UpdateCaseStatus error:", err);
+    logger.error({ err }, "UpdateCaseStatus failed");
     res.status(500).json({ error: "Failed to update case status" });
   }
 };
@@ -182,7 +183,7 @@ exports.addNote = async (req, res) => {
 
     res.status(201).json({ note: newNote });
   } catch (err) {
-    console.error("AddNote error:", err);
+    logger.error({ err }, "AddNote failed");
     res.status(500).json({ error: "Failed to add note" });
   }
 };
@@ -216,7 +217,7 @@ exports.getNationalAnalytics = async (req, res) => {
       channelBreakdown: channelBreakdown.rows,
     });
   } catch (err) {
-    console.error("GetNationalAnalytics error:", err);
+    logger.error({ err }, "GetNationalAnalytics failed");
     res.status(500).json({ error: "Failed to fetch analytics" });
   }
 };

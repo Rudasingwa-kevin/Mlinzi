@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { handleWebhook } = require("../services/whatsappService");
 const { channelLimiter } = require("../middleware/rateLimit");
+const logger = require("../config/logger");
 
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || "mlinzi_webhook_verify";
 
@@ -12,10 +13,10 @@ router.get("/webhook", (req, res) => {
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("[WhatsApp] Webhook verified");
+    logger.info("WhatsApp webhook verified");
     res.status(200).send(challenge);
   } else {
-    console.error("[WhatsApp] Verification failed");
+    logger.warn("WhatsApp verification failed");
     res.sendStatus(403);
   }
 });
@@ -31,11 +32,11 @@ router.post("/webhook", channelLimiter, (req, res) => {
     // Process the message asynchronously (fire-and-forget)
     if (body.object === "whatsapp_business_account") {
       handleWebhook(body).catch((err) => {
-        console.error("WhatsApp async processing error:", err);
+        logger.error({ err }, "WhatsApp async processing failed");
       });
     }
   } catch (err) {
-    console.error("WhatsApp webhook error:", err);
+    logger.error({ err }, "WhatsApp webhook failed");
     // Response already sent, nothing more to do
   }
 });

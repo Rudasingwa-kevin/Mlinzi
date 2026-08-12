@@ -14,6 +14,23 @@ jest.mock("../config/database", () => ({
   on: jest.fn(),
 }));
 
+// ── Mock Logger (silent in tests) ──
+
+jest.mock("../config/logger", () => {
+  const noop = () => {};
+  return {
+    info: noop,
+    warn: noop,
+    error: noop,
+    debug: noop,
+    child: () => ({ info: noop, warn: noop, error: noop, debug: noop }),
+  };
+});
+
+jest.mock("pino-http", () => {
+  return () => (req, res, next) => next();
+});
+
 // ── Mock Rate Limiter (no-op in tests) ──
 
 jest.mock("../middleware/rateLimit", () => {

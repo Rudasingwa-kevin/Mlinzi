@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const pinoHttp = require("pino-http");
 const path = require("path");
+const logger = require("./config/logger");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,6 +13,9 @@ const PORT = process.env.PORT || 5000;
 
 // Security headers
 app.use(helmet());
+
+// HTTP request logging
+app.use(pinoHttp({ logger, autoLogging: process.env.NODE_ENV === "production" }));
 
 // CORS — allow the React frontend
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
@@ -99,7 +104,7 @@ app.use((req, res) => {
 // --------------- Global Error Handler ---------------
 
 app.use((err, req, res, next) => {
-  console.error("Unhandled error:", err);
+  logger.error({ err }, "Unhandled error");
   res.status(err.status || 500).json({
     error: err.message || "Internal server error",
   });
@@ -113,9 +118,7 @@ const { runFullPurge, RETENTION_DAYS } = require("./services/dataRetentionServic
 async function start() {
   await migrate();
   app.listen(PORT, () => {
-    console.log(`Mlinzi server running on port ${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/`);
-    console.log(`Data retention: auto-purge after ${RETENTION_DAYS} days`);
+    logger.info({ port: PORT, retentionDays: RETENTION_DAYS }, "Mlinzi server started");
 
     // Schedule hourly data retention purge
     const ONE_HOUR = 60 * 60 * 1000;
@@ -123,7 +126,7 @@ async function start() {
       try {
         await runFullPurge();
       } catch (err) {
-        console.error("[DataRetention] Scheduled purge failed:", err.message);
+        logger.error({ err }, "Scheduled data retention purge failed");
       }
     }, ONE_HOUR);
   });

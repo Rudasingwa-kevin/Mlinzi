@@ -1,6 +1,7 @@
 const pool = require("../config/database");
 const { analyzeText } = require("./aiService");
 const Report = require("../models/Report");
+const logger = require("../config/logger");
 
 const AFRICASTALKING_API_KEY = process.env.AFRICASTALKING_API_KEY;
 const AFRICASTALKING_USERNAME = process.env.AFRICASTALKING_USERNAME || "sandbox";
@@ -118,8 +119,7 @@ async function updateSession(sessionId, state, reportId = null, district = null,
 async function sendSMS(phoneNumber, message) {
   // In production, integrate with Africa's Talking API
   // For development, log the message
-  console.log(`[SMS] To: ${phoneNumber}`);
-  console.log(`[SMS] Message: ${message}`);
+  logger.info({ phoneNumber }, "SMS outgoing");
 
   if (process.env.NODE_ENV === "production" && AFRICASTALKING_API_KEY) {
     try {
@@ -143,7 +143,7 @@ async function sendSMS(phoneNumber, message) {
       const data = await response.json();
       return data;
     } catch (err) {
-      console.error("SMS send error:", err.message);
+      logger.error({ err }, "SMS send failed");
     }
   }
 
@@ -274,7 +274,7 @@ Reply 4 for menu.`;
         await Report.updateEscalated(report.id);
         reply = RESPONSES.REFERRAL_SUCCESS;
       } catch (err) {
-        console.error("Referral creation error:", err);
+        logger.error({ err }, "SMS referral creation failed");
         reply = `Thank you. A counselor in ${session.district} will try to reach you.
 
 If you are in immediate danger, call:
@@ -307,7 +307,7 @@ async function createSMSReport(phoneNumber, text) {
     recommendedAction = analysis.recommendedAction;
     guidance = analysis.guidance;
   } catch (aiErr) {
-    console.error("AI analysis failed for SMS:", aiErr.message);
+    logger.warn({ err: aiErr }, "AI analysis failed for SMS, using fallback");
     category = "pending_analysis";
     severity = "pending";
     confidence = null;

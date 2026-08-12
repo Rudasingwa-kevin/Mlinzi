@@ -1,4 +1,5 @@
 const pool = require("../config/database");
+const logger = require("../config/logger");
 
 async function migrate() {
   try {
@@ -164,9 +165,9 @@ async function migrate() {
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_sms_sessions_created   ON sms_sessions(created_at)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_notifications_created   ON notifications(created_at)`);
 
-    console.log("Database migration complete");
+    logger.info("Database migration complete");
   } catch (err) {
-    console.error("Migration failed:", err.message);
+    logger.error({ err }, "Migration failed");
     process.exit(1);
   }
 }

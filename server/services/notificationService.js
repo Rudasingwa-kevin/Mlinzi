@@ -1,6 +1,7 @@
 const pool = require("../config/database");
 const { sendSMS } = require("./smsService");
 const { sendWhatsAppMessage } = require("./whatsappService");
+const logger = require("../config/logger");
 
 async function createNotification({ recipientType, recipientId, channel, title, message }) {
   const result = await pool.query(
@@ -29,7 +30,7 @@ async function notifyCounselorNewCase(counselorId, caseData) {
       await sendSMS(user.phone, `Mlinzi: New case #${caseData.id} (${caseData.severity}) assigned to you from ${caseData.district}. Log in to view details.`);
       await pool.query("UPDATE notifications SET sent = TRUE WHERE id = $1", [notification.id]);
     } catch (err) {
-      console.error("Notification SMS error:", err.message);
+      logger.warn({ err }, "Notification SMS send failed");
       await pool.query("UPDATE notifications SET error = $1 WHERE id = $2", [err.message, notification.id]);
     }
   }
@@ -60,7 +61,7 @@ async function notifyHighRiskCase(caseData) {
         await sendSMS(counselor.phone, `Mlinzi URGENT: High-risk case #${caseData.id} (${caseData.category}) in ${caseData.district}. Please log in immediately.`);
         await pool.query("UPDATE notifications SET sent = TRUE WHERE id = $1", [notification.id]);
       } catch (err) {
-        console.error("High-risk notification error:", err.message);
+        logger.warn({ err }, "High-risk notification SMS failed");
       }
     }
   }

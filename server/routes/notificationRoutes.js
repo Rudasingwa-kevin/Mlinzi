@@ -8,6 +8,7 @@ const {
   markNotificationRead,
   markAllRead,
 } = require("../services/notificationService");
+const logger = require("../config/logger");
 
 // GET /api/notifications - Get counselor notifications
 router.get("/", authenticateToken, requireRole("counselor"), async (req, res) => {
@@ -19,7 +20,7 @@ router.get("/", authenticateToken, requireRole("counselor"), async (req, res) =>
     });
     res.json({ notifications });
   } catch (err) {
-    console.error("GetNotifications error:", err);
+    logger.error({ err }, "GetNotifications failed");
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 });
@@ -30,7 +31,7 @@ router.patch("/:id/read", authenticateToken, requireRole("counselor"), v.markNot
     await markNotificationRead(req.params.id);
     res.json({ status: "ok" });
   } catch (err) {
-    console.error("MarkRead error:", err);
+    logger.error({ err }, "MarkRead failed");
     res.status(500).json({ error: "Failed to mark notification" });
   }
 });
@@ -41,7 +42,7 @@ router.post("/read-all", authenticateToken, requireRole("counselor"), async (req
     await markAllRead(req.user.id);
     res.json({ status: "ok" });
   } catch (err) {
-    console.error("MarkAllRead error:", err);
+    logger.error({ err }, "MarkAllRead failed");
     res.status(500).json({ error: "Failed to mark notifications" });
   }
 });

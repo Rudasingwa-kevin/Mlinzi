@@ -1,6 +1,7 @@
 const pool = require("../config/database");
 const fs = require("fs");
 const path = require("path");
+const logger = require("../config/logger");
 
 // ── Configuration ──
 
@@ -204,7 +205,7 @@ async function runFullPurge() {
     totalDeleted: results.reduce((sum, r) => sum + r.deleted, 0),
   };
 
-  console.log(`[DataRetention] Purge complete: ${summary.totalDeleted} records removed`);
+  logger.info({ totalDeleted: summary.totalDeleted }, "Data retention purge complete");
   return summary;
 }
 

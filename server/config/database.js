@@ -1,4 +1,5 @@
 const { Pool } = require("pg");
+const logger = require("./logger");
 
 // Render provides DATABASE_URL as a single connection string
 // In development, we use individual env vars
@@ -22,7 +23,7 @@ const pool = process.env.DATABASE_URL
     });
 
 pool.on("error", (err) => {
-  console.error("Unexpected database pool error:", err);
+  logger.error({ err }, "Unexpected database pool error");
 });
 
 module.exports = pool;

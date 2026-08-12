@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const logger = require("../config/logger");
 
 const ZEN_API_URL = "https://opencode.ai/zen/v1/chat/completions";
 const ZEN_API_KEY = process.env.ZEN_API_KEY;
@@ -115,8 +116,7 @@ async function analyzeText(text) {
     const parsed = JSON.parse(cleaned);
     return validateAndNormalize(parsed, text);
   } catch (parseErr) {
-    console.error("AI response parse error:", parseErr.message);
-    console.error("Raw AI response:", raw);
+    logger.error({ err: parseErr }, "AI text response parse error");
     throw new Error("AI returned an invalid response format");
   }
 }
@@ -151,8 +151,7 @@ async function analyzeImage(imagePath) {
     const parsed = JSON.parse(cleaned);
     return validateAndNormalize(parsed, "");
   } catch (parseErr) {
-    console.error("AI vision response parse error:", parseErr.message);
-    console.error("Raw AI response:", raw);
+    logger.error({ err: parseErr }, "AI vision response parse error");
     throw new Error("AI returned an invalid response format");
   }
 }

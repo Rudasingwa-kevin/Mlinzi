@@ -4,6 +4,7 @@ const authenticateToken = require("../middleware/auth");
 const { requireRole } = require("../middleware/auth");
 const { apiLimiter } = require("../middleware/rateLimit");
 const retention = require("../services/dataRetentionService");
+const logger = require("../config/logger");
 
 // ── GET /api/retention/stats ──
 // Admin/national_society can see what's eligible for purge
@@ -16,7 +17,7 @@ router.get(
       const stats = await retention.getRetentionStats();
       res.json(stats);
     } catch (err) {
-      console.error("Retention stats error:", err);
+      logger.error({ err }, "Retention stats failed");
       res.status(500).json({ error: "Failed to fetch retention stats" });
     }
   }
@@ -34,7 +35,7 @@ router.post(
       const summary = await retention.runFullPurge();
       res.json({ message: "Purge complete", summary });
     } catch (err) {
-      console.error("Manual purge error:", err);
+      logger.error({ err }, "Manual purge failed");
       res.status(500).json({ error: "Purge failed" });
     }
   }
@@ -51,7 +52,7 @@ router.delete(
       await retention.deleteUser(req.user.id);
       res.json({ message: "Account and all associated data deleted" });
     } catch (err) {
-      console.error("Self-deletion error:", err);
+      logger.error({ err }, "Self-deletion failed");
       res.status(500).json({ error: "Failed to delete account" });
     }
   }

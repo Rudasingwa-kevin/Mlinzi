@@ -1,5 +1,6 @@
 const { analyzeText, analyzeImage } = require("../services/aiService");
 const Report = require("../models/Report");
+const logger = require("../config/logger");
 
 // POST /api/reports/manual
 async function manualReport(req, res) {
@@ -20,7 +21,7 @@ async function manualReport(req, res) {
       recommendedAction = analysis.recommendedAction;
       guidance = analysis.guidance;
     } catch (aiErr) {
-      console.error("AI analysis failed:", aiErr.message);
+      logger.warn({ err: aiErr }, "AI text analysis failed, using fallback");
       category = "pending_analysis";
       severity = "pending";
       confidence = null;
@@ -45,7 +46,7 @@ async function manualReport(req, res) {
       report,
     });
   } catch (err) {
-    console.error("Manual report error:", err);
+    logger.error({ err }, "Manual report failed");
     res.status(500).json({ error: "Failed to process report" });
   }
 }
@@ -71,7 +72,7 @@ async function uploadReport(req, res) {
       recommendedAction = analysis.recommendedAction;
       guidance = analysis.guidance;
     } catch (aiErr) {
-      console.error("AI vision analysis failed:", aiErr.message);
+      logger.warn({ err: aiErr }, "AI image analysis failed, using fallback");
       extractedText = "Could not analyze image";
       category = "pending_analysis";
       severity = "pending";
@@ -97,7 +98,7 @@ async function uploadReport(req, res) {
       report,
     });
   } catch (err) {
-    console.error("Upload error:", err);
+    logger.error({ err }, "Upload report failed");
     res.status(500).json({ error: "Failed to process upload" });
   }
 }
@@ -116,7 +117,7 @@ async function getReports(req, res) {
     });
     res.json({ reports });
   } catch (err) {
-    console.error("Fetch error:", err);
+    logger.error({ err }, "Fetch reports failed");
     res.status(500).json({ error: "Failed to fetch reports" });
   }
 }
@@ -130,7 +131,7 @@ async function getReportById(req, res) {
     }
     res.json({ report });
   } catch (err) {
-    console.error("Fetch error:", err);
+    logger.error({ err }, "Fetch report by ID failed");
     res.status(500).json({ error: "Failed to fetch report" });
   }
 }
@@ -141,7 +142,7 @@ async function getStats(req, res) {
     const stats = await Report.getStats();
     res.json({ stats });
   } catch (err) {
-    console.error("Stats error:", err);
+    logger.error({ err }, "Fetch stats failed");
     res.status(500).json({ error: "Failed to fetch stats" });
   }
 }
