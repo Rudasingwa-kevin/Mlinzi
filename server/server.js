@@ -149,11 +149,15 @@ app.use((err, req, res, next) => {
 
 const migrate = require("./models/db");
 const { runFullPurge, RETENTION_DAYS } = require("./services/dataRetentionService");
+const { initWebSocket } = require("./services/websocketService");
 
 async function start() {
   await migrate();
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     logger.info({ port: PORT, retentionDays: RETENTION_DAYS }, "Mlinzi server started");
+
+    // Attach WebSocket server
+    initWebSocket(server);
 
     // Schedule hourly data retention purge
     const ONE_HOUR = 60 * 60 * 1000;

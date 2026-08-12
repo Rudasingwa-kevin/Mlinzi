@@ -1,6 +1,7 @@
 const pool = require("../config/database");
 const { sendSMS } = require("./smsService");
 const { sendCaseAssignmentEmail, sendHighRiskAlertEmail } = require("./emailService");
+const { notifyCounselor, broadcastToCounselors } = require("./websocketService");
 const logger = require("../config/logger");
 
 async function createNotification({ recipientType, recipientId, channel, title, message }) {
@@ -43,6 +44,12 @@ async function notifyCounselorNewCase(counselorId, caseData) {
     }
   }
 
+  notifyCounselor(counselorId, {
+    type: "case_assigned",
+    case: caseData,
+    notification: { id: notification.id, title: notification.title, message: notification.message },
+  });
+
   return notification;
 }
 
@@ -81,6 +88,11 @@ async function notifyHighRiskCase(caseData) {
       }
     }
   }
+
+  broadcastToCounselors({
+    type: "high_risk_case",
+    case: caseData,
+  });
 
   return notifications;
 }

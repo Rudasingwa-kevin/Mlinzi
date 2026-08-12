@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { getCounselorCases, getUnassignedCases, claimCase } from "../services/api";
 import { useAccessibility } from "../context/AccessibilityContext";
+import { useWebSocket } from "../hooks/useWebSocket";
 import PatternDivider from "../components/PatternDivider";
-import { Loader2, ClipboardList, RefreshCw, Users, AlertCircle, Clock, MapPin, Phone, Eye, Hand, MessageSquare } from "lucide-react";
+import { Loader2, ClipboardList, RefreshCw, Users, AlertCircle, Clock, MapPin, Phone, Eye, Hand, MessageSquare, Wifi, WifiOff } from "lucide-react";
 
 const severityConfig = {
   low: { bg: "bg-emerald-100", text: "text-emerald-700", dot: "bg-emerald-500", label: "Low" },
@@ -42,7 +43,23 @@ export default function CounselorDashboard() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ status: "" });
   const [activeTab, setActiveTab] = useState("my-cases");
+  const [toast, setToast] = useState(null);
   const { t } = useAccessibility();
+
+  const handleWsMessage = useCallback((data) => {
+    if (data.type === "case_assigned" || data.type === "high_risk_case") {
+      loadCases();
+      setToast({
+        type: data.type === "high_risk_case" ? "urgent" : "info",
+        message: data.type === "high_risk_case"
+          ? `URGENT: High-risk case #${data.case.id} in ${data.case.district}`
+          : `New case #${data.case.id} assigned from ${data.case.district}`,
+      });
+      setTimeout(() => setToast(null), 5000);
+    }
+  }, []);
+
+  const { connected } = useWebSocket(handleWsMessage);
 
   async function loadCases() {
     setLoading(true);
@@ -82,17 +99,35 @@ export default function CounselorDashboard() {
       {/* Header */}
       <section className="bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#1B5E20] py-12 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-white/20 p-2 rounded-xl">
-              <Users size={24} className="text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="bg-white/20 p-2 rounded-xl">
+                <Users size={24} className="text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-white">{t("counselorDashboard")}</h1>
             </div>
-            <h1 className="text-3xl font-bold text-white">{t("counselorDashboard")}</h1>
+            <div className="flex items-center gap-2 text-white/80 text-sm">
+              {connected ? <Wifi size={14} /> : <WifiOff size={14} />}
+              <span>{connected ? "Live" : "Offline"}</span>
+            </div>
           </div>
           <p className="text-emerald-100 ml-12">
             {t("counselDashboardSubtitle")}
           </p>
         </div>
       </section>
+
+      {/* Toast notification */}
+      {toast && (
+        <div className={`fixed top-20 right-4 z-50 max-w-sm animate-fade-in-up ${
+          toast.type === "urgent"
+            ? "bg-red-600 text-white"
+            : "bg-[#2E7D32] text-white"
+        } rounded-xl shadow-lg px-4 py-3 flex items-center gap-3`}>
+          {toast.type === "urgent" ? <AlertCircle size={18} /> : <ClipboardList size={18} />}
+          <span className="text-sm font-medium">{toast.message}</span>
+        </div>
+      )}
 
       <PatternDivider />
 
