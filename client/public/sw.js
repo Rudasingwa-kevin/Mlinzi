@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const STATIC_CACHE = `mlinzi-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `mlinzi-pages-${CACHE_VERSION}`;
 const API_CACHE = `mlinzi-api-${CACHE_VERSION}`;
@@ -100,7 +100,7 @@ async function cacheFirst(request, cacheName) {
 
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    if (response.ok && response.status === 200) {
       const cache = await caches.open(cacheName);
       cache.put(request, response.clone());
     }
@@ -113,7 +113,7 @@ async function cacheFirst(request, cacheName) {
 async function networkFirst(request, cacheName) {
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    if (response.ok && response.status === 200) {
       const cache = await caches.open(cacheName);
       cache.put(request, response.clone());
     }
