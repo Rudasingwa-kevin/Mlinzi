@@ -7,9 +7,10 @@ const pool = process.env.DATABASE_URL
   ? new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
+      max: 5,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000,
+      allowExitOnIdle: true,
     })
   : new Pool({
       host: process.env.DB_HOST || "localhost",
@@ -17,13 +18,13 @@ const pool = process.env.DATABASE_URL
       database: process.env.DB_NAME || "mlinzi",
       user: process.env.DB_USER || "postgres",
       password: process.env.DB_PASSWORD || "",
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
+      max: 5,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000,
     });
 
 pool.on("error", (err) => {
-  logger.error({ err }, "Unexpected database pool error");
+  logger.warn({ err }, "Database pool error - connection will be retried");
 });
 
 module.exports = pool;
