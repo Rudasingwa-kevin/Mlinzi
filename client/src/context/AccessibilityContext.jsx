@@ -578,7 +578,7 @@ const translations = {
     analytics: "Isesengura",
     admin: "Umuyobozi",
     heroTitle: "Kurinda abana kuri internet",
-    heroSubtitle: "Menya ikibazo cy'uburundi kuri internet kandi ubone ubufasha — nta konti ikenewe. Biriho kandi biribura.",
+    heroSubtitle: "Menya ikibazo cy'ubugizi bwa nabi kuri internet kandi ubone ubufasha — nta konti ikenewe. Birahari kandi birizewe.",
     reportNow: "Menya ikibazo",
     howItWorks: "Uburyo bikorwa",
     step1Title: "Kubika",
