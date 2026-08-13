@@ -27,7 +27,13 @@ export default function Login() {
       }
       window.location.reload();
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed");
+      if (!err.response) {
+        setError("Cannot reach the server. Please check your connection and try again.");
+      } else if (err.response.status === 429) {
+        setError(err.response.data?.error || "Too many attempts. Please wait and try again.");
+      } else {
+        setError(err.response.data?.error || "Login failed");
+      }
     } finally {
       setLoading(false);
     }

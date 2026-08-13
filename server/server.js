@@ -78,9 +78,15 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Serve uploaded files statically (for screenshots)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// General API rate limit (baseline protection for all /api routes)
+// NOTE: /api rate limiting is handled per-route to avoid double-counting
+// with route-specific limiters (authLimiter, reportLimiter, etc.)
 const { apiLimiter } = require("./middleware/rateLimit");
-app.use("/api", apiLimiter);
+app.use("/api", (req, res, next) => {
+  // Skip the general limiter for routes that have their own stricter limiter
+  const strictPaths = ["/api/auth", "/api/reports", "/api/report", "/api/sms", "/api/whatsapp", "/api/otp"];
+  if (strictPaths.some((p) => req.path.startsWith(p))) return next();
+  return apiLimiter(req, res, next);
+});
 
 // --------------- Health Check ---------------
 
