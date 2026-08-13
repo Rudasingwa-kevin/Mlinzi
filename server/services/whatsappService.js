@@ -12,7 +12,7 @@ const WHATSAPP_API_URL = `https://graph.facebook.com/v18.0/${WHATSAPP_PHONE_NUMB
 async function sendWhatsAppMessage(to, message) {
   logger.info({ to }, "WhatsApp outgoing");
 
-  if (process.env.NODE_ENV === "production" && WHATSAPP_TOKEN) {
+  if (WHATSAPP_TOKEN) {
     try {
       const response = await fetch(`${WHATSAPP_API_URL}/messages`, {
         method: "POST",
@@ -37,7 +37,7 @@ async function sendWhatsAppMessage(to, message) {
 }
 
 async function sendWhatsAppImage(to, imageUrl, caption = "") {
-  if (process.env.NODE_ENV === "production" && WHATSAPP_TOKEN) {
+  if (WHATSAPP_TOKEN) {
     try {
       const response = await fetch(`${WHATSAPP_API_URL}/messages`, {
         method: "POST",
