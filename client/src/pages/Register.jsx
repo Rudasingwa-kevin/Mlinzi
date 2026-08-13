@@ -298,7 +298,7 @@ export default function Register() {
                     <input
                       type={showPassword ? "text" : "password"}
                       required
-                      minLength={6}
+                      minLength={8}
                       value={form.password}
                       onChange={(e) => setForm({ ...form, password: e.target.value })}
                       className="w-full pl-11 pr-12 py-3 bg-white border border-[#e2e8f0] rounded-xl text-[#0B1220] placeholder-[#94a3b8] focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 outline-none transition-all"
@@ -314,7 +314,7 @@ export default function Register() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <p className="text-xs text-[#94a3b8] mt-2">Must be at least 6 characters</p>
+                  <p className="text-xs text-[#94a3b8] mt-2">Must be at least 8 characters</p>
                 </div>
 
                 {/* Summary */}

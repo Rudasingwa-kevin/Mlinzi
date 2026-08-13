@@ -39,9 +39,14 @@ app.use(pinoHttp({ logger, autoLogging: process.env.NODE_ENV === "production" })
 
 // CORS — allow the React frontend
 const isProduction = process.env.NODE_ENV === "production";
-const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
-  .split(",")
-  .map((o) => o.trim());
+const defaultOrigins = [
+  "http://localhost:5173",
+  "https://mlinzi-unicef.vercel.app",
+];
+const envOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((o) => o.trim())
+  : [];
+const allowedOrigins = [...new Set([...envOrigins, ...defaultOrigins])];
 
 app.use(
   cors({
