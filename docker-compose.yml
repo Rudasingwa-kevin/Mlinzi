@@ -38,7 +38,7 @@ services:
       DB_PASSWORD: postgres
       CLIENT_URL: http://localhost:5173
       JWT_SECRET: dev-jwt-secret-change-in-production
-      ZEN_API_KEY: ${ZEN_API_KEY}
+      GO_API_KEY: ${GO_API_KEY}
       AFRICASTALKING_API_KEY: ${AFRICASTALKING_API_KEY}
       AFRICASTALKING_USERNAME: sandbox
       BREVO_SMTP_KEY: ${BREVO_SMTP_KEY}
