@@ -83,6 +83,10 @@ app.use("/api", apiLimiter);
 
 // --------------- Health Check ---------------
 
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 app.get("/", (req, res) => {
   res.json({
     status: "ok",
@@ -150,6 +154,7 @@ app.use((err, req, res, next) => {
 const migrate = require("./models/db");
 const { runFullPurge, RETENTION_DAYS } = require("./services/dataRetentionService");
 const { initWebSocket } = require("./services/websocketService");
+const { KeepAliveJob } = require("./services/keepAliveService");
 
 async function start() {
   await migrate();
@@ -158,6 +163,9 @@ async function start() {
 
     // Attach WebSocket server
     initWebSocket(server);
+
+    // Start keep-alive ping to prevent Render free tier spin-down
+    KeepAliveJob.start();
 
     // Schedule hourly data retention purge
     const ONE_HOUR = 60 * 60 * 1000;
