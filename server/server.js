@@ -4,6 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const pinoHttp = require("pino-http");
 const path = require("path");
+const fs = require("fs");
 const logger = require("./config/logger");
 
 const app = express();
@@ -167,6 +168,12 @@ const migrate = require("./models/db");
 const { runFullPurge, RETENTION_DAYS } = require("./services/dataRetentionService");
 const { initWebSocket } = require("./services/websocketService");
 const { KeepAliveJob } = require("./services/keepAliveService");
+
+// Ensure uploads directory exists (Render's filesystem is ephemeral)
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 async function start() {
   await migrate();
