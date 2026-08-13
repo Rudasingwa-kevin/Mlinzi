@@ -51,6 +51,10 @@ export default function Register() {
       window.location.reload();
     } catch (err) {
       setError(err.response?.data?.error || "Registration failed");
+      if (err.response?.data?.details) {
+        const msgs = err.response.data.details.map(d => d.message).join(". ");
+        setError(msgs);
+      }
     } finally {
       setLoading(false);
     }

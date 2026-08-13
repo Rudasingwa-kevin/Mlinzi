@@ -29,11 +29,11 @@ const register = [
   body("role")
     .isIn(["counselor", "national_society"]).withMessage("Invalid role"),
   body("district")
-    .optional()
+    .optional({ values: "falsy" })
     .trim()
     .isLength({ max: 50 }).withMessage("District too long"),
   body("phone")
-    .optional()
+    .optional({ values: "falsy" })
     .trim()
     .matches(/^\+?[0-9\s-]{7,15}$/).withMessage("Invalid phone number"),
   validate,
