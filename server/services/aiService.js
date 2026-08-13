@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const logger = require("../config/logger");
 
-const API_URL = "https://opencode.ai/zen/v1/chat/completions";
+const API_URL = "https://opencode.ai/zen/go/v1/chat/completions";
 const API_KEY = process.env.OPENCODE_API_KEY;
 const MODEL_ID = "mimo-v2.5";
 
