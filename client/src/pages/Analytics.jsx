@@ -25,7 +25,7 @@ const channelLabels = {
 export default function Analytics() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { t } = useAccessibility();
+  const { t, formatDate } = useAccessibility();
 
   useEffect(() => {
     async function load() {
@@ -358,7 +358,7 @@ export default function Analytics() {
                     <div key={m.month}>
                       <div className="flex justify-between text-sm mb-1.5">
                         <span className="text-navy font-medium">
-                          {new Date(m.month).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                          {formatDate(m.month, { month: "short", year: "numeric" })}
                         </span>
                         <span className="text-slate-gray text-xs">{m.count}</span>
                       </div>

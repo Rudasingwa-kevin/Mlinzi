@@ -860,6 +860,12 @@ const LANGUAGES = [
   { code: "rw", label: "Kinyarwanda" },
 ];
 
+const LOCALE_MAP = {
+  en: "en-US",
+  fr: "fr-FR",
+  rw: "rw-RW",
+};
+
 export function AccessibilityProvider({ children }) {
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem("mlinzi_lang") || "en";
@@ -889,6 +895,16 @@ export function AccessibilityProvider({ children }) {
     return translations[language]?.[key] || translations.en[key] || key;
   }
 
+  function formatDate(date, options = {}) {
+    const locale = LOCALE_MAP[language] || "en-US";
+    return new Date(date).toLocaleDateString(locale, options);
+  }
+
+  function formatDateTime(date, options = {}) {
+    const locale = LOCALE_MAP[language] || "en-US";
+    return new Date(date).toLocaleString(locale, options);
+  }
+
   return (
     <AccessibilityContext.Provider
       value={{
@@ -899,6 +915,8 @@ export function AccessibilityProvider({ children }) {
         largeText,
         setLargeText,
         t,
+        formatDate,
+        formatDateTime,
         languages: LANGUAGES,
       }}
     >

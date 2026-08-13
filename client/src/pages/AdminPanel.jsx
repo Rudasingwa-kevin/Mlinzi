@@ -35,7 +35,7 @@ export default function AdminPanel() {
   const [retentionLoading, setRetentionLoading] = useState(true);
   const [purging, setPurging] = useState(false);
   const [purgeResult, setPurgeResult] = useState(null);
-  const { t } = useAccessibility();
+  const { t, formatDate } = useAccessibility();
 
   async function loadCounselors() {
     setLoading(true);
@@ -151,7 +151,7 @@ export default function AdminPanel() {
                         </span>
                         <span className="flex items-center gap-1.5">
                           <Calendar size={14} className="text-[#2E7D32]" />
-                          {new Date(c.created_at).toLocaleDateString()}
+                          {formatDate(c.created_at)}
                         </span>
                       </div>
                     </div>

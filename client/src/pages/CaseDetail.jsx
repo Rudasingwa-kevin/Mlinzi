@@ -45,7 +45,7 @@ export default function CaseDetail() {
   const [loading, setLoading] = useState(true);
   const [newNote, setNewNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const { t } = useAccessibility();
+  const { t, formatDate, formatDateTime } = useAccessibility();
 
   useEffect(() => {
     async function loadCase() {
@@ -137,7 +137,7 @@ export default function CaseDetail() {
               {caseData.district}
             </span>
             <span>•</span>
-            <span>{new Date(caseData.created_at).toLocaleDateString()}</span>
+            <span>{formatDate(caseData.created_at)}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
               <MessageSquare size={14} />
@@ -253,7 +253,7 @@ export default function CaseDetail() {
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-navy">{note.counselor_name}</span>
                         <span className="text-xs text-slate-gray">
-                          {new Date(note.created_at).toLocaleString()}
+                          {formatDateTime(note.created_at)}
                         </span>
                       </div>
                       <p className="text-sm text-charcoal">{note.note}</p>
@@ -384,11 +384,12 @@ export default function CaseDetail() {
 }
 
 function TimelineItem({ label, time, color, active }) {
+  const { formatDateTime } = useAccessibility();
   return (
     <div className="relative">
       <div className={`absolute -left-[29px] top-1 w-3 h-3 rounded-full ${color} ${active ? "" : "opacity-40"}`} />
       <p className={`text-sm font-medium ${active ? "text-navy" : "text-slate-gray"}`}>{label}</p>
-      <p className="text-xs text-slate-gray">{new Date(time).toLocaleString()}</p>
+      <p className="text-xs text-slate-gray">{formatDateTime(time)}</p>
     </div>
   );
 }
