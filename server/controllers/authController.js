@@ -1,21 +1,9 @@
 const pool = require("../config/database");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { validateEmail } = require("deep-email-validator");
 const logger = require("../config/logger");
 
 const JWT_SECRET = process.env.JWT_SECRET || "mlinzi-dev-secret-change-in-production";
-
-async function isEmailValid(email) {
-  const result = await validateEmail({
-    email,
-    validateMx: true,
-    validateTypo: true,
-    validateDisposable: true,
-    validateSMTP: false,
-  });
-  return result.valid;
-}
 
 exports.register = async (req, res) => {
   try {
@@ -29,11 +17,8 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: "Invalid role" });
     }
 
-    // Validate email format, MX records, typos, disposable domains
-    const validEmail = await isEmailValid(email);
-    if (!validEmail) {
-      return res.status(400).json({ error: "Please use a valid email address" });
-    }
+    // Email format is already validated by express-validator middleware
+    // No need for additional MX/disposable checks that can timeout
 
     const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
     if (existing.rows.length > 0) {
@@ -52,8 +37,8 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ user, token });
   } catch (err) {
-    logger.error({ err }, "Register failed");
-    res.status(500).json({ error: "Registration failed" });
+    logger.error({ err: err.message, stack: err.stack }, "Register failed");
+    res.status(500).json({ error: "Registration failed. Please try again." });
   }
 };
 
