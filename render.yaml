@@ -3,7 +3,7 @@
 
 services:
   # ── PostgreSQL Database ──
-  - type: postgresql
+  - type: database
     name: mlinzi-db
     plan: free
     databaseName: mlinzi
