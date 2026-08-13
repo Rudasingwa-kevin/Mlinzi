@@ -6,7 +6,7 @@ const ZEN_API_URL = "https://opencode.ai/zen/v1/chat/completions";
 const ZEN_API_KEY = process.env.ZEN_API_KEY;
 const MODEL_ID = "mimo-v2.5-free";
 
-const ANALYSIS_PROMPT = `You are Mlinzi, an AI child safety analyst for a UNICEF platform in Rwanda.
+const ANALYSIS_PROMPT = `You are Mlinzi, an AI child safety analyst designed for UNICEF Rwanda and national child-protection partners.
 
 Analyze the following text or image of an online message. Classify it into exactly ONE of these categories:
 

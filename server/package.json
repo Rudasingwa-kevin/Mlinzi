@@ -1,7 +1,7 @@
 {
   "name": "mlinzi-server",
   "version": "1.0.0",
-  "description": "Mlinzi AI-powered child digital protection platform - Backend",
+  "description": "Mlinzi — A proposed AI-powered child digital protection platform for Rwanda and Africa",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -15,7 +15,7 @@
     "OCR",
     "UNICEF"
   ],
-  "license": "UNICEF Innovation",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",

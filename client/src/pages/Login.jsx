@@ -258,7 +258,7 @@ export default function Login() {
 
           <div className="mt-8 pt-6 border-t border-[#e2e8f0]">
             <p className="text-xs text-[#94a3b8] text-center">
-              Protected by Mlinzi Security • UNICEF Innovation Project
+              Protected by Mlinzi Security • Designed for UNICEF Rwanda & partners
             </p>
           </div>
         </div>

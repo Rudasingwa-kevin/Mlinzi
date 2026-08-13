@@ -58,7 +58,7 @@ async function sendCaseAssignmentEmail(email, caseData, counselorName) {
             View Case Details
           </a>
           <p style="color: #999; font-size: 11px; text-align: center; margin-top: 16px;">
-            Mlinzi — Child Digital Protection Platform • UNICEF Innovation Project
+            Mlinzi — Designed for UNICEF Rwanda & partners
           </p>
         </div>
       </div>
@@ -107,7 +107,7 @@ async function sendHighRiskAlertEmail(email, caseData) {
             Review Case Now
           </a>
           <p style="color: #999; font-size: 11px; text-align: center; margin-top: 16px;">
-            Mlinzi — Child Digital Protection Platform • UNICEF Innovation Project
+            Mlinzi — Designed for UNICEF Rwanda & partners
           </p>
         </div>
       </div>

@@ -43,7 +43,7 @@ async function sendOTPEmail(email, code, purpose) {
         <div style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #2E7D32; text-align: center; padding: 20px; background: #f0fdf4; border-radius: 12px; margin: 16px 0;">${code}</div>
         <p style="color: #666; font-size: 13px;">This code expires in ${OTP_EXPIRY_MINUTES} minutes. Do not share it with anyone.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="color: #999; font-size: 12px;">Mlinzi — Child Digital Protection Platform • UNICEF Innovation Project</p>
+        <p style="color: #999; font-size: 12px;">Mlinzi — Designed for UNICEF Rwanda & partners</p>
       </div>
     `,
   });
