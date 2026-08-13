@@ -46,9 +46,10 @@ const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
 app.use(
   cors({
     origin: (origin, cb) => {
-      // Production: reject requests with no origin (non-browser clients must use API keys)
+      // Allow Render health checks (no Origin header, has render-health-check header)
+      // and server-to-server pings
       if (!origin && isProduction) {
-        return cb(new Error("Missing Origin header"));
+        return cb(null, true);
       }
       // Allow requests with no origin in dev (curl, Postman, server-to-server)
       if (!origin && !isProduction) {
