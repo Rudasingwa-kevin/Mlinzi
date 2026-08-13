@@ -1,4 +1,5 @@
-const { analyzeText, analyzeImage } = require("../services/aiService");
+const { analyzeText } = require("../services/aiService");
+const { extractText } = require("../services/ocrService");
 const Report = require("../models/Report");
 const logger = require("../config/logger");
 
@@ -64,21 +65,38 @@ async function uploadReport(req, res) {
     let extractedText, category, severity, confidence, recommendedAction, guidance;
 
     try {
-      const analysis = await analyzeImage(req.file.path);
-      extractedText = analysis.extractedText;
+      // Step 1: Extract text from image using OCR
+      extractedText = await extractText(req.file.path);
+      logger.info({ textLength: extractedText.length }, "OCR text extracted successfully");
+
+      // Step 2: Analyze the extracted text with AI
+      const analysis = await analyzeText(extractedText);
       category = analysis.category;
       severity = analysis.severity;
       confidence = analysis.confidence;
       recommendedAction = analysis.recommendedAction;
       guidance = analysis.guidance;
-    } catch (aiErr) {
-      logger.warn({ err: aiErr }, "AI image analysis failed, using fallback");
-      extractedText = "Could not analyze image";
-      category = "pending_analysis";
-      severity = "pending";
-      confidence = null;
-      recommendedAction = "anonymous_report";
-      guidance = "Automated analysis unavailable. A counselor will review this report.";
+    } catch (ocrErr) {
+      logger.warn({ err: ocrErr }, "OCR failed, trying AI vision analysis as fallback");
+      try {
+        // Fallback: Use AI vision directly if OCR fails
+        const { analyzeImage } = require("../services/aiService");
+        const analysis = await analyzeImage(req.file.path);
+        extractedText = analysis.extractedText;
+        category = analysis.category;
+        severity = analysis.severity;
+        confidence = analysis.confidence;
+        recommendedAction = analysis.recommendedAction;
+        guidance = analysis.guidance;
+      } catch (aiErr) {
+        logger.warn({ err: aiErr }, "AI image analysis also failed, using fallback");
+        extractedText = "Could not analyze image";
+        category = "pending_analysis";
+        severity = "pending";
+        confidence = null;
+        recommendedAction = "anonymous_report";
+        guidance = "Automated analysis unavailable. A counselor will review this report.";
+      }
     }
 
     const report = await Report.create({
