@@ -2,9 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const logger = require("../config/logger");
 
-const GO_API_URL = "https://opencode.ai/go/v1/chat/completions";
-const GO_API_KEY = process.env.GO_API_KEY;
-const MODEL_ID = "MiMo-V2.5";
+const API_URL = "https://opencode.ai/zen/v1/chat/completions";
+const API_KEY = process.env.OPENCODE_API_KEY;
+const MODEL_ID = "mimo-v2.5";
 
 const ANALYSIS_PROMPT = `You are Mlinzi, an AI child safety analyst designed for UNICEF Rwanda and national child-protection partners.
 
@@ -45,11 +45,11 @@ IMPORTANT: Respond ONLY with valid JSON in this exact format, no extra text:
   "guidance": "clear, simple safety advice for the child"
 }`;
 
-async function callGoAPI(messages) {
-  const response = await fetch(GO_API_URL, {
+async function callAPI(messages) {
+  const response = await fetch(API_URL, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${GO_API_KEY}`,
+      "Authorization": `Bearer ${API_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -60,7 +60,7 @@ async function callGoAPI(messages) {
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Go API error: ${response.status} - ${error}`);
+    throw new Error(`OpenCode API error: ${response.status} - ${error}`);
   }
 
   const data = await response.json();
@@ -109,7 +109,7 @@ async function analyzeText(text) {
     { role: "user", content: `Message to analyze:\n"${text}"` },
   ];
 
-  const raw = await callGoAPI(messages);
+  const raw = await callAPI(messages);
   const cleaned = raw.replace(/^```json\n?/i, "").replace(/\n?```$/i, "").trim();
 
   try {
@@ -144,7 +144,7 @@ async function analyzeImage(imagePath) {
     },
   ];
 
-  const raw = await callGoAPI(messages);
+  const raw = await callAPI(messages);
   const cleaned = raw.replace(/^```json\n?/i, "").replace(/\n?```$/i, "").trim();
 
   try {
