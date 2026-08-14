@@ -151,14 +151,26 @@ export default function Home() {
               <h3 className="font-semibold text-navy mb-2">{t("webApp")}</h3>
               <p className="text-sm text-slate-gray leading-relaxed">{t("webAppDesc")}</p>
             </div>
-            <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <div className="group relative bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up cursor-not-allowed" style={{ animationDelay: "0.1s" }}>
+              {/* Coming Soon overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-white/60 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center z-10 pointer-events-none">
+                <span className="bg-navy text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg tracking-wide uppercase">
+                  🚧 Coming Soon
+                </span>
+              </div>
               <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
                 <Smartphone size={24} className="text-navy" />
               </div>
               <h3 className="font-semibold text-navy mb-2">{t("sms")}</h3>
               <p className="text-sm text-slate-gray leading-relaxed">{t("smsDesc")}</p>
             </div>
-            <div className="bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <div className="group relative bg-green-50 rounded-2xl p-6 text-center animate-fade-in-up cursor-not-allowed" style={{ animationDelay: "0.2s" }}>
+              {/* Coming Soon overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-white/60 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center z-10 pointer-events-none">
+                <span className="bg-navy text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg tracking-wide uppercase">
+                  🚧 Coming Soon
+                </span>
+              </div>
               <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/80 flex items-center justify-center">
                 <MessageSquare size={24} className="text-navy" />
               </div>
