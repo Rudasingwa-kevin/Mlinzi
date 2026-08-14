@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 import PatternDivider from "../components/PatternDivider";
 
 export default function ReferralSuccess() {
@@ -17,7 +18,9 @@ export default function ReferralSuccess() {
 
       <div className="max-w-2xl mx-auto py-16 px-4 text-center">
         <div className="bg-green-50 border border-green/20 rounded-2xl p-8 mb-8">
-          <div className="text-5xl mb-4">✅</div>
+          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-200">
+            <ShieldCheck size={48} className="text-white" strokeWidth={1.5} />
+          </div>
           <h2 className="text-2xl font-bold text-navy mb-3">
             Thank you for reaching out
           </h2>
